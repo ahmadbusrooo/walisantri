@@ -1,0 +1,82 @@
+
+Received token: 
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer 0aHbgO57xoAsENIc2rjMUWYfilQ4um1pJqZwLPVT","host":"192.168.0.106"}
+Received token: 
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer 0aHbgO57xoAsENIc2rjMUWYfilQ4um1pJqZwLPVT","host":"192.168.0.106"}
+Received token: 
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl","host":"192.168.0.106"}
+Received token: r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl","host":"192.168.0.106"}
+Received token: r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl","host":"192.168.0.106"}
+Received token: r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9","host":"192.168.0.106"}
+Received token: OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9","host":"192.168.0.106"}
+Received token: OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9","host":"192.168.0.106"}
+Received token: OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9","host":"192.168.0.106"}
+Received token: OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9","host":"192.168.0.106"}
+Received token: OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9","host":"192.168.0.106"}
+Received token: OGYj6goszPdVehKTukxiW0L4JH5XflmIbQEN81M9
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer AfEPLXpG268tTYbVSeBJ9HOWFqNjr730ymiD4gZu","host":"192.168.0.106"}
+Received token: AfEPLXpG268tTYbVSeBJ9HOWFqNjr730ymiD4gZu
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe","host":"192.168.0.106"}
+Received token: 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe","host":"192.168.0.106"}
+Received token: 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe","host":"192.168.0.106"}
+Received token: 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe","host":"192.168.0.106"}
+Received token: 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe
+Headers: {"user-agent":"Dart\/3.6 (dart:io)","accept-encoding":"gzip","authorization":"Bearer 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe","host":"192.168.0.106"}
+Received token: 4aT57uIQy8tv2AjZsSnGpBqC3PxV6fLObhDo1mRe
+Headers: {"Authorization":"PK32iL5EegatNkRvOJhzW1nYUpZx0uSrbsMcFG69","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"4bea370f-24ae-403b-aaca-b28cee405033","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: PK32iL5EegatNkRvOJhzW1nYUpZx0uSrbsMcFG69
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"4e977fbd-a5c2-42cd-b707-9a7479babe96","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"55","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"f1305c1c-a37b-4adf-be9b-890a69254cea","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"55","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"6ae8f697-2efe-49fd-b3b1-ec14950bf22b","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"55","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"64c6f246-16a1-4b8e-acb0-456f073e7d54","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Type":"application\/x-www-form-urlencoded","Content-Length":"30","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"8337658b-40da-418b-8645-3fdd71085330","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Type":"application\/x-www-form-urlencoded","Content-Length":"30","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"04075746-7558-4468-83df-4cf0ad553ccf","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"55","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"ab33ce3e-b968-47de-b056-7050ffb59697","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"54","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"8b30df17-98ba-4166-8724-2e9c39b15fca","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"62","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"9f1f477f-9486-4e89-b975-91d200f56a44","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"61","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"6fbc6c0a-10cd-48ea-94bb-e2486470c519","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"62","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/json","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"66ce8909-0656-4373-b284-99c00c50e513","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"62","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"b5f2d1f3-c354-403d-9caa-4a5468f64566","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"62","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Content-Type":"application\/javascript","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"6191e24a-cf84-4204-baae-2b5f63a6b72d","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"62","Cookie":"ci_session=tl5gpdpvnal7m2jimdjr05gdft0l94im"}
+Received token: 
+Headers: {"Authorization":"Bearer kVQzP1HBs4WdfeDLJ7KqEYn6wSvgyxa9GmiUupr3","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"54bd11ab-57d2-495e-9cf4-9d187242577f","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Cookie":"ci_session=rompahqqo0tp1cgapgpo3d6bpkgao67f"}
+Received token: kVQzP1HBs4WdfeDLJ7KqEYn6wSvgyxa9GmiUupr3
+Headers: {"Authorization":"Bearer lHPFLWGbKu91QfRNg7ETjtc8siSzmIn2Ux6ZV4wa","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"57a45f21-6354-4795-808f-344cd00759d8","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Type":"application\/x-www-form-urlencoded","Content-Length":"30","Cookie":"ci_session=rompahqqo0tp1cgapgpo3d6bpkgao67f"}
+Received token: lHPFLWGbKu91QfRNg7ETjtc8siSzmIn2Ux6ZV4wa
+Headers: {"Authorization":"Bearer lLGjF0SCpAkrJIWsK1Vgtn6NXu9UTEQ5c4iqBRD7","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"d0792dad-4bbe-4b66-9c85-dadd3c4c9eff","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Type":"application\/x-www-form-urlencoded","Content-Length":"30","Cookie":"ci_session=rompahqqo0tp1cgapgpo3d6bpkgao67f"}
+Received token: lLGjF0SCpAkrJIWsK1Vgtn6NXu9UTEQ5c4iqBRD7
+Headers: {"Authorization":"Bearer lLGjF0SCpAkrJIWsK1Vgtn6NXu9UTEQ5c4iqBRD7","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"3cb94168-761c-48f2-a328-6204191bae5f","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Type":"application\/x-www-form-urlencoded","Content-Length":"30","Cookie":"ci_session=rompahqqo0tp1cgapgpo3d6bpkgao67f"}
+Received token: lLGjF0SCpAkrJIWsK1Vgtn6NXu9UTEQ5c4iqBRD7
+Headers: {"Authorization":"Bearer lLGjF0SCpAkrJIWsK1Vgtn6NXu9UTEQ5c4iqBRD7","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"0bcad600-b1df-462e-bd4b-26087bf023e4","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Type":"application\/x-www-form-urlencoded","Content-Length":"30","Cookie":"ci_session=n7voj8tintqd6hjirkabomrfu52b31j9"}
+Received token: lLGjF0SCpAkrJIWsK1Vgtn6NXu9UTEQ5c4iqBRD7
+Headers: {"Authorization":"Bearer 372Qxk1CRfsTiEuSPweLdO6ronaJzjXBFND0UGb4","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"599c08e7-2f32-407d-a18b-87b85b7182d5","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Type":"application\/x-www-form-urlencoded","Content-Length":"30","Cookie":"ci_session=n7voj8tintqd6hjirkabomrfu52b31j9"}
+Received token: 372Qxk1CRfsTiEuSPweLdO6ronaJzjXBFND0UGb4
+Headers: {"Host":"192.168.0.106","Connection":"keep-alive","Upgrade-Insecure-Requests":"1","User-Agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/131.0.0.0 Safari\/537.36","Accept":"text\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/avif,image\/webp,image\/apng,*\/*;q=0.8,application\/signed-exchange;v=b3;q=0.7","Accept-Encoding":"gzip, deflate","Accept-Language":"id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7","Cookie":"ci_session=6hmbvu3tlg8tscfhstcf9m7cq3svfdfr"}
+Received token: 
+Headers: {"Host":"192.168.0.106","Connection":"keep-alive","Upgrade-Insecure-Requests":"1","User-Agent":"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/131.0.0.0 Safari\/537.36","Accept":"text\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/avif,image\/webp,image\/apng,*\/*;q=0.8,application\/signed-exchange;v=b3;q=0.7","Accept-Encoding":"gzip, deflate","Accept-Language":"id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7","Cookie":"ci_session=6hmbvu3tlg8tscfhstcf9m7cq3svfdfr"}
+Received token: 
+Headers: {"Content-Type":"application\/json","User-Agent":"PostmanRuntime\/7.43.0","Accept":"*\/*","Cache-Control":"no-cache","Postman-Token":"998b3f56-84fa-439c-8f12-6c29f6a97559","Host":"192.168.0.106","Accept-Encoding":"gzip, deflate, br","Connection":"keep-alive","Content-Length":"69","Cookie":"ci_session=n7voj8tintqd6hjirkabomrfu52b31j9"}
+Received token: 

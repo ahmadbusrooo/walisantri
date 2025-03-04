@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    # ports:
+    #   - "80:80"
+    #   - "443:443"
+    volumes:
+      - ./app:/var/www/html
+      - ./ci_sessions:/var/www/ci_sessions # Pastikan direktori ini ada di host
+    depends_on:
+      - mysql
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+
+  mysql:
+    image: mariadb:10.1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.1.1
+    links:
+      - mysql:mysql
+    # ports:
+    #   - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: user
+      PMA_PASSWORD: password
+
+volumes:
+  mysql-data:
+
+networks:
+  web-network:
+    external: true

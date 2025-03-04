@@ -1,0 +1,18 @@
+SELECT *
+FROM `student`
+WHERE `student_token` = 'U4yNDrv8VYjhlGa0EHsTpmAqB7nkou3CSxeOIJ6z9ibtPQXZ1M'
+SELECT *
+FROM `student`
+WHERE `student_token` = 'U4yNDrv8VYjhlGa0EHsTpmAqB7nkou3CSxeOIJ6z9ibtPQXZ1M'
+SELECT *
+FROM `student`
+WHERE `student_token` = 'VFGaUTDcZtgAjNJQ9X3MWoBHI1bY0s2CfhS7imlw'
+SELECT *
+FROM `student`
+WHERE `student_token` = 'r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl'
+SELECT *
+FROM `student`
+WHERE `student_token` = 'r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl'
+SELECT *
+FROM `student`
+WHERE `student_token` = 'r4qY8wLpjJsHQbI30miOty7NC1WecBhDGfa9xvgl'

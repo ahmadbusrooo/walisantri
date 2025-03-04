@@ -1,0 +1,6 @@
+NIS: , Password: 
+NIS: 12345678, Password: 12345678
+NIS: 12345678, Password: 12345678
+NIS: 12345678, Password: 12345678
+NIS: , Password: 
+NIS: 12345678, Password: 12345678

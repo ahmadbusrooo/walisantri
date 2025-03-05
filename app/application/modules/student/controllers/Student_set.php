@@ -518,7 +518,7 @@ class Student_set extends CI_Controller
       $name = 'Template_Data_Santri_Senior.xls';
     } else {
       $data = file_get_contents("./media/template_excel/Template_Data_Santri_Primary.xls");
-      $name = 'Template_Data_Santri_Primary.xls.xls';
+      $name = 'Template_Data_Santri_Primary.xls';
     }
 
     $this->load->helper('download');

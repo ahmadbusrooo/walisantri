@@ -76,10 +76,10 @@ if (isset($student)) {
 									
 									<div class="form-group">
 										<label>Nama lengkap <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-										<input name="student_full_name" type="text" class="form-control" value="<?php echo $inputFullnameValue ?>" placeholder="Nama lengkap">
+										<input name="student_full_name" type="text" class="form-control"  value="<?php echo $inputFullnameValue ?>" placeholder="Nama lengkap" >
 									</div>
 									<div class="form-group">
-										<label>Jenis Kelamin</label>
+										<label>Jenis Kelamin <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
 										<div class="radio">
 											<label>
 												<input type="radio" name="student_gender" value="L" <?php echo ($inputGenderValue == 'L') ? 'checked' : ''; ?>> Laki-laki
@@ -96,7 +96,7 @@ if (isset($student)) {
 									</div>
 
 									<div class="form-group">
-										<label>Tanggal Lahir </label>
+										<label>Tanggal Lahir <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
 										<div class="input-group date " data-date="" data-date-format="yyyy-mm-dd">
 											<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 											<input class="form-control" type="text" name="student_born_date" readonly="readonly" placeholder="Tanggal" value="<?php echo $inputDateValue; ?>">
@@ -109,7 +109,7 @@ if (isset($student)) {
 									</div>
 
 									<div class="form-group">
-										<label>No. Handphone <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+										<label>No. Handphone</label>
 										<input name="student_phone" type="text" class="form-control" value="<?php echo $inputPhoneValue ?>" placeholder="No Handphone">
 									</div>
 									<div class="form-group">
@@ -137,12 +137,12 @@ if (isset($student)) {
 									<?php } ?>
 
 									<div class="form-group">
-										<label>NIK <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+										<label>NIK </label>
 										<input name="student_nisn" type="text" class="form-control" value="<?php echo $inputNisNValue ?>" placeholder="NIK Santri">
 									</div>
 									<div class="form-group">
     <label>Komplek <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-    <select name="komplek_id" id="komplek_id" class="form-control" required>
+    <select name="komplek_id" id="komplek_id" class="form-control" >
         <option value="">-- Pilih Komplek --</option>
         <?php foreach ($komplek as $k) : ?>
             <option value="<?= $k['komplek_id']; ?>" <?= ($inputKomplekValue == $k['komplek_id']) ? 'selected' : ''; ?>>
@@ -154,8 +154,8 @@ if (isset($student)) {
 
 <div class="form-group">
     <label>Kamar <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-    <select name="majors_majors_id" id="majors_id" class="form-control" required>
-        <option value="">-- Pilih Kamar --</option>
+    <select name="majors_majors_id" id="majors_id" class="form-control">
+        <option value="">-- Mohon Pilih Komplek Dulu --</option>
         <?php if (!empty($majors)) : ?>
             <?php foreach ($majors as $m) : ?>
                 <option value="<?= $m['majors_id']; ?>" <?= ($inputMajorValue == $m['majors_id']) ? 'selected' : ''; ?>>
@@ -169,7 +169,7 @@ if (isset($student)) {
 
 									<div ng-controller="classCtrl">
 										<div class="form-group"> 
-											<label >Kelas *</label>
+											<label >Kelas  <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
 											<select name="class_class_id" class="form-control autocomplete">
 												<option value="">-- Pilih Kelas --</option>
 												<option ng-repeat="class in classs" ng-selected="class_data.index == class.class_id" value="{{class.class_id}}">{{class.class_name}}</option>
@@ -180,7 +180,7 @@ if (isset($student)) {
 								</div>
 								<div class="tab-pane" id="tab_3">
 									<div class="form-group">
-										<label>Nama Ibu Kandung<small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+										<label>Nama Ibu Kandung</label>
 										<input name="student_name_of_mother" type="text" class="form-control" value="<?php echo $inputMotherValue ?>" placeholder="Nama Ibu">
 									</div>
 									<div class="form-group">
@@ -286,7 +286,7 @@ $(document).ready(function() {
 
     // Fungsi untuk mengambil data kamar berdasarkan komplek
     function loadKamar(komplek_id) {
-        $("#majors_id").html('<option value="">-- Pilih Kamar --</option>'); // Reset dropdown
+        $("#majors_id").html('<option value="">-- Mohon Pilih Komplek Dulu --</option>'); // Reset dropdown
         if (komplek_id !== "") {
             $.ajax({
                 url: "<?= site_url('manage/student/get_kamar_by_komplek'); ?>",

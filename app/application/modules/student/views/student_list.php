@@ -20,7 +20,6 @@
                             <div class="col-md-6 col-xs-12 text-right">
                                 <?php if ($this->session->userdata('uroleid') != USER) { ?>
                                     <a href="<?php echo site_url('manage/student/add') ?>" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Tambah</a>
-                                    <a href="<?php echo site_url('manage/student/import') ?>" class="btn btn-sm btn-info"><i class="fa fa-upload"></i> Upload Santri</a>
                                 <?php } ?>
                             </div>
                         </div>

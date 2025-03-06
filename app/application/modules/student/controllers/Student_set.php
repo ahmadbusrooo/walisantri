@@ -91,8 +91,13 @@ class Student_set extends CI_Controller
       $this->form_validation->set_rules('passconf', 'Konfirmasi password', 'trim|required|xss_clean|min_length[6]|matches[student_password]');
       $this->form_validation->set_message('passconf', 'Password dan konfirmasi password tidak cocok');
     }
-    $this->form_validation->set_rules('class_class_id', 'Kelas', 'trim|required|xss_clean');
     $this->form_validation->set_rules('student_full_name', 'Nama lengkap', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('student_gender', 'Jenis Kelamin', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('student_born_date', 'Tanggal Lahir', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('class_class_id', 'Kelas', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('majors_majors_id', 'Kamar', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('student_name_of_father', 'Ayah Kandung', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('student_parent_phone', 'Nomor Hp. Ortu', 'trim|required|xss_clean');
     $this->form_validation->set_error_delimiters('<div class="alert alert-danger"><button position="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
     $data['operation'] = is_null($id) ? 'Tambah' : 'Sunting';
 

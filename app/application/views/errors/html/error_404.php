@@ -87,12 +87,11 @@ body {
 <body>
   <section id="not-found">
     <!-- Ilustrasi dari Undraw -->
-    <img src="https://assets.website-files.com/5bff8886c3964a992e90d465/5c00621b7aefa4f9ee0f4303_web-dev.svg" alt="404 Illustration" class="illustration">
+    <img src="media/img/404.png" alt="404 Illustration" class="illustration">
     <div id="title">Oops! Page Not Found</div>
-    <div class="error-code">404</div>
     <div class="subtitle">The page you're looking for doesn't exist.</div>
     <div class="button">
-      <a href="/">Go Back Home</a>
+      <a href="manage">Go Back Home</a>
     </div>
   </section>
 </body>

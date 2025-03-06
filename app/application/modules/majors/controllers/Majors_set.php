@@ -81,11 +81,11 @@ class Majors_set extends CI_Controller
                   'komplek_id' => $komplekId[$i]
               );
   
-              // Debug sebelum menyimpan ke database
-              echo "<pre>";
-              print_r($params);
-              echo "</pre>";
-              // exit(); // Uncomment ini untuk debugging
+              // // Debug sebelum menyimpan ke database
+              // echo "<pre>";
+              // print_r($params);
+              // echo "</pre>";
+              // // exit(); // Uncomment ini untuk debugging
   
               $this->Student_model->add_majors($params);
           }

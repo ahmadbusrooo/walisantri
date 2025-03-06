@@ -622,6 +622,72 @@ public function get_santri_masuk_keluar($month, $year) {
         return ($status == 0) ? FALSE : $id;
     }
     
+    public function get_completion_status($params = array()) {
+        $this->db->select('
+            student_id,
+            student_nis,
+            student_full_name,
+            student_parent_phone,
+            student_address,
+            student_name_of_mother,
+            student_name_of_father,
+            student_img,
+            class_name,
+            majors_name,
+            komplek_name,
+            CASE 
+                WHEN student_nis IS NULL OR student_nis = "" THEN 0
+                WHEN student_full_name IS NULL OR student_full_name = "" THEN 0 
+                WHEN student_parent_phone IS NULL OR student_parent_phone = "" THEN 0
+                WHEN student_address IS NULL OR student_address = "" THEN 0
+                WHEN student_name_of_mother IS NULL OR student_name_of_mother = "" THEN 0
+                WHEN student_name_of_father IS NULL OR student_name_of_father = "" THEN 0
+                WHEN student_img IS NULL OR student_img = "" THEN 0
+                ELSE 1 
+            END as is_complete
+        ', FALSE);
+        
+        // Tambahkan filter status aktif
+        $this->db->where('student.student_status', 1); 
+        
+        $this->db->join('class', 'class.class_id = student.class_class_id', 'left');
+        $this->db->join('majors', 'majors.majors_id = student.majors_majors_id', 'left');
+        $this->db->join('komplek', 'komplek.komplek_id = majors.komplek_id', 'left');
+        
+        if(isset($params['is_complete'])) {
+            $this->db->having('is_complete', $params['is_complete']);
+        }
+        
+        return $this->db->get('student')->result_array();
+    }
+
+    public function count_complete_students() {
+        return $this->db
+            ->where('student_status', 1) // Tambahkan filter aktif
+            ->where('student_nis IS NOT NULL')
+            ->where('student_full_name IS NOT NULL')
+            ->where('student_parent_phone IS NOT NULL')
+            ->where('student_address IS NOT NULL')
+            ->where('student_name_of_mother IS NOT NULL')
+            ->where('student_name_of_father IS NOT NULL')
+            ->where('student_img IS NOT NULL')
+            ->count_all_results('student');
+    }
+    
+    public function count_incomplete_students() {
+        return $this->db
+            ->where('student_status', 1) // Tambahkan filter aktif
+            ->group_start()
+                ->where('student_nis IS NULL')
+                ->or_where('student_full_name IS NULL')
+                ->or_where('student_parent_phone IS NULL')
+                ->or_where('student_address IS NULL')
+                ->or_where('student_name_of_mother IS NULL')
+                ->or_where('student_name_of_father IS NULL')
+                ->or_where('student_img IS NULL')
+            ->group_end()
+            ->count_all_results('student');
+    }
 
     function delete($id) {
         $this->db->where('student_id', $id);

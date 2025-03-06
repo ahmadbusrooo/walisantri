@@ -121,7 +121,6 @@ class Ustadz extends MX_Controller {
     }
 
     // Simpan data ustadz
-    // Simpan data ustadz
     public function save() {
         $data = [
             'ustadz_nama' => $this->input->post('ustadz_nama'),

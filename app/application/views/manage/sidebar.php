@@ -35,7 +35,7 @@
       </li>
 
 <!-- Sekretaris -->
-<li class="treeview <?php echo (in_array($this->uri->segment(2), ['class', 'majors', 'period', 'information', 'setting', 'month', 'users', 'maintenance', 'student_print','report']) || 
+<li class="treeview <?php echo (in_array($this->uri->segment(2), ['class', 'majors', 'period', 'information', 'setting', 'month', 'users', 'maintenance', 'student_print','report','monitoring']) || 
         ($this->uri->segment(2) == 'student' && $this->uri->segment(3) == '') || 
         in_array($this->uri->segment(1), ['ustadz', 'kitab', 'pengurus', 'komplek'])) ? 'active' : ''; ?>">
   <a href="#">
@@ -89,6 +89,11 @@
     <li class="<?php echo ($this->uri->segment(2) == 'report') ? 'active' : ''; ?>">
       <a href="<?php echo site_url('manage/student/report'); ?>"><i class="fa fa-print"></i> Laporan Data Santri</a>
     </li>
+    <li class="<?php echo ($this->uri->segment(3) == 'monitoring') ? 'active' : ''; ?>">
+          <a href="<?php echo site_url('manage/student/monitoring'); ?>">
+            <i class="fa fa-clipboard-check"></i> Monitoring Kelengkapan
+          </a>
+        </li>
   </ul>
 </li>
 

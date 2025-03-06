@@ -174,7 +174,25 @@ class Student_set extends CI_Controller
       $this->load->view('manage/layout', $data);
     }
   }
-
+// Student_set.php
+public function monitoring() {
+    $params = array();
+    
+    // Filter status kelengkapan
+    if($this->input->get('status') == 'complete') {
+        $params['is_complete'] = 1;
+    } elseif($this->input->get('status') == 'incomplete') {
+        $params['is_complete'] = 0;
+    }
+    
+    $data['students'] = $this->Student_model->get_completion_status($params);
+    $data['complete_count'] = $this->Student_model->count_complete_students();
+    $data['incomplete_count'] = $this->Student_model->count_incomplete_students();
+    
+    $data['title'] = 'Monitoring Kelengkapan Data Santri';
+    $data['main'] = 'student/monitoring_view';
+    $this->load->view('manage/layout', $data);
+}
   public function get_kamar_by_komplek()
 {
     $komplek_id = $this->input->post('komplek_id');

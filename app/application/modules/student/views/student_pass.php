@@ -21,7 +21,7 @@
 		<!-- /.box-header -->
 		<div class="row">
 			<div class="col-md-5">
-				<div class="box">
+			<div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 					<div class="box-body">
 						<?php echo form_open(current_url(), array('method' => 'get')) ?>
 						<div class="form-group">
@@ -92,7 +92,8 @@
 						</div>
 					</div>
 					<div class="col-md-5">
-						<div class="box">
+					<div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
 							<div class="box-body">
 								<h4>Data Kelulusan</h4>
 								<table class="table table-hover table-bordered table-responsive">

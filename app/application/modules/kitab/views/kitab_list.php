@@ -3,7 +3,7 @@
         <h1>Data Kitab</h1>
     </section>
     <section class="content">
-        <div class="box">
+    <div class="box" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
             <div class="box-header with-border">
                 <h3 class="box-title">Daftar Kitab</h3>
                 <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addKitabModal">
@@ -96,7 +96,7 @@
 <!-- Modal Tambah Kitab -->
 <div class="modal fade" id="addKitabModal" tabindex="-1" role="dialog" aria-labelledby="addKitabModalLabel">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+    <div class="modal-content" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
             <?php echo form_open('kitab/add'); ?>
             <div class="modal-header">
                 <h4 class="modal-title" id="addKitabModalLabel">Tambah Kitab</h4>

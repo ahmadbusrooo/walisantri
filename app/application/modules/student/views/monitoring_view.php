@@ -1,7 +1,7 @@
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
-            Monitoring Kelengkapan Data Santri
+            Monitoring Data Santri
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?= site_url('manage') ?>"><i class="fa fa-th"></i> Beranda</a></li>

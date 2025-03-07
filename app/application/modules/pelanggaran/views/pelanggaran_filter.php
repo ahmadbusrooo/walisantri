@@ -15,7 +15,7 @@
         <div class="row">
             <!-- Filter -->
             <div class="col-md-12">
-                <div class="box box-info">
+					<div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
                     <div class="box-header with-border">
                         <h3 class="box-title">Filter Data Pelanggaran Santri</h3>
                     </div>
@@ -63,7 +63,8 @@
             <!-- Informasi Santri -->
             <?php if ($f) { ?>
                 <div class="col-md-12">
-                    <div class="box box-success">
+                <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                         <div class="box-header with-border">
                             <h3 class="box-title">Informasi Santri</h3>
                         </div>
@@ -117,7 +118,8 @@
                 </div>
 
                 <div class="col-md-12">
-    <div class="box box-warning">
+                <div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
         <div class="box-header with-border">
             <h3 class="box-title">Total Pelanggaran Per Bulan</h3>
         </div>
@@ -153,7 +155,8 @@
 
 
 <div class="col-md-12">
-    <div class="box box-info">
+<div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
         <div class="box-header with-border">
             <h3 class="box-title">Total Pelanggaran Per Tahun</h3>
         </div>
@@ -166,7 +169,8 @@
 
                 <!-- Riwayat Pelanggaran -->
                 <div class="col-md-12">
-                    <div class="box box-primary">
+					<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                         <div class="box-header with-border">
                             <h3 class="box-title">Riwayat Pelanggaran</h3>
                             <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addViolationModal">
@@ -203,7 +207,7 @@
         data-url="<?php echo site_url('manage/pelanggaran/send_whatsapp/' . $row['pelanggaran_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
         data-wali="<?php echo isset($santri_selected['student_name_of_father']) ? $santri_selected['student_name_of_father'] : '-'; ?>"
         data-telepon="<?php echo isset($santri_selected['student_parent_phone']) ? $santri_selected['student_parent_phone'] : '-'; ?>">
-    <i class="fa fa-whatsapp"></i> Kirim WA
+        <i class="fab fa-whatsapp"></i> Kirim WA
 </button>
 
                                                         <a href="<?php echo site_url('manage/pelanggaran/delete/' . $row['pelanggaran_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>" 

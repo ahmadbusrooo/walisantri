@@ -14,7 +14,7 @@
 	<section class="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<div class="box">
+			<div class="box" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 					<div class="box-header">
 						<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass"><i class="fa fa-plus"></i> Tambah</button>
 
@@ -106,7 +106,7 @@
 		<!-- Modal -->
 		<div class="modal fade" id="addClass" role="dialog">
 			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
+			<div class="modal-content" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">Tambah Kelas</h4>

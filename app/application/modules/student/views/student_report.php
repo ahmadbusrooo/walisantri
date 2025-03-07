@@ -8,7 +8,7 @@
     </section>
 
     <section class="content">
-        <div class="box">
+    <div class="box" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
             <div class="box-header with-border">
                 <h3 class="box-title">Total Santri: <strong><?php echo $total_students; ?></strong></h3>
                 <div class="box-tools">

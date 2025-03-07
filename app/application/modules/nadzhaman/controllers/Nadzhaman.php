@@ -104,7 +104,7 @@ class Nadzhaman extends CI_Controller
         $class_id = $this->input->get('class_id', TRUE);
         $period_id = $this->input->get('period_id', TRUE);
     
-        $data['title'] = 'Filter Data Nadzhaman';
+        $data['title'] = 'Tambah Data Nadzhaman';
     
         // Mendapatkan data kelas
         $data['classes'] = $this->Student_model->get_class();

@@ -15,9 +15,10 @@
     <div class="row">
         <!-- Form Filter -->
         <div class="col-md-12">
-            <div class="box box-info">
+        <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                 <div class="box-header with-border">
-                    <h3 class="box-title">Filter Data Nadzhaman</h3>
+                    <h3 class="box-title">Tambah Data Nadzhaman</h3>
                 </div>
                 <div class="box-body">
                     <?php echo form_open('nadzhaman/filter_nadzhaman', ['class' => 'form-horizontal', 'method' => 'get']); ?>
@@ -101,7 +102,9 @@
         <?php if (!empty($nadzhaman)): ?>
             <div class="row">
             <div class="col-md-12">
-                <div class="box box-success">
+
+	<div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                     <div class="box-header with-border">
                         <h3 class="box-title">Data Nadzhaman Siswa</h3>
                         <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addNadzhamanModal">
@@ -155,7 +158,8 @@
 <!-- Modal Tambah Data Nadzhaman -->
 <div class="modal fade" id="addNadzhamanModal" tabindex="-1" role="dialog" aria-labelledby="addNadzhamanModalLabel">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+    <div class="modal-content" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
             <?php echo form_open('nadzhaman/bulk_add'); ?>
             <div class="modal-header">
                 <h4 class="modal-title" id="addNadzhamanModalLabel">Tambah Data Nadzhaman</h4>

@@ -170,7 +170,8 @@
 <!-- Modal Kirim WhatsApp -->
 <div class="modal fade" id="modalWa" tabindex="-1" role="dialog" aria-labelledby="modalWaLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
             <div class="modal-header">
                 <h5 class="modal-title" id="modalWaLabel">Kirim WhatsApp ke Orang Tua</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

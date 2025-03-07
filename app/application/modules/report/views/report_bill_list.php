@@ -13,7 +13,8 @@
 	<section class="content">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="box box-success">
+			<div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
 					<div class="box-header">
 						<?php echo form_open(current_url(), array('method' => 'get')) ?>
 						<div class="row">

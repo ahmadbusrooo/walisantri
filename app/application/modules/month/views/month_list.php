@@ -12,7 +12,7 @@
 	<section class="content">
 		<div class="row">
 			<div class="col-xs-12">
-				<div class="box">
+			<div class="box" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 					<div class="box-header">
 					</div>
 					<!-- /.box-header -->

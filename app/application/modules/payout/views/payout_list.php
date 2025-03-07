@@ -13,7 +13,8 @@
 	<section class="content">
 		<div class="row"> 
 			<div class="col-md-12">
-				<div class="box box-info">
+			<div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+				
 					<div class="box-header with-border">
 						<h3 class="box-title">Filter Data Pembayaran Santri</h3>
 					</div><!-- /.box-header -->
@@ -64,7 +65,9 @@
 
 			<?php if ($f) { ?>
 
-				<div class="box box-success">
+				
+			<div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
 					<div class="box-header with-border">
 						<h3 class="box-title">Informasi Santri</h3>
 						<?php if ($f['n'] AND $f['r'] != NULL) { ?>
@@ -154,7 +157,9 @@
 				<div class="row">
 
 					<div class="col-md-5">
-    <div class="box box-primary">
+    
+	<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
         <div class="box-header with-border">
             <h3 class="box-title">Transaksi Terakhir</h3>
         </div><!-- /.box-header -->
@@ -191,7 +196,8 @@
 
 					
 					<div class="col-md-4">
-						<div class="box box-primary">
+					<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
 							<div class="box-header with-border">
 								<h3 class="box-title">Pembayaran</h3>
 							</div>
@@ -221,7 +227,8 @@
 					</div>
 
 					<div class="col-md-3">
-						<div class="box box-primary">
+					<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
 							<div class="box-header with-border">
 								<h3 class="box-title">Cetak Bukti Pembayaran</h3>
 							</div><!-- /.box-header -->
@@ -247,7 +254,8 @@
 
 
 				<!-- List Tagihan Bulanan --> 
-				<div class="box box-primary">
+				<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
 					<div class="box-header with-border">
 						<h3 class="box-title">Jenis Pembayaran</h3>
 					</div><!-- /.box-header -->

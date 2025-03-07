@@ -15,42 +15,44 @@
         <div class="row">
             <!-- Filter -->
             <div class="col-md-12">
-                <div class="box box-info">
+
+                <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                     <div class="box-header with-border">
                         <h3 class="box-title">Filter Data Izin Pulang Santri</h3>
                     </div>
                     <div class="box-body">
                         <?php echo form_open(current_url(), array('class' => 'form-horizontal', 'method' => 'get')) ?>
                         <div class="form-group">
-                        <label for="" class="col-sm-2 control-label">Tahun Pelajaran</label>
-    <div class="col-sm-2">
-        <select class="form-control" name="n" required>
-            <option value="">Pilih Tahun Pelajaran</option>
-            <?php foreach ($period as $row): ?>
-                <option 
-                    <?php 
-                        // Set otomatis tahun aktif jika belum ada filter yang dipilih
-                        echo (isset($f['n']) && $f['n'] == $row['period_id']) || (!isset($f['n']) && $row['period_status'] == 1) ? 'selected' : ''; 
-                    ?>
-                    value="<?php echo $row['period_id'] ?>">
-                    <?php echo $row['period_start'].'/'.$row['period_end'] ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+                            <label for="" class="col-sm-2 control-label">Tahun Pelajaran</label>
+                            <div class="col-sm-2">
+                                <select class="form-control" name="n" required>
+                                    <option value="">Pilih Tahun Pelajaran</option>
+                                    <?php foreach ($period as $row): ?>
+                                        <option
+                                            <?php
+                                            // Set otomatis tahun aktif jika belum ada filter yang dipilih
+                                            echo (isset($f['n']) && $f['n'] == $row['period_id']) || (!isset($f['n']) && $row['period_status'] == 1) ? 'selected' : '';
+                                            ?>
+                                            value="<?php echo $row['period_id'] ?>">
+                                            <?php echo $row['period_start'] . '/' . $row['period_end'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
 
-    <!-- Filter NIS Santri -->
-    <label for="" class="col-sm-2 control-label">Pilih Santri</label>
-    <div class="col-sm-3">
-        <select id="nisDropdown" class="form-control" name="r" required>
-            <option value="">Pilih Santri</option>
-            <?php foreach ($santri as $row): ?>
-                <option <?php echo (isset($f['r']) AND $f['r'] == $row['student_nis']) ? 'selected' : '' ?> value="<?php echo $row['student_nis']; ?>">
-                    <?php echo $row['student_nis'] . ' - ' . $row['student_full_name']; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+                            <!-- Filter NIS Santri -->
+                            <label for="" class="col-sm-2 control-label">Pilih Santri</label>
+                            <div class="col-sm-3">
+                                <select id="nisDropdown" class="form-control" name="r" required>
+                                    <option value="">Pilih Santri</option>
+                                    <?php foreach ($santri as $row): ?>
+                                        <option <?php echo (isset($f['r']) and $f['r'] == $row['student_nis']) ? 'selected' : '' ?> value="<?php echo $row['student_nis']; ?>">
+                                            <?php echo $row['student_nis'] . ' - ' . $row['student_full_name']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                             <div class="col-sm-1">
                                 <button class="btn btn-success" type="submit">Cari</button>
                             </div>
@@ -63,7 +65,8 @@
             <!-- Informasi Santri -->
             <?php if ($f) { ?>
                 <div class="col-md-12">
-                    <div class="box box-success">
+                <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                         <div class="box-header with-border">
                             <h3 class="box-title">Informasi Santri</h3>
                         </div>
@@ -74,8 +77,8 @@
                                         <td width="200">Tahun Ajaran</td>
                                         <td width="4">:</td>
                                         <?php foreach ($period as $row): ?>
-                                            <?php echo (isset($f['n']) && $f['n'] == $row['period_id']) ? 
-                                            '<td><strong>' . $row['period_start'] . '/' . $row['period_end'] . '</strong></td>' : ''; ?>
+                                            <?php echo (isset($f['n']) && $f['n'] == $row['period_id']) ?
+                                                '<td><strong>' . $row['period_start'] . '/' . $row['period_end'] . '</strong></td>' : ''; ?>
                                         <?php endforeach; ?>
                                     </tr>
                                     <tr>
@@ -111,20 +114,22 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-    <div class="box box-info">
-        <div class="box-header with-border">
-            <h3 class="box-title">Total Hari Izin Pulang Per Periode</h3>
-        </div>
-        <div class="box-body">
-            <strong>Total Hari Izin Pulang: </strong> <?php echo isset($total_days) ? $total_days : 0; ?>
-        </div>
-    </div>
-</div>
+					<div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Total Hari Izin Pulang Per Periode</h3>
+                        </div>
+                        <div class="box-body">
+                            <strong>Total Hari Izin Pulang: </strong> <?php echo isset($total_days) ? $total_days : 0; ?>
+                        </div>
+                    </div>
+                </div>
 
 
                 <!-- Riwayat Izin Pulang -->
                 <div class="col-md-12">
-                    <div class="box box-primary">
+
+					<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
                         <div class="box-header with-border">
                             <h3 class="box-title">Riwayat Izin Pulang</h3>
                             <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addPermissionModal">
@@ -145,17 +150,18 @@
                                     </thead>
                                     <tbody>
                                         <?php if (!empty($izin_pulang)): ?>
-                                            <?php $no = 1; foreach ($izin_pulang as $row): ?>
+                                            <?php $no = 1;
+                                            foreach ($izin_pulang as $row): ?>
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo $row['tanggal']; ?></td>
                                                     <td><?php echo $row['jumlah_hari']; ?></td>
                                                     <td><?php echo $row['alasan']; ?></td>
                                                     <td>
-                                                        <a href="<?php echo site_url('manage/izin_pulang/delete/' . $row['izin_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>" 
-                                                           class="btn btn-danger btn-xs"
-                                                           onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                                           <i class="fa fa-trash"></i> Hapus
+                                                        <a href="<?php echo site_url('manage/izin_pulang/delete/' . $row['izin_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
+                                                            class="btn btn-danger btn-xs"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                                            <i class="fa fa-trash"></i> Hapus
                                                         </a>
                                                     </td>
                                                 </tr>

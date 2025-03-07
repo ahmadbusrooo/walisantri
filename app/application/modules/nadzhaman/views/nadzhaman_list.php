@@ -15,7 +15,8 @@
         <div class="row">
             <!-- Filter -->
             <div class="col-md-12">
-                <div class="box box-info">
+            <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                     <div class="box-header with-border">
                         <h3 class="box-title">Filter Data Nadzhaman Santri</h3>
                     </div>
@@ -63,7 +64,8 @@
             <!-- Informasi Santri -->
             <?php if ($f): ?>
                 <div class="col-md-12">
-                    <div class="box box-success">
+                <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                         <div class="box-header with-border">
                             <h3 class="box-title">Informasi Santri</h3>
                         </div>
@@ -120,7 +122,8 @@
 
                 <!-- Total Hafalan -->
 <div class="col-md-12">
-    <div class="box box-success">
+<div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
         <div class="box-header with-border">
             <h3 class="box-title">Total Hafalan</h3>
         </div>
@@ -132,7 +135,9 @@
 
 <!-- Rekap Hafalan Bulanan -->
 <div class="col-md-12">
-    <div class="box box-primary">
+
+	<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
         <div class="box-header with-border">
             <h3 class="box-title">Rekap Hafalan Bulanan</h3>
         </div>
@@ -165,8 +170,8 @@
 
 <!-- Rekap Hafalan Tahunan -->
 <div class="col-md-12">
-    <div class="box box-info">
-        <div class="box-header with-border">
+<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+<div class="box-header with-border">
             <h3 class="box-title">Rekap Hafalan Tahunan</h3>
         </div>
         <div class="box-body">
@@ -199,7 +204,8 @@
 
                 <!-- Riwayat Nadzhaman -->
                 <div class="col-md-12">
-                    <div class="box box-primary">
+                <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
                         <div class="box-header with-border">
                             <h3 class="box-title">Riwayat Nadzhaman</h3>
                             <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addNadzhamanModal">

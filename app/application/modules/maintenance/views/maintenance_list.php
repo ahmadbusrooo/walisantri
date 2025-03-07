@@ -13,7 +13,8 @@
 	<section class="content">
 		<div class="row">
 			<div class="col-md-6">
-				<div class="box box-warning">
+			<div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+				
 					<div class="box-header">
 						<div class="col-md-6">
 							<a href="<?php echo site_url('manage/maintenance/backup') ?>">

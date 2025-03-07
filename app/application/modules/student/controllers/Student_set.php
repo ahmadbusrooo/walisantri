@@ -54,8 +54,8 @@ class Student_set extends CI_Controller
     // Ambil data santri dan total santri
     $data['student'] = $this->Student_model->get_filtered_students($params);
     $data['total_students'] = $this->Student_model->count_filtered_students($params);
-
-
+    $data['complete_count'] = $this->Student_model->count_complete_students();
+    $data['incomplete_count'] = $this->Student_model->count_incomplete_students();
     // Pagination
     $config['per_page'] = 100;
     $config['uri_segment'] = 4;
@@ -230,8 +230,8 @@ public function monitoring() {
 }
 
 
-  public function report()
-  {
+public function report()
+{
     $this->load->library('pagination');
 
     // Ambil parameter filter dari GET
@@ -241,17 +241,17 @@ public function monitoring() {
 
     // Filter berdasarkan NIS atau Nama
     if (isset($f['n']) && !empty($f['n'])) {
-      $params['student_search'] = $f['n'];
+        $params['student_search'] = $f['n'];
     }
 
     // Filter berdasarkan Kelas
     if (isset($f['class']) && !empty($f['class'])) {
-      $params['class_id'] = $f['class'];
+        $params['class_id'] = $f['class'];
     }
 
-    // Filter berdasarkan Status (Aktif/Tidak Aktif)
-    if (isset($f['status']) && ($f['status'] == '1' || $f['status'] == '0')) {
-      $params['student_status'] = $f['status'];
+    // Filter berdasarkan Komplek
+    if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {
+        $params['komplek_id'] = $f['komplek_id'];
     }
 
     // Ambil data santri dengan filter
@@ -260,13 +260,13 @@ public function monitoring() {
 
     // Data untuk dropdown filter
     $data['classes'] = $this->Student_model->get_all_classes();
+    $data['komplek'] = $this->Student_model->get_komplek(); // Tambahkan ini
 
     // Load tampilan laporan
     $data['title'] = 'Laporan Data Santri';
     $data['main'] = 'student/student_report';
     $this->load->view('manage/layout', $data);
-  }
-
+}
 
   public function print_report_pdf()
   {
@@ -284,7 +284,6 @@ public function monitoring() {
     }
 
     // Filter berdasarkan Kelas
-    // Filter berdasarkan Kelas
     $data['selected_class'] = 'Semua Kelas'; // Default jika tidak ada kelas yang dipilih
     if (isset($f['class']) && !empty($f['class'])) {
       $params['class_id'] = $f['class'];
@@ -297,11 +296,27 @@ public function monitoring() {
         $data['selected_class'] = $class['class_name'];
       }
     }
+    // Tambahkan filter komplek
+    $data['selected_komplek'] = 'Semua Komplek'; // Default value
+    if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {
+        $params['komplek_id'] = $f['komplek_id'];
+        
+        // Ambil data komplek
+        $komplek = $this->Student_model->get_komplek(array('komplek_id' => $f['komplek_id']));
+        if (!empty($komplek) && isset($komplek['komplek_name'])) {
+            $data['selected_komplek'] = $komplek['komplek_name'];
+        }
+    }
 
 
-    // Filter berdasarkan Status
-    if (isset($f['status']) && ($f['status'] == '1' || $f['status'] == '0')) {
-      $params['student_status'] = $f['status'];
+     if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {
+        $params['komplek_id'] = $f['komplek_id'];
+        
+        // Ambil data komplek
+        $komplek = $this->Student_model->get_komplek(array('id' => $f['komplek_id']));
+        if (!empty($komplek) && isset($komplek['komplek_name'])) {
+            $data['selected_komplek'] = $komplek['komplek_name'];
+        }
     }
 
     // Ambil data santri berdasarkan filter
@@ -313,6 +328,7 @@ public function monitoring() {
       redirect('manage/student');
       return;
     }
+    
 
     // Ambil data sekolah untuk header laporan
     $data['setting_school'] = $this->Setting_model->get(array('id' => SCHOOL_NAME));

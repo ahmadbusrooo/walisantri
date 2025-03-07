@@ -38,12 +38,16 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <select class="form-control" name="status" onchange="this.form.submit()">
-                                <option value="">-- Semua Status --</option>
-                                <option value="1" <?php echo (isset($f['status']) && $f['status'] == '1') ? 'selected' : ''; ?>>Aktif</option>
-                                <option value="0" <?php echo (isset($f['status']) && $f['status'] == '0') ? 'selected' : ''; ?>>Tidak Aktif</option>
-                            </select>
-                        </div>
+    <select class="form-control" name="komplek_id" onchange="this.form.submit()">
+        <option value="">-- Semua Komplek --</option>
+        <?php foreach ($komplek as $row): ?>
+            <option value="<?php echo $row['komplek_id']; ?>" 
+                <?php echo (isset($f['komplek_id']) && $f['komplek_id'] == $row['komplek_id']) ? 'selected' : ''; ?>>
+                <?php echo $row['komplek_name']; ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
                     </div>
                 </form>
             </div>

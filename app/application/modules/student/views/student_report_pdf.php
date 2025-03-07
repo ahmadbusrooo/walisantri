@@ -63,10 +63,11 @@
             <h4>Laporan Data Santri</h4>
         </div>
 
-        <!-- Info Kelas yang Dipilih -->
-        <div class="sub-header">
-            <p><strong>Kelas:</strong> <?= isset($selected_class) ? $selected_class : 'Semua Kelas' ?></p>
-        </div>
+    <!-- Info Kelas dan Komplek yang Dipilih -->
+<div class="sub-header">
+    <p><strong>Kelas:</strong> <?= isset($selected_class) ? $selected_class : 'Semua Kelas' ?></p>
+    <p><strong>Komplek:</strong> <?= isset($selected_komplek) ? $selected_komplek : 'Semua Komplek' ?></p>
+</div>
 
         <!-- Tabel Data Santri -->
         <table>

@@ -302,7 +302,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <!-- <div class="col-md-6">
         <div class="box box-info">
           <div class="box-header with-border">
             <h3 class="box-title">Grafik Keuangan</h3>
@@ -311,7 +311,7 @@
             <canvas id="financeChart"></canvas>
           </div>
         </div>
-      </div>
+      </div> -->
 
     </div>
     <div class="row">

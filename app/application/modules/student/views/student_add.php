@@ -96,12 +96,11 @@ if (isset($student)) {
 									</div>
 
 									<div class="form-group">
-										<label>Tanggal Lahir <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-										<div class="input-group date " data-date="" data-date-format="yyyy-mm-dd">
-											<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-											<input class="form-control" type="text" name="student_born_date" readonly="readonly" placeholder="Tanggal" value="<?php echo $inputDateValue; ?>">
-										</div>
-									</div>
+    <label>Tanggal Lahir <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+    <input class="form-control" type="text" name="student_born_date" 
+           placeholder="DD/MM/YYYY" value="<?php echo $inputDateValue; ?>"
+           pattern="\d{2}/\d{2}/\d{4}" title="Format: DD/MM/YYYY">
+</div>
 
 									<div class="form-group">
 										<label>Hobi</label>
@@ -273,6 +272,22 @@ if (isset($student)) {
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Inputmask -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Format otomatis DD/MM/YYYY
+    $('[name="student_born_date"]').inputmask({
+        mask: "99/99/9999",
+        placeholder: "DD/MM/YYYY",
+        separator: "/",
+        alias: "datetime",
+        inputFormat: "dd/mm/yyyy",
+        clearIncomplete: true
+    });
+});
+</script>
 <script>
 $(document).ready(function() {
     var komplek_id = $("#komplek_id").val(); // Ambil komplek_id dari dropdown saat halaman dimuat

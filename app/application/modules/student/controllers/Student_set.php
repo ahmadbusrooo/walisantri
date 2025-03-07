@@ -93,11 +93,14 @@ class Student_set extends CI_Controller
     }
     $this->form_validation->set_rules('student_full_name', 'Nama lengkap', 'trim|required|xss_clean');
     $this->form_validation->set_rules('student_gender', 'Jenis Kelamin', 'trim|required|xss_clean');
-    $this->form_validation->set_rules('student_born_date', 'Tanggal Lahir', 'trim|required|xss_clean');
+    $this->form_validation->set_rules(
+      'student_born_date', 
+      'Tanggal Lahir', 
+      'trim|required|xss_clean|callback_validate_date_format'
+  );  
     $this->form_validation->set_rules('class_class_id', 'Kelas', 'trim|required|xss_clean');
     $this->form_validation->set_rules('majors_majors_id', 'Kamar', 'trim|required|xss_clean');
     $this->form_validation->set_rules('student_name_of_father', 'Ayah Kandung', 'trim|required|xss_clean');
-    $this->form_validation->set_rules('student_parent_phone', 'Nomor Hp. Ortu', 'trim|required|xss_clean');
     $this->form_validation->set_error_delimiters('<div class="alert alert-danger"><button position="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
     $data['operation'] = is_null($id) ? 'Tambah' : 'Sunting';
 
@@ -120,7 +123,20 @@ class Student_set extends CI_Controller
       $params['student_last_update'] = date('Y-m-d H:i:s');
       $params['student_full_name'] = $this->input->post('student_full_name');
       $params['student_born_place'] = $this->input->post('student_born_place');
-      $params['student_born_date'] = $this->input->post('student_born_date');
+      $born_date = $this->input->post('student_born_date');
+    if (!empty($born_date)) {
+        $date = DateTime::createFromFormat('d/m/Y', $born_date);
+        
+        // Validasi tanggal
+        if (!$date) {
+            $this->session->set_flashdata('error', 'Format tanggal salah! Gunakan DD/MM/YYYY');
+            redirect('manage/student/add'); // Redirect kembali ke form
+        }
+        
+        $params['student_born_date'] = $date->format('Y-m-d'); // Format MySQL
+    } else {
+        $params['student_born_date'] = null; // Atur null jika kosong
+    }
       $params['student_address'] = $this->input->post('student_address');
       $params['student_name_of_mother'] = $this->input->post('student_name_of_mother');
       $params['student_name_of_father'] = $this->input->post('student_name_of_father');
@@ -158,11 +174,13 @@ class Student_set extends CI_Controller
       if (!is_null($id)) {
         $object = $this->Student_model->get(array('id' => $id));
         if ($object == NULL) {
-          redirect('manage/student');
+            redirect('manage/student');
         } else {
-          $data['student'] = $object;
+            // 🔥 Konversi format tanggal dari database (Y-m-d) ke dd/mm/YYYY
+            $object['student_born_date'] = date('d/m/Y', strtotime($object['student_born_date']));
+            $data['student'] = $object;
         }
-      }
+    }
       $data['setting_level'] = $this->Setting_model->get(array('id' => 7));
       $data['ngapp'] = 'ng-app="classApp"';
       $data['class'] = $this->Student_model->get_class();
@@ -174,6 +192,17 @@ class Student_set extends CI_Controller
       $this->load->view('manage/layout', $data);
     }
   }
+
+
+  public function validate_date_format($date) {
+    $d = DateTime::createFromFormat('d/m/Y', $date);
+    if ($d && $d->format('d/m/Y') === $date) {
+        return TRUE;
+    } else {
+        $this->form_validation->set_message('validate_date_format', 'Format tanggal harus DD/MM/YYYY');
+        return FALSE;
+    }
+}
 // Student_set.php
 public function monitoring() {
     $params = array();

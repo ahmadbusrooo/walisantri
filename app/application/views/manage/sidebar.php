@@ -35,7 +35,7 @@
       </li>
 
 <!-- Sekretaris -->
-<li class="treeview <?php echo (in_array($this->uri->segment(2), ['class', 'majors', 'period', 'information', 'setting', 'month', 'users', 'maintenance', 'student_print','report','monitoring']) || 
+<li class="treeview <?php echo (in_array($this->uri->segment(2), ['class', 'majors', 'period', 'information', 'setting', 'month', 'users', 'maintenance', 'student_print','student/report','student/monitoring']) || 
         ($this->uri->segment(2) == 'student' && $this->uri->segment(3) == '') || 
         in_array($this->uri->segment(1), ['ustadz', 'kitab', 'pengurus', 'komplek'])) ? 'active' : ''; ?>">
   <a href="#">

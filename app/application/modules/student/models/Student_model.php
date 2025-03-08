@@ -663,31 +663,32 @@ public function get_santri_masuk_keluar($month, $year) {
 
     public function count_complete_students() {
         return $this->db
-            ->where('student_status', 1) // Tambahkan filter aktif
-            ->where('student_nis IS NOT NULL')
-            ->where('student_full_name IS NOT NULL')
-            ->where('student_parent_phone IS NOT NULL')
-            ->where('student_address IS NOT NULL')
-            ->where('student_name_of_mother IS NOT NULL')
-            ->where('student_name_of_father IS NOT NULL')
-            ->where('student_img IS NOT NULL')
+            ->where('student_status', 1)
+            ->where('student_nis IS NOT NULL AND student_nis != ""')
+            ->where('student_full_name IS NOT NULL AND student_full_name != ""')
+            ->where('student_parent_phone IS NOT NULL AND student_parent_phone != ""')
+            ->where('student_address IS NOT NULL AND student_address != ""')
+            ->where('student_name_of_mother IS NOT NULL AND student_name_of_mother != ""')
+            ->where('student_name_of_father IS NOT NULL AND student_name_of_father != ""')
+            ->where('student_img IS NOT NULL AND student_img != ""')
             ->count_all_results('student');
     }
     
     public function count_incomplete_students() {
         return $this->db
-            ->where('student_status', 1) // Tambahkan filter aktif
+            ->where('student_status', 1)
             ->group_start()
-                ->where('student_nis IS NULL')
-                ->or_where('student_full_name IS NULL')
-                ->or_where('student_parent_phone IS NULL')
-                ->or_where('student_address IS NULL')
-                ->or_where('student_name_of_mother IS NULL')
-                ->or_where('student_name_of_father IS NULL')
-                ->or_where('student_img IS NULL')
+                ->where('student_nis IS NULL OR student_nis = ""')
+                ->or_where('student_full_name IS NULL OR student_full_name = ""')
+                ->or_where('student_parent_phone IS NULL OR student_parent_phone = ""')
+                ->or_where('student_address IS NULL OR student_address = ""')
+                ->or_where('student_name_of_mother IS NULL OR student_name_of_mother = ""')
+                ->or_where('student_name_of_father IS NULL OR student_name_of_father = ""')
+                ->or_where('student_img IS NULL OR student_img = ""')
             ->group_end()
             ->count_all_results('student');
     }
+    
 
     function delete($id) {
         $this->db->where('student_id', $id);

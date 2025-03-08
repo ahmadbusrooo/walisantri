@@ -40,7 +40,7 @@
                                 <tr>
                                     <td><?php echo $no++; ?></td>
                                     <td><?php echo $row['nama_kitab']; ?></td>
-                                    <td><?php echo $row['target']; ?> Bait</td>
+                                    <td><?php echo $row['target']; ?></td>
                                     <td>
                                         <button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editKitabModal<?php echo $row['kitab_id']; ?>">
                                             <i class="fa fa-edit"></i> 
@@ -69,7 +69,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Target Hafalan</label>
-                                                    <input type="number" name="target" class="form-control" value="<?php echo $row['target']; ?>" required>
+                                                    <input type="text" name="target" class="form-control" value="<?php echo $row['target']; ?>" required>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -111,7 +111,7 @@
                 </div>
                 <div class="form-group">
                     <label>Target Hafalan</label>
-                    <input type="number" name="target" class="form-control" placeholder="Contoh: 100" required>
+                    <input type="text" name="target" class="form-control" placeholder="Contoh: 100" required>
                 </div>
             </div>
             <div class="modal-footer">

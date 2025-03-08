@@ -192,7 +192,8 @@
            value="<?php echo date('Y-m-d'); ?>" required>
 </td>
 
-                                <td><input type="number" name="students[<?php echo $index; ?>][jumlah_hafalan]" class="form-control" required></td>
+<td><input type="text" name="students[<?php echo $index; ?>][jumlah_hafalan]" class="form-control" required></td>
+
                                 <td><input type="text" name="students[<?php echo $index; ?>][keterangan]" class="form-control"></td>
                             </tr>
                         <?php endforeach; ?>

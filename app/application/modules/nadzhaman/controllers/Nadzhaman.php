@@ -21,7 +21,7 @@ class Nadzhaman extends CI_Controller
 
     public function manage_kitab_class()
     {
-        $data['title'] = 'Kelola Kitab per Kelas';
+        $data['title'] = 'Seting Kitab per Kelas';
         $data['classes'] = $this->Student_model->get_class();
         $data['periods'] = $this->Period_model->get();
         $data['kitabs'] = $this->Kitab_model->get();
@@ -57,7 +57,7 @@ class Nadzhaman extends CI_Controller
                 // Cek duplikasi di input dan database
                 foreach ($kitab_ids as $kitab_id) {
                     // Jika kitab sudah ada di database
-                    if (in_array($kitabab_id, $existing_kitab_ids)) {
+                    if (in_array($kitab_id, $existing_kitab_ids)) { // <-- PERBAIKI TYPO DI SINI
                         $kitab_info = $this->Kitab_model->get(['kitab_id' => $kitab_id]);
                         $duplicate_kitab[] = $kitab_info['nama_kitab'];
                     }
@@ -270,7 +270,7 @@ class Nadzhaman extends CI_Controller
             $data['yearly_hafalan'] = $this->Nadzhaman_model->get_yearly_hafalan($student_id);
         }
 
-        $data['title'] = 'Data Nadzhaman Santri';
+        $data['title'] = 'Data Hafalan Santri';
         $data['main'] = 'nadzhaman/nadzhaman_list';
         $this->load->view('manage/layout', $data);
     }

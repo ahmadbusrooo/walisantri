@@ -117,27 +117,28 @@ class Nadzhaman_model extends CI_Model
         return $this->db->count_all_results('nadzhaman');
     }
 
-    public function update_status($student_id, $kitab_id, $period_id)
-{
-    $this->db->select_sum('jumlah_hafalan');
-    $this->db->where('student_id', $student_id);
-    $this->db->where('kitab_id', $kitab_id);
-    $this->db->where('period_id', $period_id);
-    $total_hafalan = $this->db->get('nadzhaman')->row()->jumlah_hafalan;
-
-    // Ambil target hafalan kitab
-    $this->db->select('target');
-    $this->db->where('kitab_id', $kitab_id);
-    $target_hafalan = $this->db->get('kitab')->row()->target;
-
-    // Update status
-    $status = ($total_hafalan >= $target_hafalan) ? 'Khatam' : 'Belum Khatam';
-    $this->db->where('student_id', $student_id);
-    $this->db->where('kitab_id', $kitab_id);
-    $this->db->where('period_id', $period_id);
-    $this->db->update('nadzhaman', ['status' => $status]);
-}
-
+    public function update_status($student_id, $kitab_id, $period_id) {
+        $this->db->select('target');
+        $kitab = $this->db->get_where('kitab', ['kitab_id' => $kitab_id])->row_array();
+        
+        if (is_numeric($kitab['target'])) {
+            // Ambil total hafalan numerik saja
+            $this->db->select_sum("CAST(jumlah_hafalan AS UNSIGNED)", 'total');
+            $total = $this->db->get_where('nadzhaman', [
+                'student_id' => $student_id,
+                'kitab_id' => $kitab_id,
+                'period_id' => $period_id,
+                'REGEXP_REPLACE(jumlah_hafalan, "[^0-9]", "") != ' => '' // Hanya ambil yang mengandung angka
+            ])->row()->total;
+    
+            $status = ($total >= $kitab['target']) ? 'Khatam' : 'Belum Khatam';
+        } else {
+            $status = 'Belum Khatam';
+        }
+    
+        $this->db->where(['student_id' => $student_id, 'kitab_id' => $kitab_id, 'period_id' => $period_id]);
+        $this->db->update('nadzhaman', ['status' => $status]);
+    }
 
     public function check_and_update_status($student_id, $kitab_id, $period_id) {
         // Dapatkan target hafalan dari kitab
@@ -175,22 +176,24 @@ class Nadzhaman_model extends CI_Model
      * @param int $kitab_id
      * @return void
      */
-    public function check_target($student_id, $kitab_id)
-    {
-        // Get total hafalan and target
-        $this->db->select('SUM(nadzhaman.jumlah_hafalan) AS total_hafalan, kitab.target');
-        $this->db->from('nadzhaman');
-        $this->db->join('kitab', 'kitab.kitab_id = nadzhaman.kitab_id');
-        $this->db->where('nadzhaman.student_id', $student_id);
-        $this->db->where('nadzhaman.kitab_id', $kitab_id);
-        $result = $this->db->get()->row_array();
-
-        // Check if target is reached
-        if ($result['total_hafalan'] >= $result['target']) {
-            $this->db->where('student_id', $student_id);
-            $this->db->where('kitab_id', $kitab_id);
-            $this->db->update('nadzhaman', ['status' => 'Khatam']);
+    public function check_target($student_id, $kitab_id) {
+        $this->db->select('target');
+        $kitab = $this->db->get_where('kitab', ['kitab_id' => $kitab_id])->row_array();
+        
+        // Jika target berupa angka, lakukan pengecekan
+        if (is_numeric($kitab['target'])) {
+            $this->db->select_sum('jumlah_hafalan');
+            $total = $this->db->get_where('nadzhaman', [
+                'student_id' => $student_id,
+                'kitab_id' => $kitab_id
+            ])->row_array();
+    
+            if ($total['jumlah_hafalan'] >= $kitab['target']) {
+                $this->db->where(['student_id' => $student_id, 'kitab_id' => $kitab_id]);
+                $this->db->update('nadzhaman', ['status' => 'Khatam']);
+            }
         }
+        // Jika target berupa teks, tidak ada pengecekan otomatis
     }
 
 
@@ -200,6 +203,7 @@ class Nadzhaman_model extends CI_Model
     $this->db->from('nadzhaman');
     $this->db->where('student_id', $student_id);
     $this->db->where('period_id', $period_id);
+    $this->db->where('REGEXP_REPLACE(jumlah_hafalan, "[^0-9]", "") != ', ''); 
     $result = $this->db->get()->row_array();
     return isset($result['total_hafalan']) ? $result['total_hafalan'] : 0;
 }
@@ -211,6 +215,7 @@ public function get_monthly_hafalan($student_id, $period_id)
     $this->db->from('nadzhaman');
     $this->db->where('student_id', $student_id);
     $this->db->where('period_id', $period_id);
+    $this->db->where('REGEXP_REPLACE(jumlah_hafalan, "[^0-9]", "") != ', ''); 
     $this->db->group_by('MONTH(tanggal)');
     $this->db->order_by('MONTH(tanggal)', 'ASC');
     return $this->db->get()->result_array();
@@ -220,6 +225,7 @@ public function get_yearly_hafalan($student_id)
     $this->db->select('YEAR(tanggal) as tahun, SUM(jumlah_hafalan) as total_hafalan');
     $this->db->from('nadzhaman');
     $this->db->where('student_id', $student_id);
+    $this->db->where('REGEXP_REPLACE(jumlah_hafalan, "[^0-9]", "") != ', '');
     $this->db->group_by('YEAR(tanggal)');
     $this->db->order_by('YEAR(tanggal)', 'ASC');
     return $this->db->get()->result_array();

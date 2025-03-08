@@ -168,7 +168,7 @@
         <!-- Nadzhaman -->
         <li class="treeview <?php echo ($this->uri->segment(1) == 'nadzhaman') ? 'active' : ''; ?>">
             <a href="#">
-                <i class="fa fa-book"></i> <span>Nadzhaman</span>
+                <i class="fa fa-book"></i> <span>Hafalan</span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                 </span>
@@ -176,17 +176,17 @@
             <ul class="treeview-menu">
                 <li class="<?php echo ($this->uri->segment(1) == 'nadzhaman' && $this->uri->segment(2) == '') ? 'active' : ''; ?>">
                     <a href="<?php echo site_url('nadzhaman'); ?>">
-                        <i class="fa fa-folder-open"></i> Data Nadzhaman
+                        <i class="fa fa-folder-open"></i> Cek Hafalan Santri
                     </a>
                 </li>
                 <li class="<?php echo ($this->uri->segment(2) == 'manage_kitab_class') ? 'active' : ''; ?>">
                     <a href="<?php echo site_url('nadzhaman/manage_kitab_class'); ?>">
-                        <i class="fa fa-book-reader"></i> Kelola Kitab per Kelas
+                        <i class="fa fa-book-reader"></i> Seting Kitab per Kelas
                     </a>
                 </li>
                 <li class="<?php echo ($this->uri->segment(2) == 'filter_nadzhaman') ? 'active' : ''; ?>">
                     <a href="<?php echo site_url('nadzhaman/filter_nadzhaman'); ?>">
-                        <i class="fa fa-filter"></i> Filter Nadzhaman
+                        <i class="fa fa-filter"></i> Tambah Hafalan Santri
                     </a>
                 </li>
             </ul>

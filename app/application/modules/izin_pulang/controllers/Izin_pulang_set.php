@@ -76,11 +76,11 @@ class Izin_pulang_set extends MX_Controller
             redirect('manage/izin_pulang?n=' . $data['period_id'] . '&r=' . $student['student_nis']);
         }
     }
-    public function search_santri() {
-        $keyword = $this->input->get('keyword'); // Ambil kata kunci
-        $santri = $this->Student_model->search_santri($keyword); // Panggil model
-    
-        // Format data untuk JSON (digunakan oleh Select2)
+    public function search_santri()
+    {
+        $keyword = $this->input->get('keyword');
+        $santri = $this->Student_model->search_santri($keyword);
+
         $results = [];
         foreach ($santri as $row) {
             $results[] = [
@@ -88,10 +88,9 @@ class Izin_pulang_set extends MX_Controller
                 'text' => $row['student_nis'] . ' - ' . $row['student_full_name']
             ];
         }
-    
-        echo json_encode($results); // Kirim data dalam format JSON
+
+        echo json_encode($results);
     }
-    
     
     // Hapus izin pulang
     public function delete($id)

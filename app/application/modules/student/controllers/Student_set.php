@@ -62,6 +62,8 @@ class Student_set extends CI_Controller
     $config['base_url'] = site_url('manage/student/index');
     $config['suffix'] = '?' . http_build_query($_GET, '', "&");
     $config['total_rows'] = count($this->Student_model->get_filtered_students($paramsPage));
+    // var_dump($this->Student_model->get_filtered_students($paramsPage));
+    // exit;
 
     $this->pagination->initialize($config);
 
@@ -74,6 +76,54 @@ class Student_set extends CI_Controller
     $this->load->view('manage/layout', $data);
   }
   
+
+  public function view_only($offset = NULL)
+{
+    $this->load->library('pagination');
+    
+    // Ambil parameter filter
+    $f = $this->input->get(NULL, TRUE);
+    $data['f'] = $f;
+
+    // Filter parameter
+    $params = array();
+    if (isset($f['n']) && !empty($f['n'])) {
+        $params['student_search'] = $f['n'];
+    }
+    if (isset($f['class']) && !empty($f['class'])) {
+        $params['class_id'] = $f['class'];
+    }
+    if (!empty($f['komplek_id'])) {
+        $params['komplek_id'] = $f['komplek_id'];
+    }
+    if (isset($f['kamar']) && !empty($f['kamar'])) {
+        $params['majors_id'] = $f['kamar'];
+    }
+
+    // Konfigurasi data
+    $params['limit'] = 100;
+    $params['offset'] = $offset;
+    $params['student_status'] = 1; // Hanya aktif
+    
+    $data['student'] = $this->Student_model->get_filtered_students($params);
+    
+    // Pagination
+    $config['per_page'] = 100;
+    $config['uri_segment'] = 4;
+    $config['base_url'] = site_url('manage/student/view_only');
+    $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+    $config['total_rows'] = count($this->Student_model->get_filtered_students($params));
+    $this->pagination->initialize($config);
+
+    // Data untuk view
+    $data['class'] = $this->Student_model->get_all_classes();
+    $data['majors'] = $this->Student_model->get_all_majors();
+    $data['komplek'] = $this->Student_model->get_komplek();
+    $data['title'] = 'View Data Santri';
+    $data['main'] = 'student/student_list_view'; // File view baru
+    
+    $this->load->view('manage/layout', $data); // Layout khusus view-only
+}
 
   // Add User and Update
   public function add($id = NULL)

@@ -37,7 +37,7 @@
 <!-- Sekretaris -->
 <li class="treeview <?php echo (in_array($this->uri->segment(2), ['class', 'majors', 'period', 'information', 'setting', 'month', 'users', 'maintenance', 'student_print','student/report','student/monitoring']) || 
         ($this->uri->segment(2) == 'student' && $this->uri->segment(3) == '') || 
-        in_array($this->uri->segment(1), ['ustadz', 'kitab', 'pengurus', 'komplek'])) ? 'active' : ''; ?>">
+        in_array($this->uri->segment(1), ['ustadz', 'pengurus', 'komplek'])) ? 'active' : ''; ?>">
   <a href="#">
     <i class="fa fa-cogs"></i> <span>Sekretaris</span>
     <span class="pull-right-container">
@@ -65,9 +65,6 @@
     </li>
     <li class="<?php echo ($this->uri->segment(1) == 'pengurus') ? 'active' : ''; ?>">
       <a href="<?php echo site_url('pengurus'); ?>"><i class="fa fa-users"></i> Pengurus</a>
-    </li>
-    <li class="<?php echo ($this->uri->segment(1) == 'kitab') ? 'active' : ''; ?>">
-      <a href="<?php echo site_url('kitab'); ?>"><i class="fa fa-book"></i> Data Kitab</a>
     </li>
     <li class="<?php echo ($this->uri->segment(2) == 'information') ? 'active' : ''; ?>">
       <a href="<?php echo site_url('manage/information'); ?>"><i class="fa fa-bullhorn"></i> Informasi</a>
@@ -156,15 +153,18 @@
 <?php } ?>
 
 <!-- Pendidikan -->
-<li class="treeview <?php echo ($this->uri->segment(1) == 'nadzhaman' || ($this->uri->segment(2) == 'student' && in_array($this->uri->segment(3), ['pass', 'upgrade']))) ? 'active' : ''; ?>">
+<li class="treeview <?php echo ($this->uri->segment(1) == ['nadzhaman', 'kitab']|| ($this->uri->segment(2) == 'student' && in_array($this->uri->segment(3), ['pass', 'upgrade']))) ? 'active' : ''; ?>">
     <a href="#">
         <i class="fa fa-graduation-cap"></i> <span>Pendidikan</span>
         <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
         </span>
     </a>
+    
     <ul class="treeview-menu">
-        
+    <li class="<?php echo ($this->uri->segment(1) == 'kitab') ? 'active' : ''; ?>">
+      <a href="<?php echo site_url('kitab'); ?>"><i class="fa fa-book"></i> Data Kitab</a>
+    </li>
         <!-- Nadzhaman -->
         <li class="treeview <?php echo ($this->uri->segment(1) == 'nadzhaman') ? 'active' : ''; ?>">
             <a href="#">

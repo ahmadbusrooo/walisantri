@@ -45,7 +45,7 @@
 										?>
 										<tr>
 											<td><?php echo $i; ?></td>
-											<td><?php echo $row['period_start'].'/'.$row['period_end'] ?></td>
+											<td><?php echo $row['period_start'] . ' - ' . $row['period_end'] ?></td>
 											<td><?php echo ($row['period_status'] == 1) ? 'Aktif' : 'Tidak Aktif' ?></td>
 											<td>
 												<a href="<?php echo site_url('manage/period/edit/' . $row['period_id']) ?>" class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a>

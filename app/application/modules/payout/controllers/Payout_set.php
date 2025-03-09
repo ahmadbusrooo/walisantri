@@ -495,7 +495,11 @@ if (!empty($data['in'])) {
       $failure_count = 0;
       $paid_months = []; 
       $student_id = null;
-  
+
+      $api_url = $this->Setting_model->get(array('id' => 8))['setting_value']; // URL Gateway WA
+      $api_token = $this->Setting_model->get(array('id' => 9))['setting_value']; // API Key WA
+      $activated_wa = $this->Setting_model->get(array('id' => 10))['setting_value']; // Aktivasi WA
+      
       foreach ($post_data as $payment) {
           $payment_data = json_decode($payment, true);
   
@@ -550,6 +554,8 @@ if (!empty($data['in'])) {
               $failure_count++;
           }
       }
+
+      
   
       // Jika pembayaran sukses, ambil FCM token dari database dan kirim notifikasi
       if ($success_count > 0 && $student_id) {
@@ -617,6 +623,59 @@ if (!empty($data['in'])) {
           } else {
               log_message('error', "Tidak ada token FCM ditemukan untuk student_id: $student_id");
           }
+      }
+
+            // Jika WA diaktifkan dan pembayaran sukses
+      if ($activated_wa == 'Y' && $success_count > 0 && !empty($api_url) && !empty($api_token)) {
+        // Format nomor HP wali santri
+        $phone_number = preg_replace('/[^0-9]/', '', $student['student_parent_phone']);
+        if (strpos($phone_number, '62') !== 0) {
+            $phone_number = '62' . substr($phone_number, 1);
+        }
+
+        // Buat pesan WA
+        $wa_message = "*Assalamu'alaikum* Bapak/Ibu ".$student['student_name_of_father'].",\n\n";
+        $wa_message .= "Pembayaran untuk ".$student['student_full_name']." telah *berhasil diterima:*\n\n";
+        
+        foreach ($paid_months as $payment_name => $months) {
+            $wa_message .= $payment_name.":\n";
+            foreach ($months as $month) {
+                $wa_message .= "- ".$month['month_name'].": Rp ".number_format($month['amount'], 0, ',', '.')."\n";
+            }
+            $wa_message .= "\n";
+        }
+        
+        $wa_message .= "*Terima kasih atas pembayarannya.* \n\n_Ini adalah pesan otomatis, tidak perlu dibalas_";
+
+        // Kirim via API Gateway WA
+        $postData = [
+            "data" => [
+                [
+                    'phone' => $phone_number,
+                    'message' => $wa_message
+                ]
+            ]
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: ".$api_token,
+            "Content-Type: application/json"
+        ]);
+        $result = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
+        // Log hasil pengiriman
+        if (curl_errno($ch) || $http_code != 200) {
+            log_message('error', 'Gagal mengirim WA: '.$result);
+        } else {
+            log_message('info', 'WA terkirim ke '.$phone_number);
+        }
+        curl_close($ch);
       }
   
       // Kirim feedback ke pengguna

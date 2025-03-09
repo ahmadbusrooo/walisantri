@@ -50,9 +50,8 @@ class Period_set extends CI_Controller {
 // Add period and Update
   public function add($id = NULL) {
     $this->load->library('form_validation');
-    $this->form_validation->set_rules('period_start', 'Tahun Ajaran', 'trim|required|xss_clean');
-    $this->form_validation->set_rules('period_status', 'Status', 'trim|required|xss_clean');
-
+    $this->form_validation->set_rules('period_start', 'Tahun Awal', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('period_end', 'Tahun Akhir', 'trim|required|xss_clean');
     $this->form_validation->set_error_delimiters('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
     $data['operation'] = is_null($id) ? 'Tambah' : 'Sunting';
 
@@ -63,7 +62,7 @@ class Period_set extends CI_Controller {
       }
 
       $params['period_start'] = $this->input->post('period_start');
-      $params['period_end'] = $this->input->post('period_end');
+      $params['period_end'] = $this->input->post('period_end'); 
       $params['period_status'] = $this->input->post('period_status');
 
       $non = array(

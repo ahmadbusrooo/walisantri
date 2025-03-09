@@ -43,16 +43,16 @@ if (isset($period)) {
 						<?php } ?>
 
 						<div class="form-group">
-							<label>Tahun Pelajaran *</label>
-							<div class="row">
-								<div class="col-sm-6 col-md-6">
-									<input type="text" name="period_start" readonly="" class="form-control years" onchange="getYear(this.value)" placeholder="Tahun Awal">
-								</div>
-								<div class="col-sm-6 col-md-6">
-									<input type="text" class="form-control" readonly="" name="period_end" id="YearEnd" value="<?php echo $inputEndValue ?>" placeholder="Tahun Akhir">
-								</div>
-							</div>
-						</div>
+    <label>Tahun Pelajaran *</label>
+    <div class="row">
+        <div class="col-sm-6 col-md-6">
+            <input type="text" name="period_start" class="form-control" placeholder="Tahun Awal" value="<?php echo $inputStartValue ?>">
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <input type="text" name="period_end" class="form-control" placeholder="Tahun Akhir" value="<?php echo $inputEndValue ?>">
+        </div>
+    </div>
+</div>
 
 						<div class="form-group">
 							<label>Keterangan</label>
@@ -87,16 +87,3 @@ if (isset($period)) {
 	</section>
 </div>
 
-<script>
-	function getYear(value) {
-
-		var yearsend = parseInt(value) + 1;
-
-		$("#YearEnd").val(yearsend);
-
-	}
-
-</script>
-<!-- <script>
-      $(".input-group.date").datepicker({autoclose: true, todayHighlight: true});
-    </script> -->

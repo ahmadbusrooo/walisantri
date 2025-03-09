@@ -45,7 +45,9 @@ class Majors_set extends CI_Controller
     $config['uri_segment'] = 4;
     $config['base_url'] = site_url('manage/majors/index');
     $config['suffix'] = '?' . http_build_query($_GET, '', "&");
-    $config['total_rows'] = count($this->Student_model->get_class($paramsPage));
+    $config['total_rows'] = count($this->Student_model->get_majors($paramsPage));
+//     var_dump($this->Student_model->get_majors($paramsPage));
+// exit;
     $this->pagination->initialize($config);
     $data['komplek'] = $this->Student_model->get_komplek(); // Ambil daftar komplek
     $data['title'] = 'Kamar';

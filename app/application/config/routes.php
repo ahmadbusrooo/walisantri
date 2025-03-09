@@ -76,6 +76,7 @@ $route['student/(:any)/(:any)/(:any)'] = "$1/$1_student/$3_$2";
 $route['student'] = "dashboard/Dashboard_student";
 $route['manage/student/report'] = 'student_set/report';
 $route['manage/student/monitoring'] = 'student_set/monitoring';
+$route['manage/student_views'] = 'student_set/views_only';
 
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';

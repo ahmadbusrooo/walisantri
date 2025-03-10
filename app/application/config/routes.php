@@ -98,6 +98,11 @@ $route['manage/pelanggaran/delete/(:num)'] = 'pelanggaran/Pelanggaran_set/delete
 $route['manage/absen_mengaji'] = 'manage/absen_mengaji_set';
 $route['manage/absen_mengaji/add'] = 'manage/absen_mengaji_set/add';
 $route['manage/absen_mengaji/delete/(:num)'] = 'manage/absen_mengaji_set/delete/$1';
+
+$route['manage/absen_jamaah'] = 'manage/absen_jamaah_set';
+$route['manage/absen_jamaah/add'] = 'manage/absen_jamaah_set/add';
+$route['manage/absen_jamaah/delete/(:num)'] = 'manage/absen_jamaah_set/delete/$1';
+
 $route['pelanggaran_student'] = 'pelanggaran/pelanggaran_student';
 $route['health_student'] = 'health/health_student/index';
 $route['nadzhaman_student'] = 'nadzhaman/nadzhaman_student/index';

@@ -166,7 +166,7 @@
       <a href="<?php echo site_url('kitab'); ?>"><i class="fa fa-book"></i> Data Kitab</a>
     </li>
     <li class="<?php echo ($this->uri->segment(1) == 'pelanggaran') ? 'active' : ''; ?>">
-      <a href="<?php echo site_url('manage/absen_mengaji'); ?>"><i class="fa fa-exclamation-triangle"></i> Pelanggaran</a>
+      <a href="<?php echo site_url('manage/absen_mengaji'); ?>"><i class="fa fa-exclamation-triangle"></i> Pelanggaran Mengaji</a>
     </li>
         <!-- Nadzhaman -->
         <li class="treeview <?php echo ($this->uri->segment(1) == 'nadzhaman') ? 'active' : ''; ?>">
@@ -221,7 +221,7 @@
 </li>
 
       <!-- Keamanan -->
-      <li class="treeview <?php echo in_array($this->uri->segment(2), ['pelanggaran', 'izin_pulang']) ? 'active' : '' ?>">
+      <li class="treeview <?php echo in_array($this->uri->segment(2), ['pelanggaran', 'izin_pulang', 'absen_jamaah']) ? 'active' : '' ?>">
         <a href="#">
           <i class="fa fa-shield-alt"></i> <span>Keamanan</span>
           <span class="pull-right-container">
@@ -229,8 +229,11 @@
           </span>
         </a>
         <ul class="treeview-menu">
-          <li class="<?php echo ($this->uri->segment(2) == 'pelanggaran') ? 'active' : '' ?>">
-            <a href="<?php echo site_url('manage/pelanggaran'); ?>"><i class="fa fa-exclamation-triangle"></i> Pelanggaran</a>
+        <li class="<?php echo ($this->uri->segment(2) == 'pelanggaran') ? 'active' : '' ?>">
+            <a href="<?php echo site_url('manage/pelanggaran'); ?>"><i class="fa fa-exclamation-triangle"></i> Pelanggaran Harian</a>
+          </li>
+          <li class="<?php echo ($this->uri->segment(2) == 'absen_jamaah') ? 'active' : '' ?>">
+            <a href="<?php echo site_url('manage/absen_jamaah'); ?>"><i class="fa fa-exclamation-triangle"></i> Pelanggaran Jama'ah</a>
           </li>
           <li class="<?php echo ($this->uri->segment(2) == 'izin_pulang') ? 'active' : '' ?>">
             <a href="<?php echo site_url('manage/izin_pulang'); ?>"><i class="fa fa-calendar-check"></i> Izin Pulang</a>

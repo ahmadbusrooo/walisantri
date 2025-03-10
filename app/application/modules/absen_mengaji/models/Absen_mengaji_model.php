@@ -37,4 +37,15 @@ public function get_by_id($id) {
         return (!empty($result->jumlah_absen)) ? $result->jumlah_absen : 0;
     }
     
+    public function get_top_absent($period_id, $limit = 10) {
+        $this->db->select('s.student_nis, s.student_full_name, c.class_name, SUM(a.jumlah_absen) as total');
+        $this->db->from('absen_mengaji a');
+        $this->db->join('student s', 'a.student_id = s.student_id');
+        $this->db->join('class c', 's.class_class_id = c.class_id', 'left'); // Sesuaikan disini
+        $this->db->where('a.period_id', $period_id);
+        $this->db->group_by('a.student_id');
+        $this->db->order_by('total', 'DESC');
+        $this->db->limit($limit);
+        return $this->db->get()->result_array();
+    }
 }

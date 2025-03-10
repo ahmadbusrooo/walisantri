@@ -31,7 +31,7 @@ $bulan = array(
         <div class="col-md-12">
                 <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Filter Data Pelanggaran Santri</h3>
+                        <h3 class="box-title">Filter Data Absen Santri</h3>
                     </div>
                     <div class="box-body">
                         <?php echo form_open(current_url(), array('class' => 'form-horizontal', 'method' => 'get')) ?>
@@ -73,17 +73,122 @@ $bulan = array(
                     </div>
                 </div>
             </div>
-
+            <?php if (empty($f['n'])): // Tampilkan hanya jika belum ada filter ?>
+<div class="col-md-12">
+    <div class="box box-danger" style="border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+        <div class="box-header with-border">
+            <h3 class="box-title"> Top 10 Pelanggaran Absen Mengaji Periode <?php echo $active_period['period_start'] ?>-<?php echo $active_period['period_end'] ?></h3>
+        </div>
+        <div class="box-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="danger">
+                        <th width="30">Rank</th>
+                        <th>Nama Santri</th>
+                        <th>Kelas</th>
+                        <th>Total Alfa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($top_absent)): ?>
+                        <?php $rank = 1; foreach ($top_absent as $row): ?>
+                        <tr>
+                            <td><?php echo $rank++; ?></td>
+                            <td><?php echo $row['student_full_name'] ?></td>
+                            <td><?php echo $row['class_name'] ?></td>
+                            <td><span class="badge bg-red"><?php echo $row['total'] ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="4" class="text-center">Tidak ada data absen</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            <p class="text-muted text-sm">* Data peringkat berdasarkan total ketidakhadiran mengaji pada periode aktif</p>
+        </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
             <?php if (!empty($f['n']) && !empty($f['r'])): ?>
                 <div class="col-md-12">
-                    <div class="box box-success">
-                        <div class="box-header">
-                            <h3 class="box-title">
-                                Total Absen: <?php echo $total_absen; ?>
-                                <button class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#addModal">
-                                    <i class="fa fa-plus"></i> Tambah
-                                </button>
-                            </h3>
+                    <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Informasi Santri</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-9">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td width="200">Tahun Ajaran</td>
+                                        <td width="4">:</td>
+                                        <?php foreach ($period as $row): ?>
+                                            <?php echo (isset($f['n']) && $f['n'] == $row['period_id']) ?
+                                                '<td><strong>' . $row['period_start'] . '/' . $row['period_end'] . '</strong></td>' : ''; ?>
+                                        <?php endforeach; ?>
+                                    </tr>
+                                    <tr>
+                                        <td>NIS</td>
+                                        <td>:</td>
+                                        <td><?php echo isset($santri_selected['student_nis']) ? $santri_selected['student_nis'] : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nama Santri</td>
+                                        <td>:</td>
+                                        <td><?php echo isset($santri_selected['student_full_name']) ? $santri_selected['student_full_name'] : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kelas</td>
+                                        <td>:</td>
+                                        <td><?php echo isset($santri_selected['class_name']) ? $santri_selected['class_name'] : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nama Ibu Kandung</td>
+                                        <td>:</td>
+                                        <td><?php echo isset($santri_selected['student_name_of_mother']) ? $santri_selected['student_name_of_mother'] : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Absen</td>
+                                        <td>:</td>
+                                        <td><strong><?php echo isset($total_absen) ? $total_absen : 0; ?></strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-3">
+                                <?php if (!empty($santri_selected['student_img'])) { ?>
+                                    <img src="<?php echo upload_url('student/' . $santri_selected['student_img']); ?>" class="img-thumbnail img-responsive">
+                                <?php } else { ?>
+                                    <img src="<?php echo media_url('img/user.png'); ?>" class="img-thumbnail img-responsive">
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Total Absen Per Tahun</h3>
+                        </div>
+                        <div class="box-body">
+                            <strong>Total Absen: </strong> <?php echo $total_absen; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Riwayat Absen Mengaji</h3>
+                            <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addModal">
+                                <i class="fa fa-plus"></i> Tambah Alfa
+                            </button>
                         </div>
                         <div class="box-body">
                         <table class="table table-bordered">

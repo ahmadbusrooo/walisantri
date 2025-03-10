@@ -13,14 +13,16 @@ class Absen_mengaji_set extends MX_Controller {
 
     public function index() {
         $f = $this->input->get(NULL, TRUE);
-        
+        $active_period = $this->Period_model->get_active_period();
         $data = array(
             'period' => $this->Period_model->get(),
             'santri' => $this->Student_model->get(),
             'absen' => array(),
             'total_absen' => 0,
             'santri_selected' => array(),
-            'f' => $f
+            'f' => $f,
+            'top_absent' => $this->Absen_mengaji_model->get_top_absent($active_period['period_id']), 
+            'active_period' => $active_period
         );
 
         if (!empty($f['n']) && !empty($f['r'])) {

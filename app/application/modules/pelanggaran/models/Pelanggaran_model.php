@@ -112,4 +112,18 @@ public function get_total_violations_by_year($student_id, $year)
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    public function get_top_violators_active_period($limit = 10) {
+        $this->db->select('s.student_id, s.student_full_name, s.student_nis, c.class_name, SUM(p.poin) as total_points');
+        $this->db->from('pelanggaran p');
+        $this->db->join('student s', 'p.student_id = s.student_id');
+        $this->db->join('class c', 's.class_class_id = c.class_id');
+        $this->db->join('period pd', 'p.period_id = pd.period_id');
+        $this->db->where('pd.period_status', 1); // Hanya periode aktif
+        $this->db->group_by('p.student_id');
+        $this->db->order_by('total_points', 'DESC');
+        $this->db->limit($limit);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }

@@ -17,6 +17,7 @@ class Pelanggaran_set extends MX_Controller
     public function index()
     {
         $f = $this->input->get(NULL, TRUE);
+        $active_period = $this->Period_model->get_active_period();
     
         $data['f'] = $f;
         $data['period'] = $this->Period_model->get();
@@ -52,7 +53,12 @@ class Pelanggaran_set extends MX_Controller
                 $data['yearly_violations'] = $this->Pelanggaran_model->get_yearly_violations($student_id, $selected_period);
             }
         }
-    
+        $data['top_violators'] = [];
+        // Jika tidak ada filter, tampilkan peringkat
+        if (!isset($f['n']) && !isset($f['r'])) {
+            $data['top_violators'] = $this->Pelanggaran_model->get_top_violators_active_period(10);
+        }
+        $data['active_period'] = $active_period;
         $data['title'] = 'Kelola Pelanggaran Santri';
         $data['main'] = 'pelanggaran/pelanggaran_filter';
         $this->load->view('manage/layout', $data);
@@ -67,7 +73,7 @@ class Pelanggaran_set extends MX_Controller
                 'student_id' => $this->input->post('student_id', TRUE),
                 'period_id' => $this->input->post('period_id', TRUE),
                 'tanggal' => $this->input->post('tanggal', TRUE),
-                'poin' => $this->input->post('poin', TRUE),
+                'poin' => 1, // Default 1 (opsional, jika ingin double check)
                 'pelanggaran' => $this->input->post('pelanggaran', TRUE),
                 'tindakan' => $this->input->post('tindakan', TRUE),
                 'catatan' => $this->input->post('catatan', TRUE),
@@ -111,165 +117,188 @@ class Pelanggaran_set extends MX_Controller
         echo json_encode($results);
     }
 
-// Kirim notifikasi WhatsApp
-public function send_whatsapp($id)
-{
-    // Ambil data pelanggaran berdasarkan ID
-    $dataPelanggaran = $this->Pelanggaran_model->get_by_id($id);
+    // Kirim notifikasi WhatsApp
+    public function send_whatsapp($id)
+    {
+        // Ambil data pelanggaran berdasarkan ID
+        $dataPelanggaran = $this->Pelanggaran_model->get_by_id($id);
 
-    // Periksa apakah data pelanggaran ditemukan
-    if (!$dataPelanggaran) {
-        $this->session->set_flashdata('error', 'Data pelanggaran tidak ditemukan.');
-        redirect('manage/pelanggaran');
-        return;
-    }
-
-    // Ambil data siswa berdasarkan student_id dari pelanggaran
-    $dataSiswa = $this->Student_model->get_by_id($dataPelanggaran['student_id']);
-    if (!$dataSiswa) {
-        $this->session->set_flashdata('error', 'Data siswa tidak ditemukan.');
-        redirect('manage/pelanggaran');
-        return;
-    }
-
-    // Validasi nomor telepon wali
-    $phone_number = preg_replace('/[^0-9]/', '', $dataSiswa['student_parent_phone']); // Hanya angka
-    if (strpos($phone_number, '62') !== 0) {
-        $phone_number = '62' . substr($phone_number, 1); // Ubah "08" menjadi "628"
-    }
-
-    if (empty($phone_number)) {
-        $this->session->set_flashdata('error', 'Nomor WhatsApp wali tidak ditemukan.');
-        redirect('manage/pelanggaran');
-        return;
-    }
-
-    // Format pesan WhatsApp
-    $message = "Assalamu'alaikum Bapak/Ibu {$dataSiswa['student_name_of_father']},\n\n"
-        . "Kami ingin menginformasikan bahwa anak Anda, {$dataSiswa['student_full_name']}, telah melakukan pelanggaran sebagai berikut:\n\n"
-        . "Tanggal: {$dataPelanggaran['tanggal']}\n"
-        . "Poin: {$dataPelanggaran['poin']}\n"
-        . "Pelanggaran: {$dataPelanggaran['pelanggaran']}\n"
-        . "Tindakan: {$dataPelanggaran['tindakan']}\n"
-        . "Catatan: {$dataPelanggaran['catatan']}\n\n"
-        . "Mohon perhatian dan kerjasamanya.\n\n"
-        . "Terima kasih.";
-
-    // **AMBIL API URL DAN TOKEN DARI DATABASE**
-    $api_url = $this->Setting_model->get_value(['id' => 8]); // Ambil setting_wa_gateway_url
-    $api_token = $this->Setting_model->get_value(['id' => 9]); // Ambil setting_wa_api_key
-
-    // **Validasi apakah API URL dan Token ditemukan**
-    if (empty($api_url) || empty($api_token)) {
-        log_message('error', "WhatsApp API Gateway URL atau API Key tidak ditemukan di database.");
-        $this->session->set_flashdata('error', 'Konfigurasi WhatsApp Gateway tidak ditemukan.');
-        redirect('manage/pelanggaran');
-        return;
-    }
-
-    // Data untuk API WhatsApp
-    $postData = [
-        "data" => [
-            [
-                'phone' => $phone_number, // Nomor telepon wali
-                'message' => $message     // Pesan yang akan dikirim
-            ]
-        ]
-    ];
-
-    // Konversi data menjadi JSON
-    $jsonData = json_encode($postData);
-
-    // Kirim request ke API WhatsApp Gateway
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $api_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData); // Kirim data sebagai JSON
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: $api_token",
-        "Content-Type: application/json" // Header JSON
-    ]);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // Nonaktifkan sementara (debug)
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // Nonaktifkan sementara (debug)
-    $result = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    if (curl_errno($ch)) {
-        $error_msg = curl_error($ch);
-    }
-    curl_close($ch);
-
-    // Debug respons API WhatsApp
-    if (isset($error_msg)) {
-        log_message('error', "Curl Error: $error_msg");
-        $this->session->set_flashdata('error', "Curl Error: $error_msg");
-        redirect('manage/pelanggaran');
-        return;
-    }
-
-    $response = json_decode($result, true);
-
-    // Periksa respons dari API WhatsApp
-    if ($http_code == 200 && isset($response['status']) && $response['status'] == true) {
-        $this->session->set_flashdata('success', 'Pesan WhatsApp berhasil dikirim ke wali siswa.');
-    } else {
-        $error_message = isset($response['message']) ? $response['message'] : 'Gagal mengirim pesan WhatsApp. Silakan coba lagi.';
-        log_message('error', "WhatsApp API Error: $error_message");
-        $this->session->set_flashdata('error', $error_message);
-    }
-
-    // === KIRIM NOTIFIKASI FCM ===
-    // Ambil token FCM dari database
-    $this->db->select('fcm_token');
-    $this->db->from('student_tokens');
-    $this->db->where('student_id', $dataSiswa['student_id']);
-    $query = $this->db->get();
-    $fcm_tokens = array_column($query->result_array(), 'fcm_token');
-
-    if (!empty($fcm_tokens)) {
-        $title = "Pemberitahuan Pelanggaran";
-        $body = "Anak Anda, {$dataSiswa['student_full_name']}, telah melakukan pelanggaran:\n"
-            . "📅 Tanggal: {$dataPelanggaran['tanggal']}\n"
-            . "⚠️ Poin: {$dataPelanggaran['poin']}\n"
-            . "🚨 Pelanggaran: {$dataPelanggaran['pelanggaran']}\n"
-            . "📜 Tindakan: {$dataPelanggaran['tindakan']}\n"
-            . "📝 Catatan: {$dataPelanggaran['catatan']}\n\n"
-            . "Mohon perhatian dan kerjasamanya.";
-
-        // Kirim dalam batch (maksimal 500 token per request)
-        $batch_size = 500;
-        $token_chunks = array_chunk($fcm_tokens, $batch_size);
-
-        foreach ($token_chunks as $tokens) {
-            $fcm_url = "https://notifikasi.ppalmaruf.com/send_fcm.php";
-            $fcm_data = json_encode([
-                "fcm_tokens" => $tokens, // Mengirim dalam batch
-                "title" => $title,
-                "body" => $body
-            ]);
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $fcm_url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $fcm_data);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Content-Type: application/json"
-            ]);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            $result = curl_exec($ch);
-            curl_close($ch);
-
-            log_message('info', "Notifikasi FCM dikirim ke " . count($tokens) . " token: " . $result);
+        // Periksa apakah data pelanggaran ditemukan
+        if (!$dataPelanggaran) {
+            $this->session->set_flashdata('error', 'Data pelanggaran tidak ditemukan.');
+            redirect('manage/pelanggaran');
+            return;
         }
-    } else {
-        log_message('error', "Tidak ada token FCM ditemukan untuk student_id: {$dataSiswa['student_id']}");
-    }
 
-    redirect('manage/pelanggaran?n=' . $this->input->get('n') . '&r=' . $this->input->get('r'));
-}
+        // Ambil data siswa berdasarkan student_id dari pelanggaran
+        $dataSiswa = $this->Student_model->get_by_id($dataPelanggaran['student_id']);
+        if (!$dataSiswa) {
+            $this->session->set_flashdata('error', 'Data siswa tidak ditemukan.');
+            redirect('manage/pelanggaran');
+            return;
+        }
+
+        // Validasi nomor telepon wali
+        $phone_number = preg_replace('/[^0-9]/', '', $dataSiswa['student_parent_phone']); // Hanya angka
+        if (strpos($phone_number, '62') !== 0) {
+            $phone_number = '62' . substr($phone_number, 1); // Ubah "08" menjadi "628"
+        }
+
+        if (empty($phone_number)) {
+            $this->session->set_flashdata('error', 'Nomor WhatsApp wali tidak ditemukan.');
+            redirect('manage/pelanggaran');
+            return;
+        }
+
+        function format_tanggal_indonesia($tanggal) {
+            $hari = array(
+                'Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'
+            );
+            
+            $bulan = array(
+                1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            );
+    
+            $date = DateTime::createFromFormat('Y-m-d', $tanggal);
+            $nama_hari = $hari[(int)$date->format('w')];
+            $tanggal_format = $date->format('j') . ' ' . $bulan[(int)$date->format('n')] . ' ' . $date->format('Y');
+            
+            return $nama_hari . ', ' . $tanggal_format;
+        }
+
+        // Format pesan WhatsApp
+        $tanggal_indonesia = format_tanggal_indonesia($dataPelanggaran['tanggal']);
+    
+        $message = "Assalamu'alaikum Warahmatullahi Wabarakatuh\n\n"
+            . "Kepada Yth. Bapak/Ibu {$dataSiswa['student_name_of_father']},\n\n"
+            . "Dengan hormat, kami sampaikan bahwa pada:\n"
+            . "*Tanggal* : {$tanggal_indonesia}\n"
+            . "*Nama Santri* : {$dataSiswa['student_full_name']}\n"
+            . "*Pelanggaran* : {$dataPelanggaran['pelanggaran']}\n"
+            . "*Tindakan* : {$dataPelanggaran['tindakan']}\n"
+            . "*Catatan* : {$dataPelanggaran['catatan']}\n\n"
+            . "Kami mengharapkan kerja sama Bapak/Ibu untuk memberikan pembinaan dan pengarahan kepada putra/putri Kamu Ya.\n\n"
+            . "Atas perhatian dan kerja samanya, kami ucapkan terima kasih.\n\n"
+            . "Wassalamu'alaikum Warahmatullahi Wabarakatuh\n\n"
+            . "_Salam Hormat,_\n_Tim Kedisiplinan Pondok Pesantren_";
+    
+
+        // **AMBIL API URL DAN TOKEN DARI DATABASE**
+        $api_url = $this->Setting_model->get_value(['id' => 8]); // Ambil setting_wa_gateway_url
+        $api_token = $this->Setting_model->get_value(['id' => 9]); // Ambil setting_wa_api_key
+
+        // **Validasi apakah API URL dan Token ditemukan**
+        if (empty($api_url) || empty($api_token)) {
+            log_message('error', "WhatsApp API Gateway URL atau API Key tidak ditemukan di database.");
+            $this->session->set_flashdata('error', 'Konfigurasi WhatsApp Gateway tidak ditemukan.');
+            redirect('manage/pelanggaran');
+            return;
+        }
+
+        // Data untuk API WhatsApp
+        $postData = [
+            "data" => [
+                [
+                    'phone' => $phone_number, // Nomor telepon wali
+                    'message' => $message     // Pesan yang akan dikirim
+                ]
+            ]
+        ];
+
+        // Konversi data menjadi JSON
+        $jsonData = json_encode($postData);
+
+        // Kirim request ke API WhatsApp Gateway
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData); // Kirim data sebagai JSON
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: $api_token",
+            "Content-Type: application/json" // Header JSON
+        ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // Nonaktifkan sementara (debug)
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // Nonaktifkan sementara (debug)
+        $result = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+        }
+        curl_close($ch);
+
+        // Debug respons API WhatsApp
+        if (isset($error_msg)) {
+            log_message('error', "Curl Error: $error_msg");
+            $this->session->set_flashdata('error', "Curl Error: $error_msg");
+            redirect('manage/pelanggaran');
+            return;
+        }
+
+        $response = json_decode($result, true);
+
+        // Periksa respons dari API WhatsApp
+        if ($http_code == 200 && isset($response['status']) && $response['status'] == true) {
+            $this->session->set_flashdata('success', 'Pesan WhatsApp berhasil dikirim ke wali siswa.');
+        } else {
+            $error_message = isset($response['message']) ? $response['message'] : 'Gagal mengirim pesan WhatsApp. Silakan coba lagi.';
+            log_message('error', "WhatsApp API Error: $error_message");
+            $this->session->set_flashdata('error', $error_message);
+        }
+
+        // === KIRIM NOTIFIKASI FCM ===
+        // Ambil token FCM dari database
+        $this->db->select('fcm_token');
+        $this->db->from('student_tokens');
+        $this->db->where('student_id', $dataSiswa['student_id']);
+        $query = $this->db->get();
+        $fcm_tokens = array_column($query->result_array(), 'fcm_token');
+
+        if (!empty($fcm_tokens)) {
+            $title = "Pemberitahuan Pelanggaran";
+            $body = "Anak Anda, {$dataSiswa['student_full_name']}, telah melakukan pelanggaran:\n"
+                . "📅 Tanggal: {$dataPelanggaran['tanggal']}\n"
+                . "⚠️ Poin: {$dataPelanggaran['poin']}\n"
+                . "🚨 Pelanggaran: {$dataPelanggaran['pelanggaran']}\n"
+                . "📜 Tindakan: {$dataPelanggaran['tindakan']}\n"
+                . "📝 Catatan: {$dataPelanggaran['catatan']}\n\n"
+                . "Mohon perhatian dan kerjasamanya.";
+
+            // Kirim dalam batch (maksimal 500 token per request)
+            $batch_size = 500;
+            $token_chunks = array_chunk($fcm_tokens, $batch_size);
+
+            foreach ($token_chunks as $tokens) {
+                $fcm_url = "https://notifikasi.ppalmaruf.com/send_fcm.php";
+                $fcm_data = json_encode([
+                    "fcm_tokens" => $tokens, // Mengirim dalam batch
+                    "title" => $title,
+                    "body" => $body
+                ]);
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $fcm_url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $fcm_data);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    "Content-Type: application/json"
+                ]);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                $result = curl_exec($ch);
+                curl_close($ch);
+
+                log_message('info', "Notifikasi FCM dikirim ke " . count($tokens) . " token: " . $result);
+            }
+        } else {
+            log_message('error', "Tidak ada token FCM ditemukan untuk student_id: {$dataSiswa['student_id']}");
+        }
+
+        redirect('manage/pelanggaran?n=' . $this->input->get('n') . '&r=' . $this->input->get('r'));
+    }
 
     
 

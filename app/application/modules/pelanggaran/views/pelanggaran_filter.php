@@ -59,7 +59,56 @@
                     </div>
                 </div>
             </div>
+<!-- Peringkat Pelanggaran -->
+<?php if (!isset($f['n']) && !empty($top_violators)): ?>
+<div class="col-md-12">
+    <div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                Top 10 Pelanggar Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="danger">
+                            <th width="30">Peringkat</th>
+                            <th>Nama Santri</th>
+                            <th>NIS</th>
+                            <th>Kelas</th>
+                            <th>Total Pelanggaran</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $no = 1; foreach ($top_violators as $row): ?>
+                        <tr>
+                            <td>
+                               
+                                    <?php echo $no++; ?>
+                                </span>
+                            </td>
+                            <td><?php echo $row['student_full_name'] ?></td>
+                            <td><?php echo $row['student_nis'] ?></td>
+                            <td><?php echo $row['class_name'] ?></td>
+                            <td><span class="badge bg-red"><?php echo $row['total_points'] ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <p class="text-muted text-sm">* Data peringkat berdasarkan jumlah pelanggaran santri pada periode aktif</p>
 
+            </div>
+        </div>
+    </div>
+</div>
+<?php elseif (!isset($f['n'])): ?>
+<div class="col-md-12">
+    <div class="alert alert-info">
+        <i class="fa fa-info-circle"></i> Tidak ada data pelanggaran pada periode aktif.
+    </div>
+</div>
+<?php endif; ?>
             <!-- Informasi Santri -->
             <?php if ($f) { ?>
                 <div class="col-md-12">
@@ -100,7 +149,7 @@
                                         <td><?php echo isset($santri_selected['student_name_of_mother']) ? $santri_selected['student_name_of_mother'] : '-'; ?></td>
                                     </tr>
                                     <tr>
-                                        <td>Total Poin</td>
+                                        <td>Total Pelanggaran</td>
                                         <td>:</td>
                                         <td><strong><?php echo isset($total_points) ? $total_points : 0; ?></strong></td>
                                     </tr>
@@ -129,7 +178,7 @@
                                     <thead>
                                         <tr class="info">
                                             <th>Bulan</th>
-                                            <th>Total Poin</th>
+                                            <th>Total Pelanggaran</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -162,7 +211,7 @@
                             <h3 class="box-title">Total Pelanggaran Per Tahun</h3>
                         </div>
                         <div class="box-body">
-                            <strong>Total Poin: </strong> <?php echo $yearly_violations; ?>
+                            <strong>Total Pelanggaran : </strong> <?php echo $yearly_violations; ?>
                         </div>
                     </div>
                 </div>
@@ -185,7 +234,6 @@
                                         <tr class="info">
                                             <th>No</th>
                                             <th>Tanggal</th>
-                                            <th>Poin</th>
                                             <th>Pelanggaran</th>
                                             <th>Tindakan</th>
                                             <th>Catatan</th>
@@ -199,13 +247,12 @@
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo $row['tanggal']; ?></td>
-                                                    <td><?php echo $row['poin']; ?></td>
                                                     <td><?php echo $row['pelanggaran']; ?></td>
                                                     <td><?php echo $row['tindakan']; ?></td>
                                                     <td><?php echo $row['catatan']; ?></td>
                                                     <td>
                                                         <button class="btn btn-primary btn-xs btn-send-wa"
-                                                            data-pesan="<?php echo "Tanggal: {$row['tanggal']}\nPoin: {$row['poin']}\nPelanggaran: {$row['pelanggaran']}\nTindakan: {$row['tindakan']}\nCatatan: {$row['catatan']}"; ?>"
+                                                            data-pesan="<?php echo "Tanggal: {$row['tanggal']}\nPelanggaran: {$row['pelanggaran']}\nTindakan: {$row['tindakan']}\nCatatan: {$row['catatan']}"; ?>"
                                                             data-url="<?php echo site_url('manage/pelanggaran/send_whatsapp/' . $row['pelanggaran_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
                                                             data-wali="<?php echo isset($santri_selected['student_name_of_father']) ? $santri_selected['student_name_of_father'] : '-'; ?>"
                                                             data-telepon="<?php echo isset($santri_selected['student_parent_phone']) ? $santri_selected['student_parent_phone'] : '-'; ?>">
@@ -271,16 +318,19 @@
                 </button>
             </div>
             <div class="modal-body">
+            <input type="hidden" name="poin" value="1">
+    
+    <!-- Tampilkan pesan bahwa poin otomatis
+    <div class="alert alert-info">
+        <i class="fa fa-info-circle"></i> Poin pelanggaran otomatis terisi <strong>1 poin</strong>.
+    </div> -->
                 <input type="hidden" name="student_id" value="<?php echo isset($santri_selected['student_id']) ? $santri_selected['student_id'] : ''; ?>">
                 <input type="hidden" name="period_id" value="<?php echo isset($f['n']) ? $f['n'] : ''; ?>">
                 <div class="form-group">
                     <label>Tanggal</label>
                     <input type="date" name="tanggal" class="form-control" required>
                 </div>
-                <div class="form-group">
-                    <label>Poin</label>
-                    <input type="number" name="poin" class="form-control" required>
-                </div>
+
                 <div class="form-group">
                     <label>Pelanggaran</label>
                     <input type="text" name="pelanggaran" class="form-control" required>

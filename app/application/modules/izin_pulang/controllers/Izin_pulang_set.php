@@ -36,10 +36,18 @@ class Izin_pulang_set extends MX_Controller
 
                 $data['izin_pulang'] = $this->Izin_pulang_model->get_by_student_period($student_id, $selected_period);
                 $data['selected_period'] = $selected_period;
-                $data['total_days'] = $this->Izin_pulang_model->get_total_days_by_period($selected_period);
-        $data['monthly_days'] = $this->Izin_pulang_model->get_monthly_days_by_period($selected_period);
+                $data['total_days'] = $this->Izin_pulang_model->get_total_days_by_period(
+                    $selected_period, 
+                    $student_id // ✅ Tambahkan student_id
+                );
+                
+                $data['monthly_days'] = $this->Izin_pulang_model->get_monthly_days_by_period(
+                    $selected_period, 
+                    $student_id // ✅ Tambahkan student_id
+                );
             }
         }
+        
         
         $data['title'] = 'Riwayat Izin Pulang Santri';
         $data['main'] = 'izin_pulang/izin_pulang_filter';
@@ -54,8 +62,10 @@ class Izin_pulang_set extends MX_Controller
                 'student_id' => $this->input->post('student_id', TRUE),
                 'period_id' => $this->input->post('period_id', TRUE),
                 'tanggal' => $this->input->post('tanggal', TRUE),
-                'jumlah_hari' => $this->input->post('jumlah_hari', TRUE), // Tambahkan jumlah_hari
+                'tanggal_akhir' => $this->input->post('tanggal_akhir', TRUE),
+                'jumlah_hari' => $this->input->post('jumlah_hari', TRUE),
                 'alasan' => $this->input->post('alasan', TRUE),
+                'status' => 'Tepat waktu' // Default status
             ];
     
             // Validasi input
@@ -76,6 +86,106 @@ class Izin_pulang_set extends MX_Controller
             redirect('manage/izin_pulang?n=' . $data['period_id'] . '&r=' . $student['student_nis']);
         }
     }
+
+    public function update_status()
+    {
+        $izin_id = $this->input->post('izin_id');
+        $status = $this->input->post('status');
+        
+        if($this->Izin_pulang_model->update_status($izin_id, $status)) {
+            $response = ['status' => 'success'];
+        } else {
+            $response = ['status' => 'error'];
+        }
+        
+        echo json_encode($response);
+    }
+public function send_whatsapp($id) {
+    // Array hari dan bulan Indonesia
+    $hari = array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu');
+    $bulan = array(
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus', 
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+    );
+
+    // Ambil data izin pulang
+    $izin = $this->Izin_pulang_model->get_by_id($id);
+    
+    if (!$izin) {
+        $this->session->set_flashdata('error', 'Data izin tidak ditemukan');
+        redirect('manage/izin_pulang');
+    }
+    $period_id = $this->input->get('n', TRUE);
+    $student_nis = $this->input->get('r', TRUE);
+    // Ambil data santri
+    $santri = $this->Student_model->get_by_id($izin['student_id']);
+    if (!$santri) {
+        $this->session->set_flashdata('error', 'Data santri tidak ditemukan');
+        redirect('manage/izin_pulang');
+    }
+
+    // Format tanggal
+    $tanggalAkhir = new DateTime($izin['tanggal_akhir']);
+    $tgl_harus_kembali = $hari[$tanggalAkhir->format('w')] . ', ' . 
+                        $tanggalAkhir->format('j') . ' ' . 
+                        $bulan[$tanggalAkhir->format('n')] . ' ' . 
+                        $tanggalAkhir->format('Y');
+
+    // Format nomor telepon
+    $phone = preg_replace('/[^0-9]/', '', $santri['student_parent_phone']);
+    if (strpos($phone, '62') !== 0) {
+        $phone = '62' . substr($phone, 1);
+    }
+
+    // Format pesan
+    $message = "Assalamu'alaikum Warahmatullahi Wabarakatuh\n\n"
+        . "Yth. Bapak/Ibu Orang Tua/Wali dari Ananda *{$santri['student_full_name']}*,\n\n"
+        . "Kami ingin memberitahukan bahwa Ananda tercatat *terlambat kembali* ke pondok setelah izin pulang.\n\n"
+        . "*Detail Izin Pulang:*\n"
+        . "Tanggal Izin : {$tgl_harus_kembali}\n"
+        . "Status : Terlambat Kembali\n\n"
+        . "Dimohon untuk segera mengkonfirmasi ke pihak pondok terkait keterlambatan ini.\n\n"
+        . "Terima kasih atas perhatiannya.\n\n"
+        . "Wassalamu'alaikum Warahmatullahi Wabarakatuh\n\n"
+        . "Salam hormat,\n"
+        . "Pengurus Pondok Pesantren Al-Maruf";
+
+    // Ambil konfigurasi WA Gateway
+    $this->load->model('setting/Setting_model');
+    $api_url = $this->Setting_model->get_value(['id' => 8]);
+    $api_token = $this->Setting_model->get_value(['id' => 9]);
+
+    // Kirim ke API
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $api_url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: $api_token",
+        "Content-Type: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        "data" => [[
+            "phone" => $phone,
+            "message" => $message
+        ]]
+    ]));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+    if (curl_errno($ch)) {
+        $this->session->set_flashdata('error', 'Error: ' . curl_error($ch));
+    } elseif ($http_code == 200) {
+        $this->session->set_flashdata('success', 'Notifikasi WA berhasil dikirim');
+    } else {
+        $this->session->set_flashdata('error', 'Gagal mengirim notifikasi');
+    }
+    
+    curl_close($ch);
+    redirect('manage/izin_pulang?n='.$period_id.'&r='.$student_nis); // Perbaikan di sini
+}
     public function search_santri()
     {
         $keyword = $this->input->get('keyword');

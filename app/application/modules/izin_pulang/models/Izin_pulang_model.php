@@ -14,31 +14,54 @@ class Izin_pulang_model extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+public function get_by_id($id) {
+    $this->db->where('izin_id', $id);
+    return $this->db->get('izin_pulang')->row_array();
+}
+// Di method add()
+public function add($data)
+{
+    // Hitung jumlah hari otomatis
+    $start = new DateTime($data['tanggal']);
+    $end = new DateTime($data['tanggal_akhir']);
+    $data['jumlah_hari'] = $end->diff($start)->days + 1; // +1 untuk include hari pertama
+    $data['tanggal'] = $data['tanggal']; // Simpan tanggal awal di kolom tanggal (jika perlu)
+    
+    $this->db->insert('izin_pulang', $data);
+    return $this->db->insert_id();
+}
 
-    // Tambah data izin pulang
-    public function add($data)
-    {
-        $this->db->insert('izin_pulang', $data);
-    }
+public function update_status($izin_id, $status)
+{
+    $this->db->where('izin_id', $izin_id);
+    $this->db->update('izin_pulang', ['status' => $status]);
+    return $this->db->affected_rows();
+}
 
-    public function get_total_days_by_period($period_id)
+
+
+// Di model Izin_pulang_model:
+
+// Total hari per periode DAN santri tertentu
+public function get_total_days_by_period($period_id, $student_id)
 {
     $this->db->select_sum('jumlah_hari', 'total_days');
     $this->db->where('period_id', $period_id);
+    $this->db->where('student_id', $student_id); // ✅ Tambahkan filter student_id
     $query = $this->db->get('izin_pulang');
-    return $query->row()->total_days ? $query->row()->total_days : 0; // Jika tidak ada data, kembalikan 0
+    return $query->row()->total_days ? $query->row()->total_days : 0;
 }
 
-public function get_monthly_days_by_period($period_id)
+// Total hari per bulan, per periode DAN santri tertentu
+public function get_monthly_days_by_period($period_id, $student_id)
 {
     $this->db->select('MONTH(tanggal) as month, SUM(jumlah_hari) as total_days');
     $this->db->where('period_id', $period_id);
+    $this->db->where('student_id', $student_id); // ✅ Tambahkan filter student_id
     $this->db->group_by('MONTH(tanggal)');
-    $this->db->order_by('MONTH(tanggal)', 'ASC');
     $query = $this->db->get('izin_pulang');
-    return $query->result_array(); // Mengembalikan total hari per bulan
+    return $query->result_array();
 }
-
 
     // Hapus data izin pulang
     public function delete($id)

@@ -1,3 +1,61 @@
+<style>
+/* Gaya untuk status */
+.status-select {
+    padding: 3px 8px;
+    font-size: 12px;
+    width: 140px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.status-select option {
+    padding: 5px;
+}
+
+.status-select option[value="Tepat waktu"] {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-select option[value="Terlambat"] {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Gaya untuk tombol WA */
+.btn-wa {
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 15px;
+    margin-left: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-wa i {
+    margin-right: 3px;
+}
+
+/* Container status */
+.status-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Responsive untuk mobile */
+@media (max-width: 768px) {
+    .status-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .btn-wa {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+}
+</style>
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -65,7 +123,7 @@
             <!-- Informasi Santri -->
             <?php if ($f) { ?>
                 <div class="col-md-12">
-                <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                    <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
                         <div class="box-header with-border">
                             <h3 class="box-title">Informasi Santri</h3>
@@ -114,7 +172,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-					<div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                    <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
                         <div class="box-header with-border">
                             <h3 class="box-title">Total Hari Izin Pulang Per Periode</h3>
@@ -129,7 +187,7 @@
                 <!-- Riwayat Izin Pulang -->
                 <div class="col-md-12">
 
-					<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                    <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
                         <div class="box-header with-border">
                             <h3 class="box-title">Riwayat Izin Pulang</h3>
                             <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addPermissionModal">
@@ -142,9 +200,11 @@
                                     <thead>
                                         <tr class="info">
                                             <th>No</th>
-                                            <th>Tanggal</th>
+                                            <th>Tanggal Awal</th>
+                                            <th>Tanggal Akhir</th>
                                             <th>Jumlah Hari</th>
                                             <th>Alasan</th>
+                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -155,8 +215,34 @@
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo $row['tanggal']; ?></td>
+                                                    <td><?php echo $row['tanggal_akhir']; ?></td>
                                                     <td><?php echo $row['jumlah_hari']; ?></td>
                                                     <td><?php echo $row['alasan']; ?></td>
+                                                    <td>
+    <div class="status-container">
+        <select class="form-control status-select" 
+                data-izin-id="<?php echo $row['izin_id']; ?>"
+                style="<?php echo ($row['status'] == 'Tepat waktu') ? 
+                    'border: 1px solid #28a745; background-color: #d4edda;' : 
+                    'border: 1px solid #dc3545; background-color: #f8d7da;' ?>">
+            <option value="Tepat waktu" <?php echo ($row['status'] == 'Tepat waktu') ? 'selected' : ''; ?>>Tepat waktu</option>
+            <option value="Terlambat" <?php echo ($row['status'] == 'Terlambat') ? 'selected' : ''; ?>>Terlambat</option>
+        </select>
+        
+        <!-- Tombol WA -->
+        <a href="javascript:void(0)" 
+           class="btn btn-success btn-wa"
+           data-izin-id="<?php echo $row['izin_id']; ?>"
+           data-base-url="<?php echo site_url('manage/izin_pulang/send_whatsapp/'); ?>"
+           data-period="<?php echo isset($f['n']) ? $f['n'] : ''; ?>"
+           data-student="<?php echo isset($f['r']) ? $f['r'] : ''; ?>"
+           style="<?php echo ($row['status'] != 'Terlambat') ? 'display: none;' : '' ?>"
+           data-toggle="tooltip" 
+           title="Kirim Peringatan ke Orang Tua">
+            <i class="fab fa-whatsapp"></i> WA
+        </a>
+    </div>
+</td>
                                                     <td>
                                                         <a href="<?php echo site_url('manage/izin_pulang/delete/' . $row['izin_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
                                                             class="btn btn-danger btn-xs"
@@ -196,17 +282,22 @@
             <div class="modal-body">
                 <input type="hidden" name="student_id" value="<?php echo isset($santri_selected['student_id']) ? $santri_selected['student_id'] : ''; ?>">
                 <input type="hidden" name="period_id" value="<?php echo isset($f['n']) ? $f['n'] : ''; ?>">
+
                 <div class="form-group">
-                    <label>Tanggal</label>
-                    <input type="date" name="tanggal" class="form-control" required>
+                    <label>Tanggal Awal Pulang</label>
+                    <input type="date" name="tanggal" id="tanggal" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Akhir Pulang</label>
+                    <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label>Jumlah Hari</label>
-                    <input type="number" name="jumlah_hari" class="form-control" required>
+                    <input type="number" name="jumlah_hari" id="jumlah_hari" class="form-control" readonly>
                 </div>
                 <div class="form-group">
-                    <label>Alasan</label>
-                    <input type="text" name="alasan" class="form-control" required>
+                    <label>Alasan Izin</label>
+                    <textarea name="alasan" class="form-control" rows="3" required></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -220,6 +311,69 @@
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+$(document).on('change', '.status-select', function() {
+    const container = $(this).closest('.status-container');
+    const izinId = $(this).data('izin-id');
+    const newStatus = $(this).val();
+    const waBtn = container.find('.btn-wa');
+
+    $.ajax({
+        url: '<?php echo site_url('manage/izin_pulang/update_status'); ?>',
+        method: 'POST',
+        data: {
+            izin_id: izinId,
+            status: newStatus
+        },
+        success: function(response) {
+            // Update tampilan
+            if(newStatus === 'Tepat waktu') {
+                container.find('.status-select').css({
+                    'border': '1px solid #28a745',
+                    'background-color': '#d4edda'
+                });
+                waBtn.hide();
+            } else {
+                container.find('.status-select').css({
+                    'border': '1px solid #dc3545',
+                    'background-color': '#f8d7da'
+                });
+                // Update URL WA
+                const baseUrl = waBtn.data('base-url');
+                const period = waBtn.data('period');
+                const student = waBtn.data('student');
+                waBtn.attr('href', `${baseUrl}${izinId}?n=${period}&r=${student}`);
+                waBtn.show();
+            }
+        }
+    });
+});
+
+
+</script>
+<script>
+    // Hitung Otomatis Jumlah Hari
+    document.addEventListener('DOMContentLoaded', function() {
+        const startDate = document.getElementById('tanggal');
+        const endDate = document.getElementById('tanggal_akhir');
+        const jumlahHari = document.getElementById('jumlah_hari');
+
+        function calculateDays() {
+            if (startDate.value && endDate.value) {
+                const start = new Date(startDate.value);
+                const end = new Date(endDate.value);
+                const diff = end.getTime() - start.getTime();
+                const days = Math.ceil(diff / (1000 * 3600 * 24)) + 1;
+                jumlahHari.value = days;
+            }
+        }
+
+        startDate.addEventListener('change', calculateDays);
+        endDate.addEventListener('change', calculateDays);
+    });
+</script>
+
 <script>
     $(document).ready(function() {
         $('#nisDropdown').select2({

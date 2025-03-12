@@ -281,16 +281,16 @@
                                                             </select>
 
                                                             <!-- Tombol WA -->
-                                                            <a href="javascript:void(0)"
-                                                                class="btn btn-success btn-wa"
-                                                                data-izin-id="<?php echo $row['izin_id']; ?>"
-                                                                data-base-url="<?php echo site_url('manage/izin_pulang/send_whatsapp/'); ?>"
-                                                                data-period="<?php echo isset($f['n']) ? $f['n'] : ''; ?>"
-                                                                data-student="<?php echo isset($f['r']) ? $f['r'] : ''; ?>"
-                                                                style="<?php echo ($row['status'] != 'Terlambat') ? 'display: none;' : '' ?>"
-                                                                data-toggle="tooltip"
-                                                                title="Kirim Peringatan ke Orang Tua">
-                                                                <i class="fab fa-whatsapp"></i> WA
+                                                            <a href="javascript:void(0)" 
+           class="btn btn-success btn-wa"
+           data-izin-id="<?php echo $row['izin_id']; ?>"
+           data-base-url="<?php echo site_url('manage/izin_pulang/send_whatsapp/'); ?>"
+           data-period="<?php echo isset($f['n']) ? $f['n'] : ''; ?>"
+           data-student="<?php echo isset($f['r']) ? $f['r'] : ''; ?>"
+           style="<?php echo ($row['status'] != 'Terlambat') ? 'display: none;' : '' ?>"
+           data-toggle="tooltip" 
+           title="Kirim Peringatan ke Orang Tua">
+            <i class="fab fa-whatsapp"></i> WA
                                                             </a>
                                                         </div>
                                                     </td>
@@ -400,6 +400,38 @@
             }
         });
     });
+    $(document).on('click', '.btn-wa', function(e) {
+    e.preventDefault();
+    const btn = $(this);
+    const izinId = btn.data('izin-id');
+    const period = btn.data('period');
+    const student = btn.data('student');
+    const baseUrl = btn.data('base-url');
+    const url = baseUrl + izinId + '?n=' + period + '&r=' + student;
+    
+    if (confirm('Yakin ingin mengirim notifikasi WA?')) {
+        // Tambahkan loading state
+        const originalHtml = btn.html();
+        btn.html('<i class="fas fa-spinner fa-spin"></i> Mengirim...');
+        btn.prop('disabled', true);
+        
+        // Kirim request via AJAX
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(response) {
+                alert('Notifikasi WA berhasil dikirim!');
+                btn.html(originalHtml);
+                btn.prop('disabled', false);
+            },
+            error: function() {
+                alert('Gagal mengirim notifikasi!');
+                btn.html(originalHtml);
+                btn.prop('disabled', false);
+            }
+        });
+    }
+});
 </script>
 <script>
     // Hitung Otomatis Jumlah Hari

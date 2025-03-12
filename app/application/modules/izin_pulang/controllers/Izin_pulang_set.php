@@ -9,6 +9,7 @@ class Izin_pulang_set extends MX_Controller
         $this->load->model('student/Student_model');
         $this->load->model('izin_pulang/Izin_pulang_model');
         $this->load->model('period/Period_model');
+        $this->load->model('setting/Setting_model');   
     }
 
     // Halaman utama izin pulang dengan filter
@@ -47,7 +48,17 @@ class Izin_pulang_set extends MX_Controller
                 );
             }
         }
+         // Jika tidak ada filter
+    if (!isset($f['n'])) {
+        // Ambil periode aktif
+        $data['active_period'] = $this->Period_model->get_active_period();
         
+        // Ambil data top izin
+        $data['top_izin'] = $this->Izin_pulang_model->get_top_izin(
+            $data['active_period']['period_id'], 
+            10 // Limit 10 santri
+        );
+    }
         
         $data['title'] = 'Riwayat Izin Pulang Santri';
         $data['main'] = 'izin_pulang/izin_pulang_filter';

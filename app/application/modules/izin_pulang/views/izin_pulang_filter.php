@@ -1,59 +1,59 @@
 <style>
-/* Gaya untuk status */
-.status-select {
-    padding: 3px 8px;
-    font-size: 12px;
-    width: 140px;
-    border-radius: 15px;
-    transition: all 0.3s ease;
-}
-
-.status-select option {
-    padding: 5px;
-}
-
-.status-select option[value="Tepat waktu"] {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.status-select option[value="Terlambat"] {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-/* Gaya untuk tombol WA */
-.btn-wa {
-    padding: 3px 8px;
-    font-size: 12px;
-    border-radius: 15px;
-    margin-left: 5px;
-    transition: all 0.3s ease;
-}
-
-.btn-wa i {
-    margin-right: 3px;
-}
-
-/* Container status */
-.status-container {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* Responsive untuk mobile */
-@media (max-width: 768px) {
-    .status-container {
-        flex-direction: column;
-        align-items: flex-start;
+    /* Gaya untuk status */
+    .status-select {
+        padding: 3px 8px;
+        font-size: 12px;
+        width: 140px;
+        border-radius: 15px;
+        transition: all 0.3s ease;
     }
-    
+
+    .status-select option {
+        padding: 5px;
+    }
+
+    .status-select option[value="Tepat waktu"] {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-select option[value="Terlambat"] {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    /* Gaya untuk tombol WA */
     .btn-wa {
-        margin-left: 0;
-        margin-top: 5px;
+        padding: 3px 8px;
+        font-size: 12px;
+        border-radius: 15px;
+        margin-left: 5px;
+        transition: all 0.3s ease;
     }
-}
+
+    .btn-wa i {
+        margin-right: 3px;
+    }
+
+    /* Container status */
+    .status-container {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* Responsive untuk mobile */
+    @media (max-width: 768px) {
+        .status-container {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .btn-wa {
+            margin-left: 0;
+            margin-top: 5px;
+        }
+    }
 </style>
 
 <div class="content-wrapper">
@@ -119,7 +119,58 @@
                     </div>
                 </div>
             </div>
-
+            <!-- Top Santri dengan Izin Pulang Terbanyak -->
+            <?php if (!isset($f['n']) && !empty($top_izin)): ?>
+                <div class="col-md-12">
+                    <div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                Top 10 Santri dengan Izin Pulang Terbanyak - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
+                            </h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr class="danger">
+                                            <th width="30">Rank</th>
+                                            <th>Nama Santri</th>
+                                            <th>Alamat</th>
+                                            <th>Kelas</th>
+                                            <th>Total Izin</th>
+                                            <th>Total Hari</th>
+                                            <th>Keterlambatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $no = 1;
+                                        foreach ($top_izin as $row): ?>
+                                            <tr>
+                                                <td><?php echo $no++; ?></td>
+                                                <td><?php echo $row['student_full_name'] ?></td>
+                                                <td><?php echo $row['student_address'] ?></td>
+                                                <td><?php echo $row['class_name'] ?></td>
+                                                <td><span class="badge bg-blue"><?php echo $row['total_izin'] ?>x</span></td>
+                                                <td><span class="badge bg-purple"><?php echo $row['total_hari'] ?> Hari</span></td>
+                                                <td><span class="badge bg-red"><?php echo $row['total_telat'] ?>x</span></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                                <p class="text-muted text-sm">
+                                    * Data dihitung berdasarkan total hari izin pulang dan status keterlambatan
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php elseif (!isset($f['n'])): ?>
+                <div class="col-md-12">
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i> Tidak ada data izin pulang pada periode aktif.
+                    </div>
+                </div>
+            <?php endif; ?>
             <!-- Informasi Santri -->
             <?php if ($f) { ?>
                 <div class="col-md-12">
@@ -219,30 +270,30 @@
                                                     <td><?php echo $row['jumlah_hari']; ?></td>
                                                     <td><?php echo $row['alasan']; ?></td>
                                                     <td>
-    <div class="status-container">
-        <select class="form-control status-select" 
-                data-izin-id="<?php echo $row['izin_id']; ?>"
-                style="<?php echo ($row['status'] == 'Tepat waktu') ? 
-                    'border: 1px solid #28a745; background-color: #d4edda;' : 
-                    'border: 1px solid #dc3545; background-color: #f8d7da;' ?>">
-            <option value="Tepat waktu" <?php echo ($row['status'] == 'Tepat waktu') ? 'selected' : ''; ?>>Tepat waktu</option>
-            <option value="Terlambat" <?php echo ($row['status'] == 'Terlambat') ? 'selected' : ''; ?>>Terlambat</option>
-        </select>
-        
-        <!-- Tombol WA -->
-        <a href="javascript:void(0)" 
-           class="btn btn-success btn-wa"
-           data-izin-id="<?php echo $row['izin_id']; ?>"
-           data-base-url="<?php echo site_url('manage/izin_pulang/send_whatsapp/'); ?>"
-           data-period="<?php echo isset($f['n']) ? $f['n'] : ''; ?>"
-           data-student="<?php echo isset($f['r']) ? $f['r'] : ''; ?>"
-           style="<?php echo ($row['status'] != 'Terlambat') ? 'display: none;' : '' ?>"
-           data-toggle="tooltip" 
-           title="Kirim Peringatan ke Orang Tua">
-            <i class="fab fa-whatsapp"></i> WA
-        </a>
-    </div>
-</td>
+                                                        <div class="status-container">
+                                                            <select class="form-control status-select"
+                                                                data-izin-id="<?php echo $row['izin_id']; ?>"
+                                                                style="<?php echo ($row['status'] == 'Tepat waktu') ?
+                                                                            'border: 1px solid #28a745; background-color: #d4edda;' :
+                                                                            'border: 1px solid #dc3545; background-color: #f8d7da;' ?>">
+                                                                <option value="Tepat waktu" <?php echo ($row['status'] == 'Tepat waktu') ? 'selected' : ''; ?>>Tepat waktu</option>
+                                                                <option value="Terlambat" <?php echo ($row['status'] == 'Terlambat') ? 'selected' : ''; ?>>Terlambat</option>
+                                                            </select>
+
+                                                            <!-- Tombol WA -->
+                                                            <a href="javascript:void(0)"
+                                                                class="btn btn-success btn-wa"
+                                                                data-izin-id="<?php echo $row['izin_id']; ?>"
+                                                                data-base-url="<?php echo site_url('manage/izin_pulang/send_whatsapp/'); ?>"
+                                                                data-period="<?php echo isset($f['n']) ? $f['n'] : ''; ?>"
+                                                                data-student="<?php echo isset($f['r']) ? $f['r'] : ''; ?>"
+                                                                style="<?php echo ($row['status'] != 'Terlambat') ? 'display: none;' : '' ?>"
+                                                                data-toggle="tooltip"
+                                                                title="Kirim Peringatan ke Orang Tua">
+                                                                <i class="fab fa-whatsapp"></i> WA
+                                                            </a>
+                                                        </div>
+                                                    </td>
                                                     <td>
                                                         <a href="<?php echo site_url('manage/izin_pulang/delete/' . $row['izin_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
                                                             class="btn btn-danger btn-xs"
@@ -313,44 +364,42 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <script>
-$(document).on('change', '.status-select', function() {
-    const container = $(this).closest('.status-container');
-    const izinId = $(this).data('izin-id');
-    const newStatus = $(this).val();
-    const waBtn = container.find('.btn-wa');
+    $(document).on('change', '.status-select', function() {
+        const container = $(this).closest('.status-container');
+        const izinId = $(this).data('izin-id');
+        const newStatus = $(this).val();
+        const waBtn = container.find('.btn-wa');
 
-    $.ajax({
-        url: '<?php echo site_url('manage/izin_pulang/update_status'); ?>',
-        method: 'POST',
-        data: {
-            izin_id: izinId,
-            status: newStatus
-        },
-        success: function(response) {
-            // Update tampilan
-            if(newStatus === 'Tepat waktu') {
-                container.find('.status-select').css({
-                    'border': '1px solid #28a745',
-                    'background-color': '#d4edda'
-                });
-                waBtn.hide();
-            } else {
-                container.find('.status-select').css({
-                    'border': '1px solid #dc3545',
-                    'background-color': '#f8d7da'
-                });
-                // Update URL WA
-                const baseUrl = waBtn.data('base-url');
-                const period = waBtn.data('period');
-                const student = waBtn.data('student');
-                waBtn.attr('href', `${baseUrl}${izinId}?n=${period}&r=${student}`);
-                waBtn.show();
+        $.ajax({
+            url: '<?php echo site_url('manage/izin_pulang/update_status'); ?>',
+            method: 'POST',
+            data: {
+                izin_id: izinId,
+                status: newStatus
+            },
+            success: function(response) {
+                // Update tampilan
+                if (newStatus === 'Tepat waktu') {
+                    container.find('.status-select').css({
+                        'border': '1px solid #28a745',
+                        'background-color': '#d4edda'
+                    });
+                    waBtn.hide();
+                } else {
+                    container.find('.status-select').css({
+                        'border': '1px solid #dc3545',
+                        'background-color': '#f8d7da'
+                    });
+                    // Update URL WA
+                    const baseUrl = waBtn.data('base-url');
+                    const period = waBtn.data('period');
+                    const student = waBtn.data('student');
+                    waBtn.attr('href', `${baseUrl}${izinId}?n=${period}&r=${student}`);
+                    waBtn.show();
+                }
             }
-        }
+        });
     });
-});
-
-
 </script>
 <script>
     // Hitung Otomatis Jumlah Hari

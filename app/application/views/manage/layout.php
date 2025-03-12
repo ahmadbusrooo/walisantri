@@ -33,7 +33,8 @@
    <script src="<?php echo media_url() ?>/js/jquery.inputmask.bundle.js"></script>
    
    <script src="<?php echo base_url('/media/js/fullcalendar/fullcalendar.js');?>"></script>
-   
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
  </head>
  <body class="hold-transition skin-purple-light fixed sidebar-mini" <?php echo isset($ngapp) ? $ngapp : null; ?>>

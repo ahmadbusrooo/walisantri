@@ -285,7 +285,201 @@
         </div>
     </div>
 </div>
+<!-- Modal Hasil Pengiriman -->
+<!-- Modal Hasil Pengiriman -->
+<div class="modal fade" id="modalResult" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 12px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="padding: 15px 20px;">
+                <h5 class="modal-title"> Hasil Pengiriman WhatsApp</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="resultContent" class="p-3" style="max-height: 70vh; overflow-y: auto;"></div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #eee; padding: 12px 20px;">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Tutup
+                </button>
+                <button type="button" class="btn btn-primary" onclick="window.location.reload()">
+                    Muat Ulang
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<style>
+    /* Result Modal Styling */
+    #modalResult .modal-content {
+        border: none;
+    }
+    
+    #modalResult .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    
+    #modalResult .close {
+        outline: none;
+        opacity: 0.8;
+        margin: -15px -10px -15px 0;
+        padding: 10px;
+        border-radius: 50%;
+        transition: all 0.2s;
+    }
+    
+    #modalResult .close:hover {
+        opacity: 1;
+        background-color: rgba(255,255,255,0.1);
+    }
+    
+    #resultContent {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .result-card {
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.2s;
+    }
+    
+    .result-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    
+    .result-card-header {
+        padding: 0.9rem 1.25rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .result-card-header i {
+        margin-right: 8px;
+    }
+    
+    .badge-count {
+        min-width: 30px;
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 1 rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .result-list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    
+    .result-list-item {
+        display: flex;
+        align-items: center;
+        padding: 0.85rem 1.25rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: background-color 0.15s;
+    }
+    
+    .result-list-item:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+    
+    .result-list-item:last-child {
+        border-bottom: none;
+    }
+    
+    .result-list-content {
+        flex: 1;
+    }
+    
+    .result-name {
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+    
+    .result-phone {
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+    
+    .result-reason {
+        margin-top: 3px;
+        color: #dc3545;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .result-reason i {
+        margin-right: 4px;
+    }
+    
+    .result-icon {
+        margin-left: 12px;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+    
+    .result-icon.success {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+    
+    .result-icon.danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .alert {
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        #modalResult .modal-dialog {
+            margin: 0.5rem;
+            max-width: calc(100% - 1rem);
+        }
+        
+        .result-card-header {
+            padding: 0.75rem 1rem;
+        }
+        
+        .result-list-item {
+            padding: 0.75rem 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .result-icon {
+            margin-left: 0;
+            margin-top: 10px;
+            align-self: flex-end;
+            margin-top: -30px;
+        }
+    }
+</style>
 
 
 
@@ -354,46 +548,159 @@
     });
 </script>
 <script>
-    $(document).ready(function() {
-        $("#sendWaButton").click(function() {
-            var selectedStudents = [];
-            $(".checkbox:checked").each(function() {
-                selectedStudents.push($(this).val());
-            });
-
-            if (selectedStudents.length === 0) {
-                alert("Pilih minimal satu santri untuk dikirimi pesan WA.");
-                return;
-            }
-
-            var message = $("#waMessage").val();
-            if (message.trim() === "") {
-                alert("Pesan WA tidak boleh kosong.");
-                return;
-            }
-
-            $.ajax({
-                url: "<?php echo site_url('manage/student/send_multiple_wa'); ?>",
-                type: "POST",
-                data: {
-                    students: selectedStudents,
-                    message: message
-                },
-                dataType: "json",
-                success: function(response) {
-                    if (response.status === "success") {
-                        alert("Pesan berhasil dikirim!");
-                    } else {
-                        alert("Gagal mengirim pesan: " + response.message);
-                    }
-                    $("#modalWa").modal("hide");
-                },
-                error: function() {
-                    alert("Terjadi kesalahan. Coba lagi.");
-                }
-            });
-        });
+$("#sendWaButton").click(function() {
+    var $btn = $(this);
+    var originalText = $btn.html();
+    
+    // 1. Validasi pertama - Cek checkbox terpilih
+    var selectedStudents = [];
+    $(".checkbox:checked").each(function() {
+        selectedStudents.push($(this).val());
     });
+
+    if (selectedStudents.length === 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Pilih Santri',
+            text: 'Silakan pilih minimal satu santri terlebih dahulu!',
+            width: 600,
+            padding: '2em',
+            customClass: {
+                popup: 'custom-swal-popup',
+                title: 'text-lg'
+            }
+        });
+        return; // Hentikan proses
+    }
+
+    // 2. Validasi kedua - Cek isi pesan
+    var message = $("#waMessage").val().trim();
+    if (message === "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Pesan Kosong',
+            text: 'Silakan tulis pesan yang akan dikirim!',
+            width: 600
+        });
+        return;
+    }
+
+    // 3. Jika semua validasi lolos, tampilkan loading
+    $btn.html('<i class="fa fa-spinner fa-spin"></i> Mengirim...').prop('disabled', true);
+    
+    $.ajax({
+        url: "<?php echo site_url('manage/student/send_multiple_wa'); ?>",
+        type: "POST",
+        data: {
+            students: selectedStudents,
+            message: message
+        },
+        dataType: "json",
+        success: function(response) {
+            // Reset form
+            $("#waMessage").val('');
+            
+            let html = `<div class="container-fluid p-0">`;
+
+            // Header Status
+            html += `<div class="alert ${response.status === 'success' ? 'alert-success' : 'alert-info'} mb-4">
+                <h5 class="mb-0"><i class="fa fa-${response.status === 'success' ? 'check-circle' : 'info-circle'} mr-2"></i> ${response.message}</h5>
+            </div>`;
+
+            // Bagian Berhasil
+            if (response.success && response.success.length > 0) {
+                html += `<div class="result-card border-success">
+                    <div class="result-card-header bg-success text-white">
+                        <span><i class="fa fa-check-circle"></i> Berhasil Dikirim</span>
+                        <span class="badge-count bg-white text-success">${response.success.length}</span>
+                    </div>
+                    <div class="result-list">`;
+
+                response.success.forEach(student => {
+                    html += `<div class="result-list-item">
+                        <div class="result-list-content">
+                            <div class="result-name">${student.name}</div>
+                            <div class="result-phone">${student.phone}</div>
+                        </div>
+                        <div class="result-icon success">
+                            <i class="fa fa-check"></i>
+                        </div>
+                    </div>`;
+                });
+
+                html += `</div></div>`;
+            }
+
+            // Bagian Gagal
+            if (response.failed && response.failed.length > 0) {
+                html += `<div class="result-card border-danger mt-4">
+                    <div class="result-card-header bg-danger text-white">
+                        <span><i class="fa fa-exclamation-circle"></i> Gagal Dikirim</span>
+                        <span class="badge-count bg-white text-danger">${response.failed.length}</span>
+                    </div>
+                    <div class="result-list">`;
+
+                response.failed.forEach(student => {
+                    html += `<div class="result-list-item">
+                        <div class="result-list-content">
+                            <div class="result-name">${student.name}</div>
+                            <div class="result-phone">${student.phone || 'Tidak ada nomor'}</div>
+                            ${student.reason ? `<div class="result-reason"><i class="fa fa-info-circle"></i> ${student.reason}</div>` : ''}
+                        </div>
+                        <div class="result-icon danger">
+                            <i class="fa fa-times"></i>
+                        </div>
+                    </div>`;
+                });
+
+                html += `</div></div>`;
+            }
+
+            html += `</div>`; // Tutup container-fluid
+
+            $('#resultContent').html(html);
+            $('#modalResult').modal('show');
+            
+            // Tambahkan ini untuk animasi smooth scroll jika hasil terlalu panjang
+            $('#resultContent').animate({ scrollTop: 0 }, 'fast');
+        },
+        error: function(xhr, status, error) {
+            let errorMessage = 'Terjadi kesalahan koneksi';
+            try {
+                const response = JSON.parse(xhr.responseText);
+                if (response.message) {
+                    errorMessage = response.message;
+                }
+            } catch (e) {
+                console.error('Error parsing response:', e);
+            }
+            
+            $('#resultContent').html(`
+                <div class="alert alert-danger">
+                    <h5 class="mb-0"><i class="fa fa-exclamation-triangle mr-2"></i> Gagal</h5>
+                    <p class="mt-2 mb-0">${errorMessage}</p>
+                </div>
+            `);
+            $('#modalResult').modal('show');
+        },
+        complete: function() {
+            $btn.html(originalText).prop('disabled', false);
+            $("#modalWa").modal("hide");
+        }
+    });
+});
+
+// Add this to ensure modal properly scrolls on mobile devices
+$('#modalResult').on('shown.bs.modal', function() {
+    $('#resultContent').css('max-height', window.innerHeight * 0.7);
+});
+
+// Update scroll height on window resize
+$(window).resize(function() {
+    if ($('#modalResult').hasClass('show')) {
+        $('#resultContent').css('max-height', window.innerHeight * 0.7);
+    }
+});
 </script>
 <script>
     $(document).ready(function() {

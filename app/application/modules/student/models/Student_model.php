@@ -282,21 +282,55 @@ class Student_model extends CI_Model {
         return $query->result_array(); // Mengembalikan banyak data (array of arrays)
     }
     
-
+    public function get_juzz($params = array()) {
+        $this->db->select('juzz_id, juzz_name');
+        $this->db->from('juzz');
+    
+        // Jika ada ID kelas, filter berdasarkan ID
+        if (isset($params['id']) && !empty($params['id'])) {
+            $this->db->where('juzz_id', $params['id']);
+            $query = $this->db->get();
+            return $query->row_array(); // Mengembalikan satu baris data (associative array)
+        }
+    
+        // Jika ada nama kelas, filter berdasarkan nama
+        if (isset($params['juzz_name']) && !empty($params['juzz_name'])) {
+            $this->db->where('juzz_name', $params['juzz_name']);
+        }
+    
+        // Jika ada limit & offset
+        if (isset($params['limit'])) {
+            $this->db->limit($params['limit'], isset($params['offset']) ? $params['offset'] : NULL);
+        }
+    
+        $query = $this->db->get();
+        return $query->result_array(); // Mengembalikan banyak data (array of arrays)
+    }
+    
     public function get_parents_phones($student_ids)
     {
-        $this->db->select('student_parent_phone');
+        $this->db->select('student_full_name, student_parent_phone');
         $this->db->where_in('student_id', $student_ids);
         $query = $this->db->get('student');
     
-        $phones = [];
-        foreach ($query->result() as $row) {
-            if (!empty($row->student_parent_phone)) {
-                $phones[] = preg_replace('/[^0-9]/', '', $row->student_parent_phone); // Hapus karakter selain angka
+        $result = [];
+        foreach ($query->result_array() as $row) {
+            $phone = preg_replace('/[^0-9]/', '', $row['student_parent_phone']);
+            
+            // Konversi 08xxx -> 628xxx
+            if (preg_match('/^08/', $phone)) {
+                $phone = '628' . substr($phone, 2);
+            }
+            
+            if (preg_match('/^628\d{9,13}$/', $phone)) {
+                $result[] = [
+                    'name' => $row['student_full_name'],
+                    'phone' => $phone
+                ];
             }
         }
     
-        return $phones;
+        return $result;
     }
     
 

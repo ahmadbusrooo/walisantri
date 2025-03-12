@@ -68,8 +68,8 @@
       Using "temporary files" rather than "memory" might take more time, but
       might give the ability to zip very large files :
       Tested on my win laptop with a 88Mo file :
-        Zip "in-memory" : 18sec (max_execution_time=30, memory_limit=180Mo)
-        Zip "tmporary-files" : 23sec (max_execution_time=30, memory_limit=30Mo)
+        Zip "in-memory" : 18sec (max_execution_time=300, memory_limit=180Mo)
+        Zip "tmporary-files" : 23sec (max_execution_time=300, memory_limit=30Mo)
     - Replace use of mktime() by time() to limit the E_STRICT error messages.
     - Bug correction : When adding files with full windows path (drive letter)
       PclZip is now working. Before, if the drive letter is not the default

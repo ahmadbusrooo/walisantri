@@ -40,7 +40,7 @@ class Student_set extends CI_Controller
     // **Filter berdasarkan Komplek**
     if (!empty($f['komplek_id'])) {
       $params['komplek_id'] = $f['komplek_id'];
-  }
+    }
     // Filter berdasarkan kamar (hanya jika sistem mendukung)
     if (isset($f['kamar']) && !empty($f['kamar']) && $f['kamar'] != '') {
       $params['majors_id'] = $f['kamar'];
@@ -75,12 +75,12 @@ class Student_set extends CI_Controller
     $data['main'] = 'student/student_list';
     $this->load->view('manage/layout', $data);
   }
-  
+
 
   public function view_only($offset = NULL)
-{
+  {
     $this->load->library('pagination');
-    
+
     // Ambil parameter filter
     $f = $this->input->get(NULL, TRUE);
     $data['f'] = $f;
@@ -88,25 +88,25 @@ class Student_set extends CI_Controller
     // Filter parameter
     $params = array();
     if (isset($f['n']) && !empty($f['n'])) {
-        $params['student_search'] = $f['n'];
+      $params['student_search'] = $f['n'];
     }
     if (isset($f['class']) && !empty($f['class'])) {
-        $params['class_id'] = $f['class'];
+      $params['class_id'] = $f['class'];
     }
     if (!empty($f['komplek_id'])) {
-        $params['komplek_id'] = $f['komplek_id'];
+      $params['komplek_id'] = $f['komplek_id'];
     }
     if (isset($f['kamar']) && !empty($f['kamar'])) {
-        $params['majors_id'] = $f['kamar'];
+      $params['majors_id'] = $f['kamar'];
     }
 
     // Konfigurasi data
     $params['limit'] = 100;
     $params['offset'] = $offset;
     $params['student_status'] = 1; // Hanya aktif
-    
+
     $data['student'] = $this->Student_model->get_filtered_students($params);
-    
+
     // Pagination
     $config['per_page'] = 100;
     $config['uri_segment'] = 4;
@@ -121,9 +121,9 @@ class Student_set extends CI_Controller
     $data['komplek'] = $this->Student_model->get_komplek();
     $data['title'] = 'View Data Santri';
     $data['main'] = 'student/student_list_view'; // File view baru
-    
+
     $this->load->view('manage/layout', $data); // Layout khusus view-only
-}
+  }
 
   // Add User and Update
   public function add($id = NULL)
@@ -144,10 +144,10 @@ class Student_set extends CI_Controller
     $this->form_validation->set_rules('student_full_name', 'Nama lengkap', 'trim|required|xss_clean');
     $this->form_validation->set_rules('student_gender', 'Jenis Kelamin', 'trim|required|xss_clean');
     $this->form_validation->set_rules(
-      'student_born_date', 
-      'Tanggal Lahir', 
+      'student_born_date',
+      'Tanggal Lahir',
       'trim|required|xss_clean|callback_validate_date_format'
-  );  
+    );
     $this->form_validation->set_rules('class_class_id', 'Kelas', 'trim|required|xss_clean');
     $this->form_validation->set_rules('majors_majors_id', 'Kamar', 'trim|required|xss_clean');
     $this->form_validation->set_rules('student_name_of_father', 'Ayah Kandung', 'trim|required|xss_clean');
@@ -174,19 +174,19 @@ class Student_set extends CI_Controller
       $params['student_full_name'] = $this->input->post('student_full_name');
       $params['student_born_place'] = $this->input->post('student_born_place');
       $born_date = $this->input->post('student_born_date');
-    if (!empty($born_date)) {
+      if (!empty($born_date)) {
         $date = DateTime::createFromFormat('d/m/Y', $born_date);
-        
+
         // Validasi tanggal
         if (!$date) {
-            $this->session->set_flashdata('error', 'Format tanggal salah! Gunakan DD/MM/YYYY');
-            redirect('manage/student/add'); // Redirect kembali ke form
+          $this->session->set_flashdata('error', 'Format tanggal salah! Gunakan DD/MM/YYYY');
+          redirect('manage/student/add'); // Redirect kembali ke form
         }
-        
+
         $params['student_born_date'] = $date->format('Y-m-d'); // Format MySQL
-    } else {
+      } else {
         $params['student_born_date'] = null; // Atur null jika kosong
-    }
+      }
       $params['student_address'] = $this->input->post('student_address');
       $params['student_name_of_mother'] = $this->input->post('student_name_of_mother');
       $params['student_name_of_father'] = $this->input->post('student_name_of_father');
@@ -224,19 +224,19 @@ class Student_set extends CI_Controller
       if (!is_null($id)) {
         $object = $this->Student_model->get(array('id' => $id));
         if ($object == NULL) {
-            redirect('manage/student');
+          redirect('manage/student');
         } else {
-            // 🔥 Konversi format tanggal dari database (Y-m-d) ke dd/mm/YYYY
-            $object['student_born_date'] = date('d/m/Y', strtotime($object['student_born_date']));
-            $data['student'] = $object;
+          // 🔥 Konversi format tanggal dari database (Y-m-d) ke dd/mm/YYYY
+          $object['student_born_date'] = date('d/m/Y', strtotime($object['student_born_date']));
+          $data['student'] = $object;
         }
-    }
+      }
       $data['setting_level'] = $this->Setting_model->get(array('id' => 7));
       $data['ngapp'] = 'ng-app="classApp"';
       $data['class'] = $this->Student_model->get_class();
-  // Ambil daftar komplek dan kirim ke view
-  $data['komplek'] = $this->Student_model->get_komplek();
-  $data['majors'] = []; // Kosongkan daftar kamar, nanti diisi dengan AJAX
+      // Ambil daftar komplek dan kirim ke view
+      $data['komplek'] = $this->Student_model->get_komplek();
+      $data['majors'] = []; // Kosongkan daftar kamar, nanti diisi dengan AJAX
       $data['title'] = $data['operation'] . ' Santri';
       $data['main'] = 'student/student_add';
       $this->load->view('manage/layout', $data);
@@ -244,44 +244,46 @@ class Student_set extends CI_Controller
   }
 
 
-  public function validate_date_format($date) {
+  public function validate_date_format($date)
+  {
     $d = DateTime::createFromFormat('d/m/Y', $date);
     if ($d && $d->format('d/m/Y') === $date) {
-        return TRUE;
+      return TRUE;
     } else {
-        $this->form_validation->set_message('validate_date_format', 'Format tanggal harus DD/MM/YYYY');
-        return FALSE;
+      $this->form_validation->set_message('validate_date_format', 'Format tanggal harus DD/MM/YYYY');
+      return FALSE;
     }
-}
-// Student_set.php
-public function monitoring() {
+  }
+  // Student_set.php
+  public function monitoring()
+  {
     $params = array();
-    
+
     // Filter status kelengkapan
-    if($this->input->get('status') == 'complete') {
-        $params['is_complete'] = 1;
-    } elseif($this->input->get('status') == 'incomplete') {
-        $params['is_complete'] = 0;
+    if ($this->input->get('status') == 'complete') {
+      $params['is_complete'] = 1;
+    } elseif ($this->input->get('status') == 'incomplete') {
+      $params['is_complete'] = 0;
     }
-    
+
     $data['students'] = $this->Student_model->get_completion_status($params);
     $data['complete_count'] = $this->Student_model->count_complete_students();
     $data['incomplete_count'] = $this->Student_model->count_incomplete_students();
-    
+
     $data['title'] = 'Monitoring Kelengkapan Data Santri';
     $data['main'] = 'student/monitoring_view';
     $this->load->view('manage/layout', $data);
-}
+  }
   public function get_kamar_by_komplek()
-{
+  {
     $komplek_id = $this->input->post('komplek_id');
     $data = $this->Student_model->get_kamar_by_komplek($komplek_id);
     echo json_encode($data);
-}
+  }
 
 
-public function report()
-{
+  public function report()
+  {
     $this->load->library('pagination');
 
     // Ambil parameter filter dari GET
@@ -291,17 +293,17 @@ public function report()
 
     // Filter berdasarkan NIS atau Nama
     if (isset($f['n']) && !empty($f['n'])) {
-        $params['student_search'] = $f['n'];
+      $params['student_search'] = $f['n'];
     }
 
     // Filter berdasarkan Kelas
     if (isset($f['class']) && !empty($f['class'])) {
-        $params['class_id'] = $f['class'];
+      $params['class_id'] = $f['class'];
     }
 
     // Filter berdasarkan Komplek
     if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {
-        $params['komplek_id'] = $f['komplek_id'];
+      $params['komplek_id'] = $f['komplek_id'];
     }
 
     // Ambil data santri dengan filter
@@ -316,7 +318,7 @@ public function report()
     $data['title'] = 'Laporan Data Santri';
     $data['main'] = 'student/student_report';
     $this->load->view('manage/layout', $data);
-}
+  }
 
   public function print_report_pdf()
   {
@@ -349,24 +351,24 @@ public function report()
     // Tambahkan filter komplek
     $data['selected_komplek'] = 'Semua Komplek'; // Default value
     if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {
-        $params['komplek_id'] = $f['komplek_id'];
-        
-        // Ambil data komplek
-        $komplek = $this->Student_model->get_komplek(array('komplek_id' => $f['komplek_id']));
-        if (!empty($komplek) && isset($komplek['komplek_name'])) {
-            $data['selected_komplek'] = $komplek['komplek_name'];
-        }
+      $params['komplek_id'] = $f['komplek_id'];
+
+      // Ambil data komplek
+      $komplek = $this->Student_model->get_komplek(array('komplek_id' => $f['komplek_id']));
+      if (!empty($komplek) && isset($komplek['komplek_name'])) {
+        $data['selected_komplek'] = $komplek['komplek_name'];
+      }
     }
 
 
-     if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {
-        $params['komplek_id'] = $f['komplek_id'];
-        
-        // Ambil data komplek
-        $komplek = $this->Student_model->get_komplek(array('id' => $f['komplek_id']));
-        if (!empty($komplek) && isset($komplek['komplek_name'])) {
-            $data['selected_komplek'] = $komplek['komplek_name'];
-        }
+    if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {
+      $params['komplek_id'] = $f['komplek_id'];
+
+      // Ambil data komplek
+      $komplek = $this->Student_model->get_komplek(array('id' => $f['komplek_id']));
+      if (!empty($komplek) && isset($komplek['komplek_name'])) {
+        $data['selected_komplek'] = $komplek['komplek_name'];
+      }
     }
 
     // Ambil data santri berdasarkan filter
@@ -378,7 +380,7 @@ public function report()
       redirect('manage/student');
       return;
     }
-    
+
 
     // Ambil data sekolah untuk header laporan
     $data['setting_school'] = $this->Setting_model->get(array('id' => SCHOOL_NAME));
@@ -786,70 +788,149 @@ public function report()
     pdf_create($html, 'DATA_SANTRI_' . date('d_m_Y'), TRUE, 'F4', 'landscape');
   }
 
-public function send_multiple_wa()
-{
-    $students = $this->input->post('students'); // Ambil daftar ID santri yang dipilih
-    $message = $this->input->post('message'); // Ambil pesan yang diketik di modal
-
-    if (empty($students) || empty($message)) {
-        echo json_encode(["status" => "error", "message" => "Data tidak lengkap."]);
-        return;
-    }
-
-    // Load model untuk mendapatkan nomor WhatsApp orang tua
-    $this->load->model('Student_model');
-    $recipients = $this->Student_model->get_parents_phones($students);
-
-    if (empty($recipients)) {
-        echo json_encode(["status" => "error", "message" => "Tidak ada nomor WA yang ditemukan."]);
-        return;
-    }
-
-    // Ambil API URL dan API Token dari database (lebih aman)
-    $api_url = $this->Setting_model->get_value(['id' => 8]); // Ambil setting_wa_gateway_url
-    $api_token = $this->Setting_model->get_value(['id' => 9]); // Ambil setting_wa_api_key
-
-    if (empty($api_url) || empty($api_token)) {
-        log_message('error', "WhatsApp API credentials tidak ditemukan di database.");
-        echo json_encode(["status" => "error", "message" => "Konfigurasi API WhatsApp tidak tersedia."]);
-        return;
-    }
-
-    // Format data sesuai dokumentasi terbaru Wablas
-    $payload = [
-        "data" => []
-    ];
-
-    foreach ($recipients as $phone) {
-        $payload["data"][] = [
-            'phone' => $phone,
-            'message' => $message,
-        ];
-    }
-
-    // Kirim request ke API Wablas
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-        "Authorization: $api_token",
-        "Content-Type: application/json"
-    ));
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
-    curl_setopt($curl, CURLOPT_URL, $api_url);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-
-    $result = curl_exec($curl);
-    $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    $response = json_decode($result, true);
-    curl_close($curl);
-
-    // Jika sukses, tampilkan pesan berhasil
-    echo json_encode(["status" => "success", "message" => "Pesan berhasil dikirim!", "response" => $response]);
-}
-
-
+  public function send_multiple_wa()
+  {
+      $students = $this->input->post('students');
+      $message = $this->input->post('message');
+  
+      if (empty($students)) {
+          echo json_encode(["status" => "error", "message" => "Pilih santri terlebih dahulu!"]);
+          return;
+      }
+  
+      $this->load->model('Student_model');
+      
+      // 1. Ambil semua data santri yang dipilih
+      $allStudents = $this->Student_model->get(['multiple_id' => $students]);
+      
+      // 2. Proses validasi nomor
+      $validNumbers = [];
+      $failedNumbers = [];
+      
+      foreach ($allStudents as $student) {
+          $phone = $student['student_parent_phone'];
+          $rawPhone = $phone;
+          
+          // Normalisasi nomor
+          $phone = preg_replace('/[^0-9]/', '', $phone);
+          $originalPhone = $phone;
+          
+          if (preg_match('/^0/', $phone)) {
+              $phone = '62' . substr($phone, 1);
+          }
+          
+          // Validasi akhir
+          if (preg_match('/^628\d{8,15}$/', $phone)) {
+              $validNumbers[] = [
+                  'student_id' => $student['student_id'],
+                  'name' => $student['student_full_name'],
+                  'phone' => $phone
+              ];
+          } else {
+              $failedNumbers[] = [
+                  'student_id' => $student['student_id'],
+                  'name' => $student['student_full_name'],
+                  'phone' => $rawPhone,
+                  'reason' => $this->get_failure_reason($originalPhone)
+              ];
+          }
+      }
+  
+      if (empty($validNumbers)) {
+          echo json_encode([
+              "status" => "error",
+              "message" => "Tidak ada nomor valid",
+              "details" => "Format nomor harus 08xxx atau 628xxx (min 10 digit)",
+              "failed" => $failedNumbers
+          ]);
+          return;
+      }
+  
+      // 3. Dapatkan konfigurasi API
+      $api_url = $this->Setting_model->get_value(['id' => 8]);
+      $api_token = $this->Setting_model->get_value(['id' => 9]);
+  
+      if (empty($api_url) || empty($api_token)) {
+          log_message('error', 'WA API config missing');
+          echo json_encode([
+              "status" => "error", 
+              "message" => "Server error: WA01",
+              "failed" => $failedNumbers
+          ]);
+          return;
+      }
+  
+      // 4. Format payload
+      $payload = [
+          "data" => array_map(function($item) use ($message) {
+              return [
+                  'phone' => $item['phone'],
+                  'message' => $message
+              ];
+          }, $validNumbers)
+      ];
+  
+      // 5. Eksekusi API
+      $curl = curl_init();
+      curl_setopt_array($curl, [
+          CURLOPT_URL => $api_url,
+          CURLOPT_HTTPHEADER => [
+              "Authorization: $api_token",
+              "Content-Type: application/json"
+          ],
+          CURLOPT_POST => true,
+          CURLOPT_POSTFIELDS => json_encode($payload),
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_SSL_VERIFYHOST => 0,
+          CURLOPT_SSL_VERIFYPEER => 0
+      ]);
+  
+      $response = curl_exec($curl);
+      $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+      $error = curl_error($curl);
+      curl_close($curl);
+  
+      // 6. Logging untuk debugging
+      log_message('debug', 'WA Request: ' . json_encode($payload));
+      log_message('debug', 'WA Response: ' . $response);
+  
+      // 7. Handle response
+      $responseData = json_decode($response, true);
+      
+      // 8. Tentukan status pengiriman
+      $status = "warning";
+      $message = "Terjadi kesalahan pengiriman";
+      
+      if ($httpCode == 200 && isset($responseData['status']) && $responseData['status'] == 'sent') {
+          $status = "success";
+          $message = "Berhasil mengirim ke " . count($validNumbers) . " nomor";
+      }
+  
+      // 9. Kembalikan response dengan data lengkap
+      echo json_encode([
+          "status" => $status,
+          "message" => $message,
+          "success" => $validNumbers,
+          "failed" => $failedNumbers,
+          "api_response" => $responseData,
+          "http_code" => $httpCode
+      ]);
+  }
+  
+  private function get_failure_reason($phone)
+  {
+      if (empty($phone)) return 'Nomor tidak terisi';
+      
+      $phone = preg_replace('/[^0-9]/', '', $phone);
+      
+      if (!preg_match('/^(0|62)/', $phone)) return 'Format awal nomor salah';
+      if (preg_match('/^0/', $phone) && strlen($phone) < 10) return 'Nomor terlalu pendek';
+      if (preg_match('/^62/', $phone) && strlen($phone) < 11) return 'Nomor terlalu pendek';
+      if (!preg_match('/^628\d{8,15}$/', $phone)) return 'Format nomor tidak valid';
+      
+      return 'Nomor tidak valid';
+  }
 
   // satuan
   function printPdf($id = NULL)

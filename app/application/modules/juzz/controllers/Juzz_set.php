@@ -131,10 +131,10 @@ public function delete($id = NULL) {
   $Santri = $this->Student_model->get(array('juzz_id' => $id));
   
   // Periksa apakah kelas ini digunakan di tabel juzz_kitab
-  $juzz_kitab = $this->db->get_where('juzz_kitab', ['juzz_id' => $id])->result_array();
+  
 
   if ($_POST) {
-      if (count($Santri) > 0 || count($juzz_kitab) > 0) {
+      if (count($Santri) > 0 ) {
           $this->session->set_flashdata('failed', 'Data Juzz tidak dapat dihapus karena masih digunakan.');
           redirect('manage/juzz');
       }

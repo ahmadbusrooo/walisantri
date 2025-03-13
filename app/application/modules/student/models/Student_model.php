@@ -58,6 +58,9 @@ class Student_model extends CI_Model {
         if (isset($params['class_id'])) {
             $this->db->where('class_class_id', $params['class_id']);
         }
+        if (isset($params['juzz_id'])) {
+            $this->db->where('juzz_juzz_id', $params['juzz_id']);
+        }
     
         if (isset($params['majors_id'])) {
             $this->db->where('majors_majors_id', $params['majors_id']);
@@ -66,9 +69,17 @@ class Student_model extends CI_Model {
         if (isset($params['class_name'])) {
             $this->db->like('class_name', $params['class_name']);
         }
-    
+
+        if (isset($params['juzz_name'])) {
+            $this->db->like('juzz_name', $params['juzz_name']);
+        }
+
         if (isset($params['group'])) {
             $this->db->group_by('student.class_class_id');
+        }
+
+        if (isset($params['group'])) {
+            $this->db->group_by('student.juzz_juzz_id');
         }
     
         if (isset($params['limit'])) {
@@ -91,12 +102,14 @@ class Student_model extends CI_Model {
             student_born_place, student_born_date, student_img, student_status, student_name_of_mother, 
             student_name_of_father, student_input_date, student_last_update,
             class_class_id, class.class_name,
+            juzz_juzz_id, juzz.juzz_name,
             majors_majors_id, majors.majors_name, majors_short_name, majors.komplek_id,
             komplek.komplek_name
         ');
     
         // 🔄 **Perbaiki urutan JOIN**
         $this->db->join('class', 'class.class_id = student.class_class_id', 'left');
+        $this->db->join('juzz', 'juzz.juzz_id = student.juzz_juzz_id', 'left');
         $this->db->join('majors', 'majors.majors_id = student.majors_majors_id', 'left');
         $this->db->join('komplek', 'komplek.komplek_id = majors.komplek_id', 'left'); // 🚀 JOIN setelah majors
     
@@ -117,12 +130,14 @@ class Student_model extends CI_Model {
             student.student_img, student.student_status, student.student_input_date, student.student_last_update,
             student.student_born_place, student.student_born_date,
             class.class_id, class.class_name,
+            juzz.juzz_id, juzz.juzz_name,
             majors.majors_id, majors.majors_name,
             komplek.komplek_id, komplek.komplek_name
         ');
     
         $this->db->from('student');
         $this->db->join('class', 'class.class_id = student.class_class_id', 'left');
+        $this->db->join('juzz', 'juzz.juzz_id = student.juzz_juzz_id', 'left');
         $this->db->join('majors', 'majors.majors_id = student.majors_majors_id', 'left');
         $this->db->join('komplek', 'komplek.komplek_id = majors.komplek_id', 'left');
     
@@ -150,6 +165,11 @@ class Student_model extends CI_Model {
         if (!empty($params['class_id'])) {
             $this->db->where('student.class_class_id', $params['class_id']);
         }
+        // **Filter berdasarkan Juzz**
+        if (!empty($params['juzz_id'])) {
+            $this->db->where('student.juzz_juzz_id', $params['juzz_id']);
+        }
+
     
         // **Filter berdasarkan Kamar (Asrama)**
         if (!empty($params['majors_id'])) {
@@ -173,6 +193,11 @@ class Student_model extends CI_Model {
     public function get_all_classes() {
         $this->db->select('class_id, class_name');
         return $this->db->get('class')->result_array();
+    }
+
+    public function get_all_juzzes() {
+        $this->db->select('juzz_id, juzz_name');
+        return $this->db->get('juzz')->result_array();
     }
     
     public function get_all_majors() {
@@ -214,6 +239,9 @@ class Student_model extends CI_Model {
     
         if (!empty($params['class_id'])) {
             $this->db->where('student.class_class_id', $params['class_id']);
+        }
+        if (!empty($params['juzz_id'])) {
+            $this->db->where('student.juzz_juzz_id', $params['juzz_id']);
         }
     
         if (!empty($params['majors_id'])) {
@@ -449,8 +477,9 @@ public function get_santri_masuk_keluar($month, $year) {
 
     // Mendapatkan data santri berdasarkan NIS
     public function get_by_nis($nis) {
-        $this->db->select('student_id, student_nis, student_full_name, class_name, student_name_of_mother, student_img, student_name_of_father, student_parent_phone');
+        $this->db->select('student_id, student_nis, student_full_name, class_name, juzz_name, student_name_of_mother, student_img, student_name_of_father, student_parent_phone');
         $this->db->join('class', 'class.class_id = student.class_class_id', 'left');
+        $this->db->join('juzz', 'juzz.juzz_id = student.juzz_juzz_id', 'left');
         $this->db->where('student_nis', $nis);
         $this->db->where('student_status', 1);
         return $this->db->get('student')->row_array();
@@ -489,6 +518,17 @@ public function get_santri_masuk_keluar($month, $year) {
         $this->db->join('class', 'class.class_id = student.class_class_id', 'left');
         $this->db->where('student.student_status', 1); // Hanya menghitung siswa aktif
         $this->db->group_by('class.class_name');
+        $this->db->order_by('total_students', 'DESC');
+
+        return $this->db->get()->result_array();
+    }
+
+    public function get_students_by_juzz() {
+        $this->db->select('juzz.juzz_name, COUNT(student.student_id) as total_students');
+        $this->db->from('student');
+        $this->db->join('juzz', 'juzz.juzz_id = student.juzz_juzz_id', 'left');
+        $this->db->where('student.student_status', 1); // Hanya menghitung siswa aktif
+        $this->db->group_by('juzz.juzz_name');
         $this->db->order_by('total_students', 'DESC');
 
         return $this->db->get()->result_array();
@@ -561,6 +601,10 @@ public function get_santri_masuk_keluar($month, $year) {
             $this->db->set('class_class_id', $data['class_class_id']);
         }
 
+        if (isset($data['juzz_juzz_id'])) {
+            $this->db->set('juzz_juzz_id', $data['juzz_juzz_id']);
+        }
+
         if (isset($data['majors_majors_id'])) {
             $this->db->set('majors_majors_id', $data['majors_majors_id']);
         }
@@ -613,6 +657,28 @@ public function get_santri_masuk_keluar($month, $year) {
         return ($status == 0) ? FALSE : $id;
     }
 
+    function add_juzz($data = array()) {
+
+        if (isset($data['juzz_id'])) {
+            $this->db->set('juzz_id', $data['juzz_id']);
+        }
+
+        if (isset($data['juzz_name'])) {
+            $this->db->set('juzz_name', $data['juzz_name']);
+        }
+
+        if (isset($data['juzz_id'])) {
+            $this->db->where('juzz_id', $data['juzz_id']);
+            $this->db->update('juzz');
+            $id = $data['juzz_id'];
+        } else {
+            $this->db->insert('juzz');
+            $id = $this->db->insert_id(); 
+        }
+
+        $status = $this->db->affected_rows();
+        return ($status == 0) ? FALSE : $id;
+    }
     function add_majors($data = array()) {
         // Pastikan ID kamar ditangani saat update
         if (isset($data['majors_id'])) {
@@ -667,6 +733,7 @@ public function get_santri_masuk_keluar($month, $year) {
             student_name_of_father,
             student_img,
             class_name,
+            juzz_name,
             majors_name,
             komplek_name,
             CASE 
@@ -685,6 +752,7 @@ public function get_santri_masuk_keluar($month, $year) {
         $this->db->where('student.student_status', 1); 
         
         $this->db->join('class', 'class.class_id = student.class_class_id', 'left');
+        $this->db->join('juzz', 'juzz.juzz_id = student.juzz_juzz_id', 'left');
         $this->db->join('majors', 'majors.majors_id = student.majors_majors_id', 'left');
         $this->db->join('komplek', 'komplek.komplek_id = majors.komplek_id', 'left');
         
@@ -732,6 +800,10 @@ public function get_santri_masuk_keluar($month, $year) {
     function delete_class($id) {
         $this->db->where('class_id', $id);
         $this->db->delete('class');
+    }
+    function delete_juzz($id) {
+        $this->db->where('juzz_id', $id);
+        $this->db->delete('juzz');
     }
 
     function delete_majors($id) {

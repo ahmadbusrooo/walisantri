@@ -153,7 +153,7 @@
       <?php } ?>
 
       <!-- Pendidikan -->
-      <li class="treeview <?php echo ($this->uri->segment(1) == ['nadzhaman', 'kitab', 'pelanggaran'] || ($this->uri->segment(2) == 'student' && in_array($this->uri->segment(3), ['pass', 'upgrade']))) ? 'active' : ''; ?>">
+      <li class="treeview <?php echo ($this->uri->segment(1) == ['nadzhaman', 'kitab', 'pelanggaran', "manage"] || ($this->uri->segment(2) == 'student' && in_array($this->uri->segment(3), ['pass', 'upgrade']))) ? 'active' : ''; ?>">
         <a href="#">
           <i class="fa fa-graduation-cap"></i> <span>Pendidikan</span>
           <span class="pull-right-container">
@@ -164,6 +164,9 @@
         <ul class="treeview-menu">
           <li class="<?php echo ($this->uri->segment(1) == 'kitab') ? 'active' : ''; ?>">
             <a href="<?php echo site_url('kitab'); ?>"><i class="fa fa-book"></i> Data Kitab</a>
+          </li>
+          <li class="<?php echo ($this->uri->segment(1) == 'Juzz') ? 'active' : ''; ?>">
+            <a href="<?php echo site_url('manage/juzz'); ?>"><i class="fa fa-book"></i> Juzz</a>
           </li>
           <li class="<?php echo ($this->uri->segment(1) == 'pelanggaran') ? 'active' : ''; ?>">
             <a href="<?php echo site_url('manage/absen_mengaji'); ?>"><i class="fa fa-exclamation-triangle"></i> Pelanggaran Mengaji</a>

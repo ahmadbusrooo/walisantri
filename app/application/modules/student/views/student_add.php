@@ -4,6 +4,7 @@ if (isset($student)) {
 
 	$inputFullnameValue = $student['student_full_name'];
 	$inputClassValue = $student['class_class_id'];
+	$inputJuzzValue = $student['juzz_juzz_id'];
 	$inputMajorValue = $student['majors_majors_id'];
 	$inputNisValue = $student['student_nis'];
 	$inputNisNValue = $student['student_nisn'];
@@ -21,6 +22,7 @@ if (isset($student)) {
 } else {
 	$inputFullnameValue = set_value('student_full_name');
 	$inputClassValue = set_value('class_class_id');
+	$inputJuzzValue = set_value('juzz_juzz_id');
 	$inputMajorValue = set_value('majors_majors_id');
 	$inputNisValue = set_value('student_nis');
 	$inputNisNValue = set_value('student_nisn');
@@ -38,7 +40,7 @@ if (isset($student)) {
 }
 ?>
 
-<div class="content-wrapper"> 
+<div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
@@ -73,10 +75,10 @@ if (isset($student)) {
 									<?php if (isset($student)) { ?>
 										<input type="hidden" name="student_id" value="<?php echo $student['student_id']; ?>">
 									<?php } ?>
-									
+
 									<div class="form-group">
 										<label>Nama lengkap <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-										<input name="student_full_name" type="text" class="form-control"  value="<?php echo $inputFullnameValue ?>" placeholder="Nama lengkap" >
+										<input name="student_full_name" type="text" class="form-control" value="<?php echo $inputFullnameValue ?>" placeholder="Nama lengkap">
 									</div>
 									<div class="form-group">
 										<label>Jenis Kelamin <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
@@ -96,11 +98,11 @@ if (isset($student)) {
 									</div>
 
 									<div class="form-group">
-    <label>Tanggal Lahir <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-    <input class="form-control" type="text" name="student_born_date" 
-           placeholder="DD/MM/YYYY" value="<?php echo $inputDateValue; ?>"
-           pattern="\d{2}/\d{2}/\d{4}" title="Format: DD/MM/YYYY">
-</div>
+										<label>Tanggal Lahir <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+										<input class="form-control" type="text" name="student_born_date"
+											placeholder="DD/MM/YYYY" value="<?php echo $inputDateValue; ?>"
+											pattern="\d{2}/\d{2}/\d{4}" title="Format: DD/MM/YYYY">
+									</div>
 
 									<div class="form-group">
 										<label>Hobi</label>
@@ -121,18 +123,18 @@ if (isset($student)) {
 									<div class="form-group">
 										<label>NIS <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
 										<input name="student_nis" type="text" class="form-control" value="<?php echo $inputNisValue ?>" placeholder="NIS Santri">
-									</div> 
+									</div>
 
 									<?php if (!isset($student)) { ?>
 										<div class="form-group">
 											<label>Password <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
 											<input name="student_password" type="password" class="form-control" placeholder="Password">
-										</div>            
+										</div>
 
 										<div class="form-group">
 											<label>Konfirmasi Password <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
 											<input name="passconf" type="password" class="form-control" placeholder="Konfirmasi Password">
-										</div>       
+										</div>
 									<?php } ?>
 
 									<div class="form-group">
@@ -140,42 +142,51 @@ if (isset($student)) {
 										<input name="student_nisn" type="text" class="form-control" value="<?php echo $inputNisNValue ?>" placeholder="NIK Santri">
 									</div>
 									<div class="form-group">
-    <label>Komplek <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-    <select name="komplek_id" id="komplek_id" class="form-control" >
-        <option value="">-- Pilih Komplek --</option>
-        <?php foreach ($komplek as $k) : ?>
-            <option value="<?= $k['komplek_id']; ?>" <?= ($inputKomplekValue == $k['komplek_id']) ? 'selected' : ''; ?>>
-                <?= $k['komplek_name']; ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</div>
+										<label>Komplek <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+										<select name="komplek_id" id="komplek_id" class="form-control">
+											<option value="">-- Pilih Komplek --</option>
+											<?php foreach ($komplek as $k) : ?>
+												<option value="<?= $k['komplek_id']; ?>" <?= ($inputKomplekValue == $k['komplek_id']) ? 'selected' : ''; ?>>
+													<?= $k['komplek_name']; ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+									</div>
 
-<div class="form-group">
-    <label>Kamar <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-    <select name="majors_majors_id" id="majors_id" class="form-control">
-        <option value="">-- Mohon Pilih Komplek Dulu --</option>
-        <?php if (!empty($majors)) : ?>
-            <?php foreach ($majors as $m) : ?>
-                <option value="<?= $m['majors_id']; ?>" <?= ($inputMajorValue == $m['majors_id']) ? 'selected' : ''; ?>>
-                    <?= $m['majors_name']; ?>
-                </option>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </select>
-</div>
+									<div class="form-group">
+										<label>Kamar <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+										<select name="majors_majors_id" id="majors_id" class="form-control">
+											<option value="">-- Mohon Pilih Komplek Dulu --</option>
+											<?php if (!empty($majors)) : ?>
+												<?php foreach ($majors as $m) : ?>
+													<option value="<?= $m['majors_id']; ?>" <?= ($inputMajorValue == $m['majors_id']) ? 'selected' : ''; ?>>
+														<?= $m['majors_name']; ?>
+													</option>
+												<?php endforeach; ?>
+											<?php endif; ?>
+										</select>
+									</div>
 
 
 									<div ng-controller="classCtrl">
-										<div class="form-group"> 
-											<label >Kelas  <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+										<div class="form-group">
+											<label>Kelas <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
 											<select name="class_class_id" class="form-control autocomplete">
 												<option value="">-- Pilih Kelas --</option>
 												<option ng-repeat="class in classs" ng-selected="class_data.index == class.class_id" value="{{class.class_id}}">{{class.class_name}}</option>
 											</select>
 										</div>
 									</div>
-									
+									<div ng-controller="juzzCtrl">
+										<div class="form-group">
+											<label>Juzz <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
+											<select name="juzz_juzz_id" class="form-control autocomplete">
+												<option value="">-- Pilih Juzz --</option>
+												<option ng-repeat="juzz in juzzs" ng-selected="juzz_data.index == juzz.juzz_id" value="{{juzz.juzz_id}}">{{juzz.juzz_name}}</option>
+											</select>
+										</div>
+									</div>
+
 								</div>
 								<div class="tab-pane" id="tab_3">
 									<div class="form-group">
@@ -190,15 +201,15 @@ if (isset($student)) {
 										<label>No. Handphone Orang Tua <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
 										<input name="student_parent_phone" type="text" class="form-control" value="<?php echo $inputParPhoneValue ?>" placeholder="No Handphone Orang Tua">
 									</div>
-									
+
 								</div>
 
 							</div>
 						</div>
 
-						
+
 						<p class="text-muted">*) Kolom wajib diisi. <br> Nomor Hp Wajib Diawali 62 Tanpa +
-					</p>
+						</p>
 					</div>
 					<!-- /.box-body -->
 				</div>
@@ -211,16 +222,16 @@ if (isset($student)) {
 							<label>Status</label>
 							<div class="radio">
 								<label>
-								<input type="radio" name="student_status" value="1" <?php echo (isset($student['student_status']) ? ($student['student_status'] == 1 ? 'checked' : '') : 'checked'); ?>> Aktif
+									<input type="radio" name="student_status" value="1" <?php echo (isset($student['student_status']) ? ($student['student_status'] == 1 ? 'checked' : '') : 'checked'); ?>> Aktif
 								</label>
 							</div>
 							<div class="radio">
 								<label>
-								<input type="radio" name="student_status" value="0" <?php echo (isset($student['student_status']) ? ($student['student_status'] == 0 ? 'checked' : '') : ''); ?>> Tidak Aktif
+									<input type="radio" name="student_status" value="0" <?php echo (isset($student['student_status']) ? ($student['student_status'] == 0 ? 'checked' : '') : ''); ?>> Tidak Aktif
 								</label>
 							</div>
 						</div>
-						<label >Foto</label>
+						<label>Foto</label>
 						<a href="#" class="thumbnail">
 							<?php if (isset($student['student_img']) != NULL) { ?>
 								<img src="<?php echo upload_url('student/' . $student['student_img']) ?>" class="img-responsive avatar">
@@ -276,58 +287,58 @@ if (isset($student)) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    // Format otomatis DD/MM/YYYY
-    $('[name="student_born_date"]').inputmask({
-        mask: "99/99/9999",
-        placeholder: "DD/MM/YYYY",
-        separator: "/",
-        alias: "datetime",
-        inputFormat: "dd/mm/yyyy",
-        clearIncomplete: true
-    });
-});
+	$(document).ready(function() {
+		// Format otomatis DD/MM/YYYY
+		$('[name="student_born_date"]').inputmask({
+			mask: "99/99/9999",
+			placeholder: "DD/MM/YYYY",
+			separator: "/",
+			alias: "datetime",
+			inputFormat: "dd/mm/yyyy",
+			clearIncomplete: true
+		});
+	});
 </script>
 <script>
-$(document).ready(function() {
-    var komplek_id = $("#komplek_id").val(); // Ambil komplek_id dari dropdown saat halaman dimuat
-    loadKamar(komplek_id); // Panggil fungsi untuk mengisi kamar
+	$(document).ready(function() {
+		var komplek_id = $("#komplek_id").val(); // Ambil komplek_id dari dropdown saat halaman dimuat
+		loadKamar(komplek_id); // Panggil fungsi untuk mengisi kamar
 
-    // Event listener jika komplek diubah
-    $("#komplek_id").change(function() {
-        var selectedKomplek = $(this).val();
-        loadKamar(selectedKomplek);
-    });
+		// Event listener jika komplek diubah
+		$("#komplek_id").change(function() {
+			var selectedKomplek = $(this).val();
+			loadKamar(selectedKomplek);
+		});
 
-    // Fungsi untuk mengambil data kamar berdasarkan komplek
-    function loadKamar(komplek_id) {
-        $("#majors_id").html('<option value="">-- Mohon Pilih Komplek Dulu --</option>'); // Reset dropdown
-        if (komplek_id !== "") {
-            $.ajax({
-                url: "<?= site_url('manage/student/get_kamar_by_komplek'); ?>",
-                type: "POST",
-                data: { komplek_id: komplek_id },
-                dataType: "json",
-                success: function(data) {
-                    if (data.length > 0) {
-                        $.each(data, function(index, item) {
-                            var selected = (item.majors_id == "<?= isset($student['majors_majors_id']) ? $student['majors_majors_id'] : ''; ?>") ? "selected" : "";
-                            $("#majors_id").append('<option value="' + item.majors_id + '" ' + selected + '>' + item.majors_name + '</option>');
-                        });
-                    } else {
-                        $("#majors_id").html('<option value="">Tidak ada kamar tersedia</option>');
-                    }
-                }
-            });
-        }
-    }
-});
-
+		// Fungsi untuk mengambil data kamar berdasarkan komplek
+		function loadKamar(komplek_id) {
+			$("#majors_id").html('<option value="">-- Mohon Pilih Komplek Dulu --</option>'); // Reset dropdown
+			if (komplek_id !== "") {
+				$.ajax({
+					url: "<?= site_url('manage/student/get_kamar_by_komplek'); ?>",
+					type: "POST",
+					data: {
+						komplek_id: komplek_id
+					},
+					dataType: "json",
+					success: function(data) {
+						if (data.length > 0) {
+							$.each(data, function(index, item) {
+								var selected = (item.majors_id == "<?= isset($student['majors_majors_id']) ? $student['majors_majors_id'] : ''; ?>") ? "selected" : "";
+								$("#majors_id").append('<option value="' + item.majors_id + '" ' + selected + '>' + item.majors_name + '</option>');
+							});
+						} else {
+							$("#majors_id").html('<option value="">Tidak ada kamar tersedia</option>');
+						}
+					}
+				});
+			}
+		}
+	});
 </script>
 
 
 <script>
-
 	function getId(id) {
 		$('#studentId').val(id)
 	}
@@ -340,7 +351,9 @@ $(document).ready(function() {
 	classApp.controller('classCtrl', function($scope, $http) {
 		$scope.classs = [];
 		<?php if (isset($student)): ?>
-			$scope.class_data = {index: <?php echo $student['class_class_id']; ?>};
+			$scope.class_data = {
+				index: <?php echo $student['class_class_id']; ?>
+			};
 		<?php endif; ?>
 
 		$scope.getClass = function() {
@@ -370,7 +383,27 @@ $(document).ready(function() {
 		});
 
 	});
+	classApp.controller('juzzCtrl', function($scope, $http) {
+    $scope.juzzs = [];
+    <?php if (isset($student)): ?>
+      $scope.juzz_data = {
+        index: <?php echo $student['juzz_juzz_id']; ?>
+      };
+    <?php endif; ?>
 
+    // Fungsi untuk mengambil data Juzz
+    $scope.getJuzz = function() {
+      var url = SITEURL + 'api/get_juzz/'; // Pastikan endpoint ini ada
+      $http.get(url).then(function(response) {
+        $scope.juzzs = response.data;
+      });
+    };
+
+    // Inisialisasi saat dokumen siap
+    angular.element(document).ready(function() {
+      $scope.getJuzz();
+    });
+  });
 	function readURL(input) {
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();
@@ -385,6 +418,4 @@ $(document).ready(function() {
 	$("#student_img").change(function() {
 		readURL(this);
 	});
-
-
 </script>

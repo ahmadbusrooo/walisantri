@@ -24,6 +24,14 @@ class Api extends CI_Controller {
                 ->set_content_type('application/json')
                 ->set_output(json_encode($res));
     }
+    public function get_juzz() {
+        $this->load->model('student/Student_model');
+        $res = $this->Student_model->get_juzz();
+
+        $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($res));
+    }
 
     public function get_class2() {
         $this->load->model('student/Student_model');
@@ -33,12 +41,20 @@ class Api extends CI_Controller {
                 ->set_content_type('application/json')
                 ->set_output(json_encode($res));
     }
+    public function get_juzz2() {
+        $this->load->model('student/Student_model');
+        $res = $this->Student_model->get(array('group'=>true));
+
+        $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($res));
+    }
 
 
-    public function get_student_by_class($id = NULL) {
+    public function get_student_by_juzz($id = NULL) {
         if ($id != NULL) {
             $this->load->model('student/Student_model');
-            $res = $this->Student_model->get(array('status'=>1, 'class_id'=>$id));
+            $res = $this->Student_model->get(array('status'=>1, 'juzz_id'=>$id));
 
             $this->output
                     ->set_content_type('application/json')

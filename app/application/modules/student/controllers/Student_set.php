@@ -37,6 +37,11 @@ class Student_set extends CI_Controller
     if (isset($f['class']) && !empty($f['class']) && $f['class'] != '') {
       $params['class_id'] = $f['class'];
     }
+
+    if (isset($f['juzz']) && !empty($f['juzz']) && $f['juzz'] != '') {
+      $params['juzz_id'] = $f['juzz'];
+    }
+
     // **Filter berdasarkan Komplek**
     if (!empty($f['komplek_id'])) {
       $params['komplek_id'] = $f['komplek_id'];
@@ -69,6 +74,7 @@ class Student_set extends CI_Controller
 
     // Data tambahan untuk dropdown filter
     $data['class'] = $this->Student_model->get_all_classes();
+    $data['juzz'] = $this->Student_model->get_all_juzzes();
     $data['majors'] = $this->Student_model->get_all_majors();
     $data['komplek'] = $this->Student_model->get_komplek();
     $data['title'] = 'Data Santri';
@@ -92,6 +98,9 @@ class Student_set extends CI_Controller
     }
     if (isset($f['class']) && !empty($f['class'])) {
       $params['class_id'] = $f['class'];
+    }
+    if (isset($f['juzz']) && !empty($f['juzz'])) {
+      $params['juzz_id'] = $f['juzz'];
     }
     if (!empty($f['komplek_id'])) {
       $params['komplek_id'] = $f['komplek_id'];
@@ -117,6 +126,7 @@ class Student_set extends CI_Controller
 
     // Data untuk view
     $data['class'] = $this->Student_model->get_all_classes();
+    $data['juzz'] = $this->Student_model->get_all_juzzes();
     $data['majors'] = $this->Student_model->get_all_majors();
     $data['komplek'] = $this->Student_model->get_komplek();
     $data['title'] = 'View Data Santri';
@@ -149,6 +159,7 @@ class Student_set extends CI_Controller
       'trim|required|xss_clean|callback_validate_date_format'
     );
     $this->form_validation->set_rules('class_class_id', 'Kelas', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('juzz_juzz_id', 'Juzz', 'trim|required|xss_clean');
     $this->form_validation->set_rules('majors_majors_id', 'Kamar', 'trim|required|xss_clean');
     $this->form_validation->set_rules('student_name_of_father', 'Ayah Kandung', 'trim|required|xss_clean');
     $this->form_validation->set_error_delimiters('<div class="alert alert-danger"><button position="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
@@ -168,6 +179,7 @@ class Student_set extends CI_Controller
       $params['student_phone'] = $this->input->post('student_phone');
       $params['student_hobby'] = $this->input->post('student_hobby');
       $params['class_class_id'] = $this->input->post('class_class_id');
+      $params['juzz_juzz_id'] = $this->input->post('juzz_juzz_id');
       $params['majors_majors_id'] = $this->input->post('majors_majors_id'); // Kamar harus sesuai dengan komplek yang dipilih
       $params['komplek_id'] = $this->input->post('komplek_id'); // Tambahkan komplek_id
       $params['student_last_update'] = date('Y-m-d H:i:s');
@@ -231,9 +243,11 @@ class Student_set extends CI_Controller
           $data['student'] = $object;
         }
       }
+      
       $data['setting_level'] = $this->Setting_model->get(array('id' => 7));
       $data['ngapp'] = 'ng-app="classApp"';
       $data['class'] = $this->Student_model->get_class();
+      $data['juzz'] = $this->Student_model->get_juzz();
       // Ambil daftar komplek dan kirim ke view
       $data['komplek'] = $this->Student_model->get_komplek();
       $data['majors'] = []; // Kosongkan daftar kamar, nanti diisi dengan AJAX
@@ -301,6 +315,11 @@ class Student_set extends CI_Controller
       $params['class_id'] = $f['class'];
     }
 
+    // Filter berdasarkan Kelas
+    if (isset($f['juzz']) && !empty($f['juzz'])) {
+      $params['juzz_id'] = $f['juzz'];
+    }
+
     // Filter berdasarkan Komplek
     if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {
       $params['komplek_id'] = $f['komplek_id'];
@@ -312,6 +331,7 @@ class Student_set extends CI_Controller
 
     // Data untuk dropdown filter
     $data['classes'] = $this->Student_model->get_all_classes();
+    $data['juzzes'] = $this->Student_model->get_all_juzzes();
     $data['komplek'] = $this->Student_model->get_komplek(); // Tambahkan ini
 
     // Load tampilan laporan
@@ -348,6 +368,20 @@ class Student_set extends CI_Controller
         $data['selected_class'] = $class['class_name'];
       }
     }
+
+     // Filter berdasarkan Kelas
+     $data['selected_juzz'] = 'Semua Kelas'; // Default jika tidak ada kelas yang dipilih
+     if (isset($f['juzz']) && !empty($f['juzz'])) {
+       $params['juzz_id'] = $f['juzz'];
+ 
+       // Ambil data kelas
+       $juzz = $this->Student_model->get_juzz(array('id' => $f['juzz']));
+ 
+       // Cek apakah data kelas tersedia
+       if (!empty($juzz) && isset($juzz['juzz_name'])) {
+         $data['selected_juzz'] = $juzz['juzz_name'];
+       }
+     }
     // Tambahkan filter komplek
     $data['selected_komplek'] = 'Semua Komplek'; // Default value
     if (isset($f['komplek_id']) && !empty($f['komplek_id'])) {

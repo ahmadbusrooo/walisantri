@@ -2,11 +2,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <?php echo isset($title) ? $title : 'Data Hafalan Santri'; ?>
+            <?php echo isset($title) ? $title : 'Riwayat Hafalan Santri'; ?>
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?php echo site_url('manage') ?>"><i class="fa fa-th"></i> Home</a></li>
-            <li class="active"><?php echo isset($title) ? $title : 'Data Hafalan Santri'; ?></li>
+            <li class="active"><?php echo isset($title) ? $title : 'Riwayat Hafalan Santri'; ?></li>
         </ol>
     </section>
 
@@ -18,7 +18,7 @@
             <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
                     <div class="box-header with-border">
-                        <h3 class="box-title">Filter Data Hafalan Santri</h3>
+                        <h3 class="box-title">Filter Riwayat Hafalan Santri</h3>
                     </div>
                     <div class="box-body">
                         <?php echo form_open(current_url(), array('class' => 'form-horizontal', 'method' => 'get')) ?>
@@ -207,10 +207,8 @@
                 <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
                         <div class="box-header with-border">
-                            <h3 class="box-title">Riwayat Nadzhaman</h3>
-                            <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addNadzhamanModal">
-                                <i class="fa fa-plus"></i> Tambah Nadzhaman
-                            </button>
+                            <h3 class="box-title">Riwayat Hafalan</h3>
+                            
                         </div>
                         <div class="box-body">
                             <div class="table-responsive">

@@ -152,10 +152,10 @@
         </li>
       <?php } ?>
 
-      <!-- Pendidikan -->
+      <!-- M3 -->
       <li class="treeview <?php echo ($this->uri->segment(1) == ['nadzhaman', 'kitab', 'pelanggaran', "manage"] || ($this->uri->segment(2) == 'student' && in_array($this->uri->segment(3), ['pass', 'upgrade']))) ? 'active' : ''; ?>">
         <a href="#">
-          <i class="fa fa-graduation-cap"></i> <span>Pendidikan</span>
+          <i class="fa fa-graduation-cap"></i> <span>M3</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
@@ -164,9 +164,6 @@
         <ul class="treeview-menu">
           <li class="<?php echo ($this->uri->segment(1) == 'kitab') ? 'active' : ''; ?>">
             <a href="<?php echo site_url('kitab'); ?>"><i class="fa fa-book"></i> Data Kitab</a>
-          </li>
-          <li class="<?php echo ($this->uri->segment(1) == 'Juzz') ? 'active' : ''; ?>">
-            <a href="<?php echo site_url('manage/juzz'); ?>"><i class="fa fa-book"></i> Juzz</a>
           </li>
           <li class="<?php echo ($this->uri->segment(1) == 'pelanggaran') ? 'active' : ''; ?>">
             <a href="<?php echo site_url('manage/absen_mengaji'); ?>"><i class="fa fa-exclamation-triangle"></i> Pelanggaran Mengaji</a>
@@ -223,8 +220,49 @@
         </ul>
       </li>
 
+      <li class="treeview <?php echo ($this->uri->segment(1) == ["manage"] || ($this->uri->segment(2) == ['student', 'absen_setoran', 'juzz'] && in_array($this->uri->segment(3), ['pass', 'upgrade']))) ? 'active' : ''; ?>">
+        <a href="#">
+          <i class="fa fa-graduation-cap"></i> <span>Pendidikan</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+
+        <ul class="treeview-menu">
+          <li class="<?php echo ($this->uri->segment(2) == 'juzz') ? 'active' : ''; ?>">
+            <a href="<?php echo site_url('manage/juzz'); ?>"><i class="fa fa-book"></i> Juzz</a>
+          </li>
+          <li class="<?php echo ($this->uri->segment(2) == 'absen_setoran') ? 'active' : ''; ?>">
+            <a href="<?php echo site_url('manage/absen_setoran'); ?>"><i class="fa fa-exclamation-triangle"></i> Pelanggaran Setoran</a>
+          </li>
+          <!-- Setoran -->
+          <!-- Kelas -->
+          <li class="treeview <?php echo ($this->uri->segment(2) == 'student' && in_array($this->uri->segment(3), ['pass', 'upgrade'])) ? 'active' : ''; ?>">
+            <a href="#">
+              <i class="fa fa-chalkboard-teacher"></i> <span>Juzz</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <li class="<?php echo ($this->uri->segment(3) == 'pass') ? 'active' : ''; ?>">
+                <a href="<?php echo site_url('manage/student/pass'); ?>">
+                  <i class="fa fa-check-circle"></i> Kelulusan
+                </a>
+              </li>
+              <li class="<?php echo ($this->uri->segment(3) == 'upgrade') ? 'active' : ''; ?>">
+                <a href="<?php echo site_url('manage/student/upgrade'); ?>">
+                  <i class="fa fa-level-up-alt"></i> Kenaikan Juz
+                </a>
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+      </li>
+
       <!-- Keamanan -->
-      <li class="treeview <?= (in_array($this->uri->segment(2), ['pelanggaran','absen_jamaah','izin_pulang'])) ? 'active' : '' ?>">
+      <li class="treeview <?= (in_array($this->uri->segment(2), ['pelanggaran', 'absen_jamaah', 'izin_pulang'])) ? 'active' : '' ?>">
         <a href="#">
           <i class="fas fa-shield-alt"></i> <span>Keamanan</span>
           <span class="pull-right-container">

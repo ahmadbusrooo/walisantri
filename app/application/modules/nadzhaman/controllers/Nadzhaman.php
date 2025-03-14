@@ -137,23 +137,25 @@ class Nadzhaman extends CI_Controller
     
         // Ambil data hafalan per siswa
         $data['nadzhaman'] = [];
-        if (!empty($data['santri'])) {
-            foreach ($data['santri'] as $santri) {
-                $nadzhaman = $this->Nadzhaman_model->get([
-                    'student_id' => $santri['student_id'],
-                    'period_id' => $period_id
-                ]);
-    
-                $data['nadzhaman'][] = [
-                    'student_full_name' => $santri['student_full_name'],
-                    'tanggal' => isset($nadzhaman[0]['tanggal']) ? $nadzhaman[0]['tanggal'] : '-',
-                    'nama_kitab' => isset($nadzhaman[0]['nama_kitab']) ? $nadzhaman[0]['nama_kitab'] : '-',
-                    'jumlah_hafalan' => isset($nadzhaman[0]['jumlah_hafalan']) ? $nadzhaman[0]['jumlah_hafalan'] : '-',
-                    'keterangan' => isset($nadzhaman[0]['keterangan']) ? $nadzhaman[0]['keterangan'] : '-',
-                    'status' => isset($nadzhaman[0]['status']) ? $nadzhaman[0]['status'] : '-'
-                ];
-            }
+    if (!empty($data['santri'])) {
+        foreach ($data['santri'] as $santri) {
+            $nadzhaman = $this->Nadzhaman_model->get([
+                'student_id' => $santri['student_id'],
+                'period_id' => $period_id
+            ]);
+
+            $data['nadzhaman'][] = [
+                'student_nis' => $santri['student_nis'], // TAMBAHKAN INI
+                'student_full_name' => $santri['student_full_name'],
+                'tanggal' => isset($nadzhaman[0]['tanggal']) ? $nadzhaman[0]['tanggal'] : '-',
+                'tanggal_akhir' => isset($nadzhaman[0]['tanggal_akhir']) ? $nadzhaman[0]['tanggal_akhir'] : '-',
+                'nama_kitab' => isset($nadzhaman[0]['nama_kitab']) ? $nadzhaman[0]['nama_kitab'] : '-',
+                'jumlah_hafalan' => isset($nadzhaman[0]['jumlah_hafalan']) ? $nadzhaman[0]['jumlah_hafalan'] : '-',
+                'keterangan' => isset($nadzhaman[0]['keterangan']) ? $nadzhaman[0]['keterangan'] : '-',
+                'status' => isset($nadzhaman[0]['status']) ? $nadzhaman[0]['status'] : '-'
+            ];
         }
+    }
     
         // Pastikan ada filter kelas dan periode yang diisi
         if (empty($class_id) || empty($period_id)) {
@@ -192,6 +194,7 @@ class Nadzhaman extends CI_Controller
                 'student_id' => $student['student_id'],
                 'kitab_id' => $kitab_id,
                 'tanggal' => $student['tanggal'],
+                'tanggal_akhir'    => $student['tanggal_akhir'],
                 'jumlah_hafalan' => $student['jumlah_hafalan'],
                 'keterangan' => $student['keterangan'],
                 'period_id' => $period_id,
@@ -270,7 +273,7 @@ class Nadzhaman extends CI_Controller
             $data['yearly_hafalan'] = $this->Nadzhaman_model->get_yearly_hafalan($student_id);
         }
 
-        $data['title'] = 'Data Hafalan Santri';
+        $data['title'] = 'Riwayat Hafalan Santri';
         $data['main'] = 'nadzhaman/nadzhaman_list';
         $this->load->view('manage/layout', $data);
     }

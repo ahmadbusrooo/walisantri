@@ -601,7 +601,7 @@ public function get_santri_masuk_keluar($month, $year) {
             $this->db->set('class_class_id', $data['class_class_id']);
         }
 
-        if (isset($data['juzz_juzz_id'])) {
+        if (array_key_exists('juzz_juzz_id', $data)) {
             $this->db->set('juzz_juzz_id', $data['juzz_juzz_id']);
         }
 

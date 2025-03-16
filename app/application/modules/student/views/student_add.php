@@ -179,10 +179,14 @@ if (isset($student)) {
 									</div>
 									<div ng-controller="juzzCtrl">
 										<div class="form-group">
-											<label>Juzz <small data-toggle="tooltip" title="Wajib diisi">*</small></label>
-											<select name="juzz_juzz_id" class="form-control autocomplete">
-												<option value="">-- Pilih Juzz --</option>
-												<option ng-repeat="juzz in juzzs" ng-selected="juzz_data.index == juzz.juzz_id" value="{{juzz.juzz_id}}">{{juzz.juzz_name}}</option>
+											<label>Juzz </label>
+											<select name="juzz_juzz_id" class="form-control">
+												<option value="">-- Pilih Juzz (Opsional) --</option>
+												<?php foreach ($juzz as $j): ?>
+													<option value="<?= $j['juzz_id'] ?>" <?= ($j['juzz_id'] == $inputJuzzValue) ? 'selected' : '' ?>>
+														<?= $j['juzz_name'] ?>
+													</option>
+												<?php endforeach; ?>
 											</select>
 										</div>
 									</div>
@@ -384,26 +388,27 @@ if (isset($student)) {
 
 	});
 	classApp.controller('juzzCtrl', function($scope, $http) {
-    $scope.juzzs = [];
-    <?php if (isset($student)): ?>
-      $scope.juzz_data = {
-        index: <?php echo $student['juzz_juzz_id']; ?>
-      };
-    <?php endif; ?>
+		$scope.juzzs = [];
+		<?php if (isset($student)): ?>
+			$scope.juzz_data = {
+				index: <?php echo ($student['juzz_juzz_id'] !== NULL) ? $student['juzz_juzz_id'] : 'null'; ?>
+			};
+		<?php endif; ?>
 
-    // Fungsi untuk mengambil data Juzz
-    $scope.getJuzz = function() {
-      var url = SITEURL + 'api/get_juzz/'; // Pastikan endpoint ini ada
-      $http.get(url).then(function(response) {
-        $scope.juzzs = response.data;
-      });
-    };
+		// Fungsi untuk mengambil data Juzz
+		$scope.getJuzz = function() {
+			var url = SITEURL + 'api/get_juzz/'; // Pastikan endpoint ini ada
+			$http.get(url).then(function(response) {
+				$scope.juzzs = response.data;
+			});
+		};
 
-    // Inisialisasi saat dokumen siap
-    angular.element(document).ready(function() {
-      $scope.getJuzz();
-    });
-  });
+		// Inisialisasi saat dokumen siap
+		angular.element(document).ready(function() {
+			$scope.getJuzz();
+		});
+	});
+
 	function readURL(input) {
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();

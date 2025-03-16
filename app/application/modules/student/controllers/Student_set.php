@@ -159,7 +159,7 @@ class Student_set extends CI_Controller
       'trim|required|xss_clean|callback_validate_date_format'
     );
     $this->form_validation->set_rules('class_class_id', 'Kelas', 'trim|required|xss_clean');
-    $this->form_validation->set_rules('juzz_juzz_id', 'Juzz', 'trim|required|xss_clean');
+    $this->form_validation->set_rules('juzz_juzz_id', 'Juzz', 'trim|xss_clean');
     $this->form_validation->set_rules('majors_majors_id', 'Kamar', 'trim|required|xss_clean');
     $this->form_validation->set_rules('student_name_of_father', 'Ayah Kandung', 'trim|required|xss_clean');
     $this->form_validation->set_error_delimiters('<div class="alert alert-danger"><button position="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>');
@@ -179,7 +179,8 @@ class Student_set extends CI_Controller
       $params['student_phone'] = $this->input->post('student_phone');
       $params['student_hobby'] = $this->input->post('student_hobby');
       $params['class_class_id'] = $this->input->post('class_class_id');
-      $params['juzz_juzz_id'] = $this->input->post('juzz_juzz_id');
+      $juzz_input = $this->input->post('juzz_juzz_id');
+      $params['juzz_juzz_id'] = ($juzz_input !== "") ? $juzz_input : NULL;
       $params['majors_majors_id'] = $this->input->post('majors_majors_id'); // Kamar harus sesuai dengan komplek yang dipilih
       $params['komplek_id'] = $this->input->post('komplek_id'); // Tambahkan komplek_id
       $params['student_last_update'] = date('Y-m-d H:i:s');
@@ -205,7 +206,9 @@ class Student_set extends CI_Controller
       $params['student_parent_phone'] = $this->input->post('student_parent_phone');
       $params['student_status'] = $this->input->post('student_status');
       $status = $this->Student_model->add($params);
-
+      // echo "<pre>";
+      // var_dump($params['juzz_juzz_id']);
+      // die();
       if (!empty($_FILES['student_img']['name'])) {
         $paramsupdate['student_img'] = $this->do_upload($name = 'student_img', $fileName = $params['student_full_name']);
       }
@@ -449,7 +452,7 @@ class Student_set extends CI_Controller
   public function view($id = NULL)
   {
     $data['student'] = $this->Student_model->get(array('id' => $id));
-    $data['title'] = 'Santri';
+    $data['title'] = 'Detail Santri';
     $data['main'] = 'student/student_view';
     $this->load->view('manage/layout', $data);
   }
@@ -730,7 +733,30 @@ class Student_set extends CI_Controller
     $data['main'] = 'student/student_upgrade';
     $this->load->view('manage/layout', $data);
   }
-
+  public function kenaikan_juz($offset = NULL)
+  {
+      $f = $this->input->get(NULL, TRUE);
+      $data['f'] = $f;
+      $params = array();
+  
+      // Filter berdasarkan Juz saat ini
+      if (isset($f['pr']) && !empty($f['pr'])) {
+          $params['juzz_id'] = $f['pr'];
+      }
+  
+      $params['status'] = 1; // Hanya siswa aktif
+  
+      // Ambil data siswa
+      $data['student'] = $this->Student_model->get_filtered_students($params);
+      
+      // Data untuk dropdown Juz
+      $data['juzz'] = $this->Student_model->get_all_juzzes();
+      $data['upgrade_juzz'] = $this->Student_model->get_all_juzzes();
+  
+      $data['title'] = 'Kenaikan Juz Santri';
+      $data['main'] = 'student/student_juz'; // File view baru
+      $this->load->view('manage/layout', $data);
+  }
   function multiple()
   {
     $action = $this->input->post('action');
@@ -757,7 +783,19 @@ class Student_set extends CI_Controller
         $this->session->set_flashdata('success', 'Proses Kenaikan Kelas berhasil');
       }
       redirect('manage/student/upgrade');
-    } elseif ($action == "printPdf") {
+    }elseif ($action == "upgrade_juz") {
+        $upgrade = $this->input->post('msg');
+        for ($i = 0; $i < count($upgrade); $i++) {
+            $this->Student_model->add(array(
+                'student_id' => $upgrade[$i], 
+                'juzz_juzz_id' => $this->input->post('juzz_id'), // Update juz
+                'student_last_update' => date('Y-m-d H:i:s')
+            ));
+        }
+        $this->session->set_flashdata('success', 'Proses Kenaikan Juz berhasil');
+        redirect('manage/student/kenaikan_juz');
+    }
+     elseif ($action == "printPdf") {
       $this->load->helper(array('dompdf'));
       $idcard = $this->input->post('msg');
       for ($i = 0; $i < count($idcard); $i++) {

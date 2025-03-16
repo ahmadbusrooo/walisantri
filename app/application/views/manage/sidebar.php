@@ -237,7 +237,7 @@
           </li>
           <!-- Setoran -->
           <!-- Kelas -->
-          <li class="treeview <?php echo ($this->uri->segment(2) == 'student' && in_array($this->uri->segment(3), ['pass', 'upgrade'])) ? 'active' : ''; ?>">
+          <li class="treeview <?php echo ($this->uri->segment(2) == 'student' && in_array($this->uri->segment(3), ['pass', 'kenaikan_juz'])) ? 'active' : ''; ?>">
             <a href="#">
               <i class="fa fa-chalkboard-teacher"></i> <span>Juzz</span>
               <span class="pull-right-container">
@@ -251,7 +251,7 @@
                 </a>
               </li>
               <li class="<?php echo ($this->uri->segment(3) == 'upgrade') ? 'active' : ''; ?>">
-                <a href="<?php echo site_url('manage/student/upgrade'); ?>">
+                <a href="<?php echo site_url('manage/student/kenaikan_juz'); ?>">
                   <i class="fa fa-level-up-alt"></i> Kenaikan Juz
                 </a>
               </li>

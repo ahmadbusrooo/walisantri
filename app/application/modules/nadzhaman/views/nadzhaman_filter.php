@@ -66,7 +66,7 @@
 
         <!-- Kitab Data -->
         <?php if (!empty($kitabs)): ?>
-            <div class="box box-success">
+            <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
                 <div class="box-header with-border">
                     <h3 class="box-title">Kitab untuk Kelas dan Tahun Pelajaran Ini</h3>
                 </div>
@@ -141,11 +141,11 @@
                                                 <td><?php echo isset($row['keterangan']) ? $row['keterangan'] : '-'; ?></td>
                                                 <td><?php echo isset($row['status']) ? $row['status'] : '-'; ?></td>
                                                 <td>
-                        <a href="<?php echo site_url('nadzhaman') . '?n=' . $selected_period . '&r=' . $row['student_nis']; ?>" 
-                           class="btn btn-info btn-sm">
-                            <i class="fa fa-history"></i> Riwayat
-                        </a>
-                    </td>
+                                                    <a href="<?php echo site_url('nadzhaman') . '?n=' . $selected_period . '&r=' . $row['student_nis']; ?>"
+                                                        class="btn btn-info btn-sm">
+                                                        <i class="fa fa-history"></i> Riwayat
+                                                    </a>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>
@@ -179,55 +179,55 @@
                 </button>
             </div>
             <div class="modal-body">
-    <input type="hidden" name="class_id" value="<?php echo $this->input->get('class_id'); ?>">
-    <input type="hidden" name="period_id" value="<?php echo $this->input->get('period_id'); ?>">
-    
-    <!-- Input Tanggal Global -->
-    <div class="row" style="margin-bottom: 15px;">
-        <div class="col-md-6">
-            <label>Tanggal Mulai</label>
-            <input type="date" id="global_tanggal" class="form-control" 
-                   value="<?php echo date('Y-m-d'); ?>" required>
-        </div>
-        <div class="col-md-6">
-            <label>Tanggal Akhir</label>
-            <input type="date" id="global_tanggal_akhir" class="form-control" 
-                   value="<?php echo date('Y-m-d'); ?>" required>
-        </div>
-    </div>
+                <input type="hidden" name="class_id" value="<?php echo $this->input->get('class_id'); ?>">
+                <input type="hidden" name="period_id" value="<?php echo $this->input->get('period_id'); ?>">
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Nama Siswa</th>
-                <th>Jumlah Hafalan</th>
-                <th>Keterangan</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($santri as $index => $s): ?>
-                <tr>
-                    <td>
-                        <?php echo $s['student_full_name']; ?>
-                        <!-- Input Tanggal Tersembunyi -->
-                        <input type="hidden" name="students[<?php echo $index; ?>][student_id]" 
-                               value="<?php echo $s['student_id']; ?>">
-                        <input type="hidden" 
-                               name="students[<?php echo $index; ?>][tanggal]" 
-                               class="tanggal-input">
-                        <input type="hidden" 
-                               name="students[<?php echo $index; ?>][tanggal_akhir]" 
-                               class="tanggal-akhir-input">
-                    </td>
-                    <td><input type="text" name="students[<?php echo $index; ?>][jumlah_hafalan]" 
-                              class="form-control" required></td>
-                    <td><input type="text" name="students[<?php echo $index; ?>][keterangan]" 
-                              class="form-control"></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+                <!-- Input Tanggal Global -->
+                <div class="row" style="margin-bottom: 15px;">
+                    <div class="col-md-6">
+                        <label>Tanggal Mulai</label>
+                        <input type="date" id="global_tanggal" class="form-control"
+                            value="<?php echo date('Y-m-d'); ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Tanggal Akhir</label>
+                        <input type="date" id="global_tanggal_akhir" class="form-control"
+                            value="<?php echo date('Y-m-d'); ?>" required>
+                    </div>
+                </div>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nama Siswa</th>
+                            <th>Jumlah Hafalan</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($santri as $index => $s): ?>
+                            <tr>
+                                <td>
+                                    <?php echo $s['student_full_name']; ?>
+                                    <!-- Input Tanggal Tersembunyi -->
+                                    <input type="hidden" name="students[<?php echo $index; ?>][student_id]"
+                                        value="<?php echo $s['student_id']; ?>">
+                                    <input type="hidden"
+                                        name="students[<?php echo $index; ?>][tanggal]"
+                                        class="tanggal-input">
+                                    <input type="hidden"
+                                        name="students[<?php echo $index; ?>][tanggal_akhir]"
+                                        class="tanggal-akhir-input">
+                                </td>
+                                <td><input type="text" name="students[<?php echo $index; ?>][jumlah_hafalan]"
+                                        class="form-control" required></td>
+                                <td><input type="text" name="students[<?php echo $index; ?>][keterangan]"
+                                        class="form-control"></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
 
 
             <div class="modal-footer">
@@ -239,26 +239,26 @@
     </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const globalTanggal = document.getElementById('global_tanggal');
-    const globalTanggalAkhir = document.getElementById('global_tanggal_akhir');
-    const allTanggalInputs = document.querySelectorAll('.tanggal-input');
-    const allTanggalAkhirInputs = document.querySelectorAll('.tanggal-akhir-input');
+    document.addEventListener('DOMContentLoaded', function() {
+        const globalTanggal = document.getElementById('global_tanggal');
+        const globalTanggalAkhir = document.getElementById('global_tanggal_akhir');
+        const allTanggalInputs = document.querySelectorAll('.tanggal-input');
+        const allTanggalAkhirInputs = document.querySelectorAll('.tanggal-akhir-input');
 
-    // Fungsi untuk update semua input
-    function updateAllDates() {
-        const tanggalValue = globalTanggal.value;
-        const tanggalAkhirValue = globalTanggalAkhir.value;
-        
-        allTanggalInputs.forEach(input => input.value = tanggalValue);
-        allTanggalAkhirInputs.forEach(input => input.value = tanggalAkhirValue);
-    }
+        // Fungsi untuk update semua input
+        function updateAllDates() {
+            const tanggalValue = globalTanggal.value;
+            const tanggalAkhirValue = globalTanggalAkhir.value;
 
-    // Update saat input global berubah
-    globalTanggal.addEventListener('change', updateAllDates);
-    globalTanggalAkhir.addEventListener('change', updateAllDates);
+            allTanggalInputs.forEach(input => input.value = tanggalValue);
+            allTanggalAkhirInputs.forEach(input => input.value = tanggalAkhirValue);
+        }
 
-    // Set nilai awal saat modal terbuka
-    updateAllDates();
-});
+        // Update saat input global berubah
+        globalTanggal.addEventListener('change', updateAllDates);
+        globalTanggalAkhir.addEventListener('change', updateAllDates);
+
+        // Set nilai awal saat modal terbuka
+        updateAllDates();
+    });
 </script>

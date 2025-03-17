@@ -15,7 +15,7 @@
         <div class="row">
             <!-- Filter -->
             <div class="col-md-12">
-            <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
                     <div class="box-header with-border">
                         <h3 class="box-title">Filter Riwayat Hafalan Santri</h3>
@@ -23,35 +23,35 @@
                     <div class="box-body">
                         <?php echo form_open(current_url(), array('class' => 'form-horizontal', 'method' => 'get')) ?>
                         <div class="form-group">
-                        <label for="" class="col-sm-2 control-label">Tahun Pelajaran</label>
-    <div class="col-sm-2">
-        <select class="form-control" name="n" required>
-            <option value="">Pilih Tahun Pelajaran</option>
-            <?php foreach ($period as $row): ?>
-                <option 
-                    <?php 
-                        // Set otomatis tahun aktif jika belum ada filter yang dipilih
-                        echo (isset($f['n']) && $f['n'] == $row['period_id']) || (!isset($f['n']) && $row['period_status'] == 1) ? 'selected' : ''; 
-                    ?>
-                    value="<?php echo $row['period_id'] ?>">
-                    <?php echo $row['period_start'].'/'.$row['period_end'] ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+                            <label for="" class="col-sm-2 control-label">Tahun Pelajaran</label>
+                            <div class="col-sm-2">
+                                <select class="form-control" name="n" required>
+                                    <option value="">Pilih Tahun Pelajaran</option>
+                                    <?php foreach ($period as $row): ?>
+                                        <option
+                                            <?php
+                                            // Set otomatis tahun aktif jika belum ada filter yang dipilih
+                                            echo (isset($f['n']) && $f['n'] == $row['period_id']) || (!isset($f['n']) && $row['period_status'] == 1) ? 'selected' : '';
+                                            ?>
+                                            value="<?php echo $row['period_id'] ?>">
+                                            <?php echo $row['period_start'] . '/' . $row['period_end'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
 
-    <!-- Filter NIS Santri -->
-    <label for="" class="col-sm-2 control-label">Pilih Santri</label>
-    <div class="col-sm-3">
-        <select id="nisDropdown" class="form-control" name="r" required>
-            <option value="">Pilih Santri</option>
-            <?php foreach ($santri as $row): ?>
-                <option <?php echo (isset($f['r']) AND $f['r'] == $row['student_nis']) ? 'selected' : '' ?> value="<?php echo $row['student_nis']; ?>">
-                    <?php echo $row['student_nis'] . ' - ' . $row['student_full_name']; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+                            <!-- Filter NIS Santri -->
+                            <label for="" class="col-sm-2 control-label">Pilih Santri</label>
+                            <div class="col-sm-3">
+                                <select id="nisDropdown" class="form-control" name="r" required>
+                                    <option value="">Pilih Santri</option>
+                                    <?php foreach ($santri as $row): ?>
+                                        <option <?php echo (isset($f['r']) and $f['r'] == $row['student_nis']) ? 'selected' : '' ?> value="<?php echo $row['student_nis']; ?>">
+                                            <?php echo $row['student_nis'] . ' - ' . $row['student_full_name']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                             <div class="col-sm-1">
                                 <button class="btn btn-success" type="submit">Cari</button>
                             </div>
@@ -64,7 +64,7 @@
             <!-- Informasi Santri -->
             <?php if ($f): ?>
                 <div class="col-md-12">
-                <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                    <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
                         <div class="box-header with-border">
                             <h3 class="box-title">Informasi Santri</h3>
@@ -77,8 +77,8 @@
                                         <td width="4">:</td>
                                         <td>
                                             <?php foreach ($period as $row): ?>
-                                                <?php echo (isset($f['n']) && $f['n'] == $row['period_id']) ? 
-                                                '<strong>' . $row['period_start'] . '/' . $row['period_end'] . '</strong>' : ''; ?>
+                                                <?php echo (isset($f['n']) && $f['n'] == $row['period_id']) ?
+                                                    '<strong>' . $row['period_start'] . '/' . $row['period_end'] . '</strong>' : ''; ?>
                                             <?php endforeach; ?>
                                         </td>
                                     </tr>
@@ -121,94 +121,94 @@
                 </div>
 
                 <!-- Total Hafalan -->
-<div class="col-md-12">
-<div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                <div class="col-md-12">
+                    <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
-        <div class="box-header with-border">
-            <h3 class="box-title">Total Hafalan</h3>
-        </div>
-        <div class="box-body">
-            <p><strong>Total Hafalan: </strong><?php echo $total_hafalan; ?> Bait</p>
-        </div>
-    </div>
-</div>
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Total Hafalan</h3>
+                        </div>
+                        <div class="box-body">
+                            <p><strong>Total Hafalan: </strong><?php echo $total_hafalan; ?> Bait</p>
+                        </div>
+                    </div>
+                </div>
 
-<!-- Rekap Hafalan Bulanan -->
-<div class="col-md-12">
+                <!-- Rekap Hafalan Bulanan -->
+                <div class="col-md-12">
 
-	<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                    <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
-        <div class="box-header with-border">
-            <h3 class="box-title">Rekap Hafalan Bulanan</h3>
-        </div>
-        <div class="box-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Bulan</th>
-                        <th>Total Hafalan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($monthly_hafalan)): ?>
-                        <?php foreach ($monthly_hafalan as $row): ?>
-                            <tr>
-                                <td><?php echo date('F', mktime(0, 0, 0, $row['bulan'], 10)); ?></td>
-                                <td><?php echo $row['total_hafalan']; ?> Bait</td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="2" class="text-center">Data tidak tersedia</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Rekap Hafalan Bulanan</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Bulan</th>
+                                        <th>Total Hafalan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($monthly_hafalan)): ?>
+                                        <?php foreach ($monthly_hafalan as $row): ?>
+                                            <tr>
+                                                <td><?php echo date('F', mktime(0, 0, 0, $row['bulan'], 10)); ?></td>
+                                                <td><?php echo $row['total_hafalan']; ?> Bait</td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="2" class="text-center">Data tidak tersedia</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-<!-- Rekap Hafalan Tahunan -->
-<div class="col-md-12">
-<div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
-<div class="box-header with-border">
-            <h3 class="box-title">Rekap Hafalan Tahunan</h3>
-        </div>
-        <div class="box-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Tahun</th>
-                        <th>Total Hafalan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($yearly_hafalan)): ?>
-                        <?php foreach ($yearly_hafalan as $row): ?>
-                            <tr>
-                                <td><?php echo $row['tahun']; ?></td>
-                                <td><?php echo $row['total_hafalan']; ?> Bait</td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="2" class="text-center">Data tidak tersedia</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                <!-- Rekap Hafalan Tahunan -->
+                <div class="col-md-12">
+                    <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Rekap Hafalan Tahunan</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Tahun</th>
+                                        <th>Total Hafalan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($yearly_hafalan)): ?>
+                                        <?php foreach ($yearly_hafalan as $row): ?>
+                                            <tr>
+                                                <td><?php echo $row['tahun']; ?></td>
+                                                <td><?php echo $row['total_hafalan']; ?> Bait</td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="2" class="text-center">Data tidak tersedia</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
 
                 <!-- Riwayat Nadzhaman -->
                 <div class="col-md-12">
-                <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                    <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
 
                         <div class="box-header with-border">
                             <h3 class="box-title">Riwayat Hafalan</h3>
-                            
+
                         </div>
                         <div class="box-body">
                             <div class="table-responsive">
@@ -217,6 +217,7 @@
                                         <tr class="info">
                                             <th>No</th>
                                             <th>Tanggal</th>
+                                            <th>Tanggal Akhir</th>
                                             <th>Kitab</th>
                                             <th>Jumlah Hafalan</th>
                                             <th>Keterangan</th>
@@ -225,18 +226,20 @@
                                     </thead>
                                     <tbody>
                                         <?php if (!empty($nadzhaman)): ?>
-                                            <?php $no = 1; foreach ($nadzhaman as $row): ?>
+                                            <?php $no = 1;
+                                            foreach ($nadzhaman as $row): ?>
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo $row['tanggal']; ?></td>
+                                                    <td><?php echo $row['tanggal_akhir']; ?></td>
                                                     <td><?php echo $row['nama_kitab']; ?></td>
                                                     <td><?php echo $row['jumlah_hafalan']; ?></td>
                                                     <td><?php echo $row['keterangan']; ?></td>
                                                     <td>
-                                                        <a href="<?php echo site_url('nadzhaman/delete/' . $row['nadzhaman_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>" 
-                                                           class="btn btn-danger btn-xs"
-                                                           onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                                           <i class="fa fa-trash"></i> Hapus
+                                                        <a href="<?php echo site_url('nadzhaman/delete/' . $row['nadzhaman_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
+                                                            class="btn btn-danger btn-xs"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                                            <i class="fa fa-trash"></i> Hapus
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -313,12 +316,17 @@
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
-                    return { keyword: params.term };
+                    return {
+                        keyword: params.term
+                    };
                 },
                 processResults: function(data) {
                     return {
                         results: $.map(data, function(item) {
-                            return { id: item.id, text: item.text };
+                            return {
+                                id: item.id,
+                                text: item.text
+                            };
                         })
                     };
                 },

@@ -414,7 +414,7 @@
               <?php foreach ($top_violators as $santri): ?>
                 <li class="list-group-item">
                   <strong><?php echo $santri['student_full_name']; ?>:</strong>
-                  <?php echo $santri['total_points']; ?> Poin
+                  <?php echo $santri['total_points']; ?> Pelanggaran
                 </li>
               <?php endforeach; ?>
             </ul>
@@ -763,7 +763,7 @@
     data: {
       labels: [<?php foreach ($top_violators as $row) echo "'" . $row['student_full_name'] . "',"; ?>],
       datasets: [{
-        label: 'Poin Pelanggaran',
+        label: 'Total Pelanggaran',
         data: [<?php foreach ($top_violators as $row) echo $row['total_points'] . ","; ?>],
         backgroundColor: '#e74c3c'
       }]

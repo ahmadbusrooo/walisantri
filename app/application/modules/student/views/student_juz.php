@@ -18,12 +18,12 @@
 
         <div class="row">
             <div class="col-md-9">
-                <div class="box box-primary">
+                <div class="box box-primary" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
                     <div class="box-body">
                         <?php echo form_open(current_url(), array('method' => 'get')) ?>
                         <div class="form-group">
                             <div class="input-group">
-                                <div class="input-group-addon">Pilih Juz Saat Ini</div>
+                                <div class="input-group-addon alert-info">Pilih Juz Saat Ini</div>
                                 <select class="form-control" name="pr" onchange="this.form.submit()">
                                     <option value="">-- Semua Juz --</option>
                                     <?php foreach ($juzz as $row): ?>
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <div class="panel panel-success">
+                    <div class="panel panel-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
                         <div class="panel-body">
                             <select class="form-control" name="juzz_id" required>
                                 <option value="">-- Ke Juzz --</option>

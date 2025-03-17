@@ -726,6 +726,7 @@ public function get_santri_masuk_keluar($month, $year) {
         $this->db->select('
             student_id,
             student_nis,
+            student_phone,
             student_full_name,
             student_parent_phone,
             student_address,
@@ -733,11 +734,11 @@ public function get_santri_masuk_keluar($month, $year) {
             student_name_of_father,
             student_img,
             class_name,
-            juzz_name,
             majors_name,
             komplek_name,
             CASE 
                 WHEN student_nis IS NULL OR student_nis = "" THEN 0
+                WHEN student_phone IS NULL OR student_phone = "" THEN 0
                 WHEN student_full_name IS NULL OR student_full_name = "" THEN 0 
                 WHEN student_parent_phone IS NULL OR student_parent_phone = "" THEN 0
                 WHEN student_address IS NULL OR student_address = "" THEN 0
@@ -752,7 +753,6 @@ public function get_santri_masuk_keluar($month, $year) {
         $this->db->where('student.student_status', 1); 
         
         $this->db->join('class', 'class.class_id = student.class_class_id', 'left');
-        $this->db->join('juzz', 'juzz.juzz_id = student.juzz_juzz_id', 'left');
         $this->db->join('majors', 'majors.majors_id = student.majors_majors_id', 'left');
         $this->db->join('komplek', 'komplek.komplek_id = majors.komplek_id', 'left');
         
@@ -767,6 +767,7 @@ public function get_santri_masuk_keluar($month, $year) {
         return $this->db
             ->where('student_status', 1)
             ->where('student_nis IS NOT NULL AND student_nis != ""')
+            ->where('student_phone IS NOT NULL AND student_phone != ""')
             ->where('student_full_name IS NOT NULL AND student_full_name != ""')
             ->where('student_parent_phone IS NOT NULL AND student_parent_phone != ""')
             ->where('student_address IS NOT NULL AND student_address != ""')

@@ -9,11 +9,7 @@ class Class_set extends CI_Controller {
     parent::__construct();
     if ($this->session->userdata('logged') == NULL) {
       header("Location:" . site_url('manage/auth/login') . "?location=" . urlencode($_SERVER['REQUEST_URI']));
-    }
-    $list_access = array(SUPERUSER);
-    if (!in_array($this->session->userdata('uroleid'),$list_access)) {
-      redirect('manage');
-    }
+        }
 
     $this->load->model(array('student/Student_model', 'setting/Setting_model'));
     $this->load->model('ustadz/Ustadz_model'); // Pastikan model dimuat
@@ -123,9 +119,6 @@ class Class_set extends CI_Controller {
 
 // Delete to database
 public function delete($id = NULL) {
-  if ($this->session->userdata('uroleid') != SUPERUSER) {
-      redirect('manage');
-  }
 
   // Periksa apakah ada siswa yang terdaftar di kelas ini
   $Santri = $this->Student_model->get(array('class_id' => $id));

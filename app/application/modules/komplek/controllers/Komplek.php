@@ -169,10 +169,7 @@ public function edit_kamar($majors_id = NULL)
 
 public function delete_kamar($majors_id = NULL)
 {
-    // Cek apakah user memiliki akses (contoh: hanya SUPERUSER yang boleh hapus)
-    if ($this->session->userdata('uroleid') != SUPERUSER) {
-        redirect('manage');
-    }
+
 
     if ($_POST) {
         // Ambil data santri yang masih terkait dengan kamar ini

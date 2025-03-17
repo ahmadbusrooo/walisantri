@@ -5,9 +5,9 @@ class Health extends CI_Controller
 {
     public function __construct()
     {
-        parent::__construct();
-        if ($this->session->userdata('uroleid') != SUPERUSER){
-            redirect('student/auth/login?location=' . urlencode($_SERVER['REQUEST_URI']));
+        parent::__construct(TRUE);
+        if ($this->session->userdata('logged') == NULL) {
+          header("Location:" . site_url('manage/auth/login') . "?location=" . urlencode($_SERVER['REQUEST_URI']));
         }
         $this->load->model(['health/Health_model', 'student/Student_model', 'period/Period_model']);
     }

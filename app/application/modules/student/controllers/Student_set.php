@@ -82,7 +82,6 @@ class Student_set extends CI_Controller
     $this->load->view('manage/layout', $data);
   }
 
-
   public function view_only($offset = NULL)
   {
     $this->load->library('pagination');
@@ -139,10 +138,6 @@ class Student_set extends CI_Controller
   public function add($id = NULL)
   {
 
-    $list_access = array(SUPERUSER);
-    if (!in_array($this->session->userdata('uroleid'), $list_access)) {
-      redirect('manage');
-    }
     $this->load->library('form_validation');
 
     if (!$this->input->post('student_id')) {
@@ -460,9 +455,6 @@ class Student_set extends CI_Controller
   // Delete to database
   public function delete($id = NULL)
   {
-    if ($this->session->userdata('uroleid') != SUPERUSER) {
-      redirect('manage');
-    }
     if ($_POST) {
 
       $bulan = $this->Bulan_model->get(array('student_id' => $this->input->post('student_id')));

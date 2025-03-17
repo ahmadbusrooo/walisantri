@@ -99,7 +99,11 @@
                                                         </span>
                                                     </td>
                                                     <td>
-
+                                                    <a href="<?= site_url('manage/student/view/' . $row['student_id']) ?>"
+                                                                class="btn btn-xs btn-info" title="Lihat"
+                                                                style="border-radius: 20px; padding: 3px 10px;">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>

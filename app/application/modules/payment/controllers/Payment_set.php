@@ -644,9 +644,7 @@ public function delete_payment_bulan_by_pos($payment_id = NULL, $student_id = NU
 
     // Delete to database
   public function delete($id = NULL) {
-   if ($this->session->userdata('uroleid')!= SUPERUSER){
-    redirect('manage');
-  }
+
   if ($_POST) {
 
     $bulan = $this->Bulan_model->get(array('payment_id' => $this->input->post('payment_id')));

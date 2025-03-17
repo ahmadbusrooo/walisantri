@@ -116,9 +116,6 @@ class Pos_set extends CI_Controller {
 
     // Delete to database
     public function delete($id = NULL) {
-       if ($this->session->userdata('uroleid')!= SUPERUSER){
-          redirect('manage');
-        }
         if ($_POST) {
 
             $payment = $this->Payment_model->get(array('pos_id'=>$id));

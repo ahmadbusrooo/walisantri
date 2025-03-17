@@ -6,9 +6,9 @@ class Nadzhaman extends CI_Controller
 {
     public function __construct()
     {
-        parent::__construct();
-        if ($this->session->userdata('uroleid') != SUPERUSER) {
-            redirect('manage/dashboard');
+        parent::__construct(TRUE);
+        if ($this->session->userdata('logged') == NULL) {
+          header("Location:" . site_url('manage/auth/login') . "?location=" . urlencode($_SERVER['REQUEST_URI']));
         }
         $this->load->model([
             'nadzhaman/Nadzhaman_model', 

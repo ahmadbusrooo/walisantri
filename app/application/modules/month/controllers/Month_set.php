@@ -10,10 +10,7 @@ class Month_set extends CI_Controller {
     if ($this->session->userdata('logged') == NULL) {
       header("Location:" . site_url('manage/auth/login') . "?location=" . urlencode($_SERVER['REQUEST_URI']));
   }
-  $list_access = array(SUPERUSER);
-  if (!in_array($this->session->userdata('uroleid'),$list_access)) {
-      redirect('manage');
-  }
+
 
   $this->load->model('bulan/Bulan_model');
   $this->load->helper(array('form', 'url'));

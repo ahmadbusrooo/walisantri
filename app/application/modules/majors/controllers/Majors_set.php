@@ -134,9 +134,7 @@ class Majors_set extends CI_Controller
   // Delete to database
   public function delete($id = NULL)
   {
-    if ($this->session->userdata('uroleid') != SUPERUSER) {
-      redirect('manage');
-    }
+
     if ($_POST) {
 
       $Santri = $this->Student_model->get(array('majors_id' => $id));

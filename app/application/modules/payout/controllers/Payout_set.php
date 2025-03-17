@@ -1042,11 +1042,6 @@ private function generatePaymentNumber($lastletter) {
 
   public function delete_all_bills($student_id = NULL) {
     // Pastikan hanya admin atau user tertentu yang memiliki akses
-    if ($this->session->userdata('uroleid') != SUPERUSER) {
-        $this->session->set_flashdata('error', 'Anda tidak memiliki akses untuk melakukan aksi ini.');
-        redirect('manage/payout');
-        return;
-    }
 
     if ($student_id == NULL) {
         $this->session->set_flashdata('error', 'ID siswa tidak ditemukan.');
@@ -1191,9 +1186,6 @@ private function generatePaymentNumber($lastletter) {
 
 // Delete to database
   public function delete($id = NULL) {
-    if ($this->session->userdata('uroleid')!= SUPERUSER){
-      redirect('manage');
-    }
     if ($_POST) {
       $this->Payment_model->delete($id);
 // activity log

@@ -23,9 +23,9 @@
 							<div class="row">
 								<div class="col-md-2">
 									<?php if (!empty($student['student_img'])) { ?>
-									<img src="<?php echo upload_url('student/'.$student['student_img']) ?>" class="img-responsive avatar">
+										<img src="<?php echo upload_url('student/' . $student['student_img']) ?>" class="img-responsive avatar">
 									<?php } else { ?>
-									<img src="<?php echo media_url('img/user.png') ?>" class="img-responsive avatar">
+										<img src="<?php echo media_url('img/user.png') ?>" class="img-responsive avatar">
 									<?php } ?>
 								</div>
 								<div class="col-md-10">
@@ -49,12 +49,12 @@
 											<tr>
 												<td>Jenis Kelamin</td>
 												<td>:</td>
-												<td><?php echo ($student['student_gender']=='L')? 'Laki-laki' : 'Perempuan' ?></td>
+												<td><?php echo ($student['student_gender'] == 'L') ? 'Laki-laki' : 'Perempuan' ?></td>
 											</tr>
 											<tr>
 												<td>Tempat, Tanggal Lahir</td>
 												<td>:</td>
-												<td><?php echo $student['student_born_place'].', '. pretty_date($student['student_born_date'],'d F Y',false) ?></td>
+												<td><?php echo $student['student_born_place'] . ', ' . pretty_date($student['student_born_date'], 'd F Y', false) ?></td>
 											</tr>
 											<tr>
 												<td>Hobi</td>
@@ -91,25 +91,39 @@
 												<td>:</td>
 												<td><?php echo $student['class_name'] ?></td>
 											</tr>
-											<?php if(majors()=='senior') { ?>
-											<tr>
-												<td>Kamar</td>
-												<td>:</td>
-												<td><?php echo $student['majors_name'] ?></td>
-											</tr>
+											<?php if (majors() == 'senior') { ?>
+												<tr>
+													<td>Kamar</td>
+													<td>:</td>
+													<td><?php echo $student['majors_name'] ?></td>
+												</tr>
 											<?php } ?>
 										</tbody>
 									</table>
 								</div>
 								<div class="col-md-4">
-									<a href="<?php echo site_url('manage/student') ?>" class="btn btn-default">
-										<i class="far fa-arrow-alt-circle-left"></i> Kembali
-									</a>
-									<?php if ($this->session->userdata('uroleid') == SUPERUSER) { ?>
-									<a href="<?php echo site_url('manage/student/edit/' . $student['student_id']) ?>" class="btn btn-success">
-										<i class="fa fa-edit"></i> Edit
-									</a>
-									<a href="#delModal<?php echo $student['student_id']; ?>" data-toggle="modal" class="btn btn-danger"><i class="fa fa-trash" data-toggle="tooltip" title="Hapus"></i> Hapus</a>
+
+									<?php
+									// Cek apakah user BUKAN SUPERUSER atau SEKRETARIS
+									if ($this->session->userdata('uroleid') != SUPERUSER && $this->session->userdata('uroleid') != SEKRETARIS) {
+									?>
+										<a href="<?php echo site_url('manage/student/view_only') ?>" class="btn btn-default">
+											<i class="far fa-arrow-alt-circle-left"></i> Kembali
+										</a>
+									<?php } ?>
+
+									<?php
+									// Cek apakah user adalah SUPERUSER atau SEKRETARIS
+									if ($this->session->userdata('uroleid') == SUPERUSER || $this->session->userdata('uroleid') == SEKRETARIS) {
+									?>
+										<a href="<?php echo site_url('manage/student') ?>" class="btn btn-default">
+											<i class="far fa-arrow-alt-circle-left"></i> Kembali
+										</a>
+
+										<a href="<?php echo site_url('manage/student/edit/' . $student['student_id']) ?>" class="btn btn-success">
+											<i class="fa fa-edit"></i> Edit
+										</a>
+										<a href="#delModal<?php echo $student['student_id']; ?>" data-toggle="modal" class="btn btn-danger"><i class="fa fa-trash" data-toggle="tooltip" title="Hapus"></i> Hapus</a>
 									<?php } ?>
 								</div>
 							</div>
@@ -124,23 +138,23 @@
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span></button>
-									<h3 class="modal-title"><span class="fa fa-warning"></span> Konfirmasi penghapusan</h3>
-								</div>
-								<div class="modal-body">
-									<p>Apakah anda yakin akan menghapus data ini?</p>
-								</div>
-								<div class="modal-footer">
-									<?php echo form_open('manage/student/delete/' . $student['student_id']); ?>
-									<input type="hidden" name="delName" value="<?php echo $student['student_full_name']; ?>">
-									<button type="button" class="btn btn-default pull-left" data-dismiss="modal"><span class="fa fa-close"></span> Batal</button>
-									<button type="submit" class="btn btn-danger"><span class="fa fa-check"></span> Hapus</button>
-									<?php echo form_close(); ?>
-								</div>
+								<h3 class="modal-title"><span class="fa fa-warning"></span> Konfirmasi penghapusan</h3>
 							</div>
-							<!-- /.modal-content -->
+							<div class="modal-body">
+								<p>Apakah anda yakin akan menghapus data ini?</p>
+							</div>
+							<div class="modal-footer">
+								<?php echo form_open('manage/student/delete/' . $student['student_id']); ?>
+								<input type="hidden" name="delName" value="<?php echo $student['student_full_name']; ?>">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal"><span class="fa fa-close"></span> Batal</button>
+								<button type="submit" class="btn btn-danger"><span class="fa fa-check"></span> Hapus</button>
+								<?php echo form_close(); ?>
+							</div>
 						</div>
-						<!-- /.modal-dialog -->
+						<!-- /.modal-content -->
 					</div>
+					<!-- /.modal-dialog -->
+				</div>
 
-				</section>
-			</div>
+	</section>
+</div>

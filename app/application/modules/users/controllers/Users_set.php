@@ -10,10 +10,6 @@ class Users_set extends CI_Controller {
     if ($this->session->userdata('logged') == NULL) {
         header("Location:" . site_url('manage/auth/login') . "?location=" . urlencode($_SERVER['REQUEST_URI']));
     }
-        $list_access = array(SUPERUSER);
-        if (!in_array($this->session->userdata('uroleid'),$list_access)) {
-            redirect('manage');
-        }
        
         $this->load->model('users/Users_model');
         $this->load->helper(array('form', 'url'));
@@ -35,11 +31,11 @@ class Users_set extends CI_Controller {
         }
 
         $paramsPage = $params;
-        $params['limit'] = 5;
+        $params['limit'] = 10;
         $params['offset'] = $offset;
         $data['user'] = $this->Users_model->get($params);
 
-        $config['per_page'] = 5;
+        $config['per_page'] = 10;
         $config['uri_segment'] = 4;
         $config['base_url'] = site_url('manage/users/index');
         $config['suffix'] = '?' . http_build_query($_GET, '', "&");
@@ -134,9 +130,6 @@ class Users_set extends CI_Controller {
 
     // Delete to database
     public function delete($id = NULL) {
-       if ($this->session->userdata('uroleid')!= SUPERUSER){
-          redirect('manage');
-        }
         if ($_POST) {
             $this->Users_model->delete($id);
             // activity log

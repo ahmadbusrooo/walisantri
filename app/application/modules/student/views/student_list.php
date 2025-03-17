@@ -101,11 +101,11 @@
                     <div class="box-header with-border" style="color: black;">
                         <h3 class="box-title"> Daftar Santri</h3>
                         <div class="box-tools pull-right">
-                            <?php if ($this->session->userdata('uroleid') != USER) { ?>
+                            
                                 <a href="<?= site_url('manage/student/add') ?>" class="btn btn-sm btn-success">
                                     <i class="fa fa-plus"></i> Tambah
                                 </a>
-                            <?php } ?>
+                          
                         </div>
                     </div>
 
@@ -212,7 +212,7 @@
                                                                 style="border-radius: 20px; padding: 3px 10px;">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>
-                                                            <?php if ($this->session->userdata('uroleid') != USER): ?>
+                                                            
                                                                 <a href="<?= site_url('manage/student/edit/' . $row['student_id']) ?>"
                                                                     class="btn btn-xs btn-warning" title="Edit"
                                                                     style="border-radius: 20px; padding: 3px 10px;">
@@ -223,7 +223,6 @@
                                                                     style="border-radius: 20px; padding: 3px 10px;">
                                                                     <i class="fa fa-unlock"></i>
                                                                 </a>
-                                                            <?php endif; ?>
                                                         </div>
                                                     </td>
                                                 </tr>

@@ -77,7 +77,6 @@ class Information_set extends CI_Controller {
 			$paramsupdate['information_id'] = $status;
 			$this->Information_model->add($paramsupdate);
 
-
             // activity log
 			$this->Logs_model->add(
 				array(
@@ -109,9 +108,7 @@ class Information_set extends CI_Controller {
 
     // Delete to database
 	public function delete($id = NULL) {
-		if ($this->session->userdata('uroleid')!= SUPERUSER){
-			redirect('manage');
-		}
+
 		if ($_POST) {
 			$this->Information_model->delete($id);
             // activity log

@@ -375,6 +375,124 @@
         </div>
       </div>
     </div>
+<!-- Tambahkan di bagian konten utama setelah row pertama -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title">
+          <i class="fa fa-exclamation-triangle"></i> Pelanggaran Hari Ini 
+          <small class="text-white">(<?= date('d F Y') ?>)</small>
+        </h3>
+        <div class="box-tools pull-right">
+          <button type="button" class="btn btn-box-tool" data-widget="refresh" onclick="refreshViolations()">
+            <i class="fa fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+      <div class="box-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover table-striped">
+            <thead class="bg-red">
+              <tr>
+                <th class="text-center">Waktu</th>
+                <th>Nama Santri</th>
+                <th>Jenis Pelanggaran</th>
+                <th class="text-center">Poin</th>
+                <th>Tindakan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if (!empty($today_violations)) : ?>
+                <?php foreach ($today_violations as $violation) : ?>
+                  <tr>
+                    <td class="text-center">
+                      <span class="badge bg-red">
+                      <?= $violation['pelanggaran_created_at'] ?>
+                      </span>
+                    </td>
+                    <td><?= $violation['student_full_name'] ?></td>
+                    <td><?= $violation['pelanggaran'] ?></td>
+                    <td class="text-center">
+                      <span class="badge bg-orange">
+                        <?= $violation['poin'] ?>
+                      </span>
+                    </td>
+                    <td><?= $violation['tindakan'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php else : ?>
+                <tr>
+                  <td colspan="5" class="text-center text-muted">
+                    <i class="fa fa-check-circle"></i> Tidak ada pelanggaran hari ini
+                  </td>
+                </tr>
+              <?php endif; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="box-footer text-right">
+        <small class="text-muted">Diperbarui: <?= date('H:i:s') ?></small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function refreshViolations() {
+  $('#loading-overlay').show();
+  $.ajax({
+    url: '<?= site_url('manage/dashboard_set/get_today_violations_api') ?>',
+    type: 'GET',
+    success: function(response) {
+      let data = JSON.parse(response);
+      let html = '';
+      
+      if(data.length > 0) {
+        data.forEach(function(violation) {
+          html += `
+            <tr>
+              <td class="text-center">
+                <span class="badge bg-red">
+                  ${new Date(violation.tanggal).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}
+                </span>
+              </td>
+              <td>${violation.student_full_name}</td>
+              <td>${violation.jenis_pelanggaran}</td>
+              <td class="text-center">
+                <span class="badge bg-orange">
+                  ${violation.poin}
+                </span>
+              </td>
+              <td>${violation.keterangan || '-'}</td>
+            </tr>
+          `;
+        });
+      } else {
+        html = `
+          <tr>
+            <td colspan="5" class="text-center text-muted">
+              <i class="fa fa-check-circle"></i> Tidak ada pelanggaran hari ini
+            </td>
+          </tr>
+        `;
+      }
+      
+      $('table tbody').html(html);
+      $('.box-footer small').text('Diperbarui: ' + new Date().toLocaleTimeString('id-ID'));
+    },
+    complete: function() {
+      $('#loading-overlay').hide();
+    }
+  });
+}
+
+// Auto refresh setiap 1 menit
+setInterval(refreshViolations, 60000);
+</script>
+
+
 
     <!-- Santri Sering Melanggar dan Grafik Pelanggaran -->
     <div class="row">

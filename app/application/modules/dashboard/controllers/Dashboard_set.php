@@ -24,6 +24,7 @@ class Dashboard_set extends CI_Controller {
             'ustadz/Ustadz_model',
             'pengurus/Pengurus_model',
             'nadzhaman/Nadzhaman_model',
+            'izin_pulang/Izin_pulang_model',
             'pelanggaran/Pelanggaran_model'
 
 
@@ -143,6 +144,10 @@ $data['santri_masuk_keluar'] = $this->Student_model->get_santri_masuk_keluar($mo
                 redirect('manage');
             }
         }
+        $data['today_izin'] = $this->Izin_pulang_model->get_today_izin(10);
+$current_period = date('Y'); // Sesuaikan dengan logika periode Anda
+$data['top_izin'] = $this->Izin_pulang_model->get_top_izin($current_period, 10);
+        $data['today_violations'] = $this->Pelanggaran_model->get_today_violations();
         $data['setting_logo'] = $this->Setting_model->get(array('id' => 6));
         $data['holiday'] = $this->Holiday_model->get();
         $data['title'] = 'Dashboard';

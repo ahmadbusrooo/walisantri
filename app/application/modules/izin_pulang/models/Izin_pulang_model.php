@@ -14,7 +14,22 @@ class Izin_pulang_model extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
-    public function get_by_id($id)
+
+    public function get_today_izin($limit = 10)
+{
+    $this->db->select('ip.*, s.student_full_name, c.class_name');
+    $this->db->from('izin_pulang ip');
+    $this->db->join('student s', 's.student_id = ip.student_id');
+    $this->db->join('class c', 'c.class_id = s.class_class_id');
+    $this->db->where('ip.tanggal', date('Y-m-d'));
+    $this->db->or_where('ip.tanggal_akhir', date('Y-m-d'));
+    $this->db->order_by('ip.tanggal', 'DESC');
+    $this->db->limit($limit);
+    return $this->db->get()->result_array();
+}
+
+
+     public function get_by_id($id)
     {
         $this->db->where('izin_id', $id);
         return $this->db->get('izin_pulang')->row_array();

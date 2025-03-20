@@ -164,6 +164,7 @@
                         </div>
                     </div>
                 </div>
+                
             <?php elseif (!isset($f['n'])): ?>
                 <div class="col-md-12">
                     <div class="alert alert-info">
@@ -171,6 +172,65 @@
                     </div>
                 </div>
             <?php endif; ?>
+            <!-- Santri yang Sedang Pulang Hari Ini -->
+<?php if (!isset($f['n']) && !empty($current_leaves)): ?>
+<div class="col-md-12">
+    <div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <i class="fa fa-calendar-day"></i> Santri Sedang Pulang - <?php echo date('d F Y') ?>
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="warning">
+                            <th>Nama Santri</th>
+                            <th>NIS</th>
+                            <th>Kelas</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Tanggal Kembali</th>
+                            <th>Sisa Hari</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($current_leaves as $row): 
+                            $end_date = new DateTime($row['tanggal_akhir']);
+                            $today = new DateTime();
+                            $remaining_days = $today->diff($end_date)->days + 1;
+                        ?>
+                            <tr>
+                                <td><?php echo $row['student_full_name'] ?></td>
+                                <td><?php echo $row['student_nis'] ?></td>
+                                <td><?php echo $row['class_name'] ?></td>
+                                <td><?php echo date('d/m/Y', strtotime($row['tanggal'])) ?></td>
+                                <td><?php echo date('d/m/Y', strtotime($row['tanggal_akhir'])) ?></td>
+                                <td>
+    <span class="badge bg-orange remaining-days" 
+          data-end-date="<?php echo $row['tanggal_akhir'] ?>">
+        <?php echo $remaining_days ?> Hari
+    </span>
+</td>
+
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <p class="text-muted text-sm">
+                    * Menampilkan santri yang sedang dalam masa izin pulang hari ini
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<?php elseif (!isset($f['n'])): ?>
+    <div class="col-md-12">
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i> Tidak ada data izin pulang pada periode aktif.
+                    </div>
+                </div>
+<?php endif; ?>
             <!-- Informasi Santri -->
             <?php if ($f) { ?>
                 <div class="col-md-12">
@@ -363,6 +423,28 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
+<script>
+    // Update remaining days every day
+function updateRemainingDays() {
+    $('.remaining-days').each(function() {
+        const endDate = new Date($(this).data('end-date'));
+        const today = new Date();
+        const diffTime = endDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        $(this).text(diffDays + ' Hari');
+        
+        // Beri warna berbeda jika masa izin hampir habis
+        if(diffDays <= 3) {
+            $(this).removeClass('bg-orange').addClass('bg-red');
+        }
+    });
+}
+
+// Update setiap 1 jam
+setInterval(updateRemainingDays, 3600000);
+updateRemainingDays(); // Jalankan pertama kali
+</script>
 <script>
     $(document).on('change', '.status-select', function() {
         const container = $(this).closest('.status-container');

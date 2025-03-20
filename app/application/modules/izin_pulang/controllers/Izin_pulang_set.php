@@ -59,6 +59,10 @@ class Izin_pulang_set extends MX_Controller
             10 // Limit 10 santri
         );
     }
+    if (!isset($f['n'])) {
+        // Data santri yang sedang pulang hari ini
+        $data['current_leaves'] = $this->Izin_pulang_model->get_currently_on_leave();
+    }
         
         $data['title'] = 'Riwayat Izin Pulang Santri';
         $data['main'] = 'izin_pulang/izin_pulang_filter';

@@ -119,61 +119,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Top Santri dengan Izin Pulang Terbanyak -->
-            <?php if (!isset($f['n']) && !empty($top_izin)): ?>
-                <div class="col-md-12">
-                    <div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">
-                                Top 10 Santri dengan Izin Pulang Terbanyak - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
-                            </h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr class="danger">
-                                            <th width="30">Rank</th>
-                                            <th>Nama Santri</th>
-                                            <th>Alamat</th>
-                                            <th>Kelas</th>
-                                            <th>Total Izin</th>
-                                            <th>Total Hari</th>
-                                            <th>Keterlambatan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $no = 1;
-                                        foreach ($top_izin as $row): ?>
-                                            <tr>
-                                                <td><?php echo $no++; ?></td>
-                                                <td><?php echo $row['student_full_name'] ?></td>
-                                                <td><?php echo $row['student_address'] ?></td>
-                                                <td><?php echo $row['class_name'] ?></td>
-                                                <td><span class="badge bg-blue"><?php echo $row['total_izin'] ?>x</span></td>
-                                                <td><span class="badge bg-purple"><?php echo $row['total_hari'] ?> Hari</span></td>
-                                                <td><span class="badge bg-red"><?php echo $row['total_telat'] ?>x</span></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <p class="text-muted text-sm">
-                                    * Data dihitung berdasarkan total hari izin pulang dan status keterlambatan
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            <?php elseif (!isset($f['n'])): ?>
-                <div class="col-md-12">
-                    <div class="alert alert-info">
-                        <i class="fa fa-info-circle"></i> Tidak ada data izin pulang pada periode aktif.
-                    </div>
-                </div>
-            <?php endif; ?>
             <!-- Santri yang Sedang Pulang Hari Ini -->
-<?php if (!isset($f['n']) && !empty($current_leaves)): ?>
+            <?php if (!isset($f['n'])): ?>
 <div class="col-md-12">
     <div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
         <div class="box-header with-border">
@@ -187,34 +134,39 @@
                     <thead>
                         <tr class="warning">
                             <th>Nama Santri</th>
-                            <th>NIS</th>
                             <th>Kelas</th>
-                            <th>Tanggal Mulai</th>
+                            <th>Alamat</th>
+                            <th>Tanggal Pulang</th>
                             <th>Tanggal Kembali</th>
                             <th>Sisa Hari</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($current_leaves as $row): 
-                            $end_date = new DateTime($row['tanggal_akhir']);
-                            $today = new DateTime();
-                            $remaining_days = $today->diff($end_date)->days + 1;
-                        ?>
+                        <?php if (!empty($current_leaves)): ?>
+                            <?php foreach ($current_leaves as $row):
+                                $end_date = new DateTime($row['tanggal_akhir']);
+                                $today = new DateTime();
+                                $remaining_days = $today->diff($end_date)->days + 1;
+                            ?>
+                                <tr>
+                                    <td><?php echo $row['student_full_name'] ?></td>
+                                    <td><?php echo $row['class_name'] ?></td>
+                                    <td><?php echo $row['student_address'] ?></td>
+                                    <td><?php echo date('d/m/Y', strtotime($row['tanggal'])) ?></td>
+                                    <td><?php echo date('d/m/Y', strtotime($row['tanggal_akhir'])) ?></td>
+                                    <td>
+                                        <span class="badge bg-orange remaining-days"
+                                            data-end-date="<?php echo $row['tanggal_akhir'] ?>">
+                                            <?php echo $remaining_days ?> Hari
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
                             <tr>
-                                <td><?php echo $row['student_full_name'] ?></td>
-                                <td><?php echo $row['student_nis'] ?></td>
-                                <td><?php echo $row['class_name'] ?></td>
-                                <td><?php echo date('d/m/Y', strtotime($row['tanggal'])) ?></td>
-                                <td><?php echo date('d/m/Y', strtotime($row['tanggal_akhir'])) ?></td>
-                                <td>
-    <span class="badge bg-orange remaining-days" 
-          data-end-date="<?php echo $row['tanggal_akhir'] ?>">
-        <?php echo $remaining_days ?> Hari
-    </span>
-</td>
-
+                                <td colspan="6" class="text-center text-muted">Tidak ada santri yang sedang pulang hari ini.</td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
                 <p class="text-muted text-sm">
@@ -224,13 +176,62 @@
         </div>
     </div>
 </div>
-<?php elseif (!isset($f['n'])): ?>
-    <div class="col-md-12">
-                    <div class="alert alert-info">
-                        <i class="fa fa-info-circle"></i> Tidak ada data izin pulang pada periode aktif.
-                    </div>
-                </div>
 <?php endif; ?>
+
+            <!-- Top Santri dengan Izin Pulang Terbanyak -->
+            <?php if (!isset($f['n'])): ?>
+<div class="col-md-12">
+    <div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                Top 10 Santri dengan Izin Pulang Terbanyak - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="danger">
+                            <th width="30">Rank</th>
+                            <th>Nama Santri</th>
+                            <th>Alamat</th>
+                            <th>Kelas</th>
+                            <th>Total Izin</th>
+                            <th>Total Hari</th>
+                            <th>Keterlambatan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($top_izin)): ?>
+                            <?php $no = 1;
+                            foreach ($top_izin as $row): ?>
+                                <tr>
+                                    <td><?php echo $no++; ?></td>
+                                    <td><?php echo $row['student_full_name'] ?></td>
+                                    <td><?php echo $row['student_address'] ?></td>
+                                    <td><?php echo $row['class_name'] ?></td>
+                                    <td><span class="badge bg-blue"><?php echo $row['total_izin'] ?>x</span></td>
+                                    <td><span class="badge bg-purple"><?php echo $row['total_hari'] ?> Hari</span></td>
+                                    <td><span class="badge bg-red"><?php echo $row['total_telat'] ?>x</span></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">Tidak ada data izin pulang pada periode aktif.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+                <p class="text-muted text-sm">
+                    * Data dihitung berdasarkan total hari izin pulang dan status keterlambatan
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+
             <!-- Informasi Santri -->
             <?php if ($f) { ?>
                 <div class="col-md-12">
@@ -341,16 +342,16 @@
                                                             </select>
 
                                                             <!-- Tombol WA -->
-                                                            <a href="javascript:void(0)" 
-           class="btn btn-success btn-wa"
-           data-izin-id="<?php echo $row['izin_id']; ?>"
-           data-base-url="<?php echo site_url('manage/izin_pulang/send_whatsapp/'); ?>"
-           data-period="<?php echo isset($f['n']) ? $f['n'] : ''; ?>"
-           data-student="<?php echo isset($f['r']) ? $f['r'] : ''; ?>"
-           style="<?php echo ($row['status'] != 'Terlambat') ? 'display: none;' : '' ?>"
-           data-toggle="tooltip" 
-           title="Kirim Peringatan ke Orang Tua">
-            <i class="fab fa-whatsapp"></i> WA
+                                                            <a href="javascript:void(0)"
+                                                                class="btn btn-success btn-wa"
+                                                                data-izin-id="<?php echo $row['izin_id']; ?>"
+                                                                data-base-url="<?php echo site_url('manage/izin_pulang/send_whatsapp/'); ?>"
+                                                                data-period="<?php echo isset($f['n']) ? $f['n'] : ''; ?>"
+                                                                data-student="<?php echo isset($f['r']) ? $f['r'] : ''; ?>"
+                                                                style="<?php echo ($row['status'] != 'Terlambat') ? 'display: none;' : '' ?>"
+                                                                data-toggle="tooltip"
+                                                                title="Kirim Peringatan ke Orang Tua">
+                                                                <i class="fab fa-whatsapp"></i> WA
                                                             </a>
                                                         </div>
                                                     </td>
@@ -425,25 +426,25 @@
 
 <script>
     // Update remaining days every day
-function updateRemainingDays() {
-    $('.remaining-days').each(function() {
-        const endDate = new Date($(this).data('end-date'));
-        const today = new Date();
-        const diffTime = endDate - today;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        $(this).text(diffDays + ' Hari');
-        
-        // Beri warna berbeda jika masa izin hampir habis
-        if(diffDays <= 3) {
-            $(this).removeClass('bg-orange').addClass('bg-red');
-        }
-    });
-}
+    function updateRemainingDays() {
+        $('.remaining-days').each(function() {
+            const endDate = new Date($(this).data('end-date'));
+            const today = new Date();
+            const diffTime = endDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-// Update setiap 1 jam
-setInterval(updateRemainingDays, 3600000);
-updateRemainingDays(); // Jalankan pertama kali
+            $(this).text(diffDays + ' Hari');
+
+            // Beri warna berbeda jika masa izin hampir habis
+            if (diffDays <= 3) {
+                $(this).removeClass('bg-orange').addClass('bg-red');
+            }
+        });
+    }
+
+    // Update setiap 1 jam
+    setInterval(updateRemainingDays, 3600000);
+    updateRemainingDays(); // Jalankan pertama kali
 </script>
 <script>
     $(document).on('change', '.status-select', function() {
@@ -483,37 +484,37 @@ updateRemainingDays(); // Jalankan pertama kali
         });
     });
     $(document).on('click', '.btn-wa', function(e) {
-    e.preventDefault();
-    const btn = $(this);
-    const izinId = btn.data('izin-id');
-    const period = btn.data('period');
-    const student = btn.data('student');
-    const baseUrl = btn.data('base-url');
-    const url = baseUrl + izinId + '?n=' + period + '&r=' + student;
-    
-    if (confirm('Yakin ingin mengirim notifikasi WA?')) {
-        // Tambahkan loading state
-        const originalHtml = btn.html();
-        btn.html('<i class="fas fa-spinner fa-spin"></i> Mengirim...');
-        btn.prop('disabled', true);
-        
-        // Kirim request via AJAX
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(response) {
-                alert('Notifikasi WA berhasil dikirim!');
-                btn.html(originalHtml);
-                btn.prop('disabled', false);
-            },
-            error: function() {
-                alert('Gagal mengirim notifikasi!');
-                btn.html(originalHtml);
-                btn.prop('disabled', false);
-            }
-        });
-    }
-});
+        e.preventDefault();
+        const btn = $(this);
+        const izinId = btn.data('izin-id');
+        const period = btn.data('period');
+        const student = btn.data('student');
+        const baseUrl = btn.data('base-url');
+        const url = baseUrl + izinId + '?n=' + period + '&r=' + student;
+
+        if (confirm('Yakin ingin mengirim notifikasi WA?')) {
+            // Tambahkan loading state
+            const originalHtml = btn.html();
+            btn.html('<i class="fas fa-spinner fa-spin"></i> Mengirim...');
+            btn.prop('disabled', true);
+
+            // Kirim request via AJAX
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    alert('Notifikasi WA berhasil dikirim!');
+                    btn.html(originalHtml);
+                    btn.prop('disabled', false);
+                },
+                error: function() {
+                    alert('Gagal mengirim notifikasi!');
+                    btn.html(originalHtml);
+                    btn.prop('disabled', false);
+                }
+            });
+        }
+    });
 </script>
 <script>
     // Hitung Otomatis Jumlah Hari

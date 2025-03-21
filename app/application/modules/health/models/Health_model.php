@@ -80,9 +80,13 @@ class Health_model extends CI_Model
         if (empty($data['student_id']) || empty($data['period_id']) || empty($data['tanggal'])) {
             return false;
         }
+        $data['status'] = 'Masih Sakit';
     
-        $this->db->insert('health_records', $data);
-        return $this->db->insert_id();
+        if ($this->db->insert('health_records', $data)) {
+            return $this->db->insert_id();
+        }
+        return false;
+        
     }
     
     public function update($data, $id)
@@ -90,12 +94,50 @@ class Health_model extends CI_Model
         if (empty($data) || empty($id)) {
             return false;
         }
-    
+        if (isset($data['status']) && $data['status'] == 'Sudah Sembuh') {
+            $data['tanggal_sembuh'] = date('Y-m-d');
+        }
+        
         $this->db->where('health_record_id', $id);
         $this->db->update('health_records', $data);
         return $this->db->affected_rows();
     }
+    public function get_current_sick()
+    {
+        $this->db->select('health_records.*, student.student_nis, student.student_full_name, class.class_name, student.class_class_id, majors.majors_name, student.majors_majors_id');  
+        $this->db->join('student', 'health_records.student_id = student.student_id');
+        $this->db->join('class', 'student.class_class_id = class.class_id');
+        $this->db->join('majors', 'student.majors_majors_id = majors.majors_id');
+        $this->db->where('health_records.status', 'Masih Sakit');
+        $this->db->where('health_records.tanggal <=', date('Y-m-d')); // Tanggal mulai sakit <= hari ini
+        $this->db->where('health_records.tanggal_sembuh IS NULL'); // Belum ada tanggal sembuh
+        return $this->db->get('health_records')->result_array();
+    }
+
+public function get_top_sick()
+{
+    $active_period = $this->Period_model->get_active_period();
     
+    $this->db->select('student.student_id, student.student_full_name, student.student_address, class.class_name, COUNT(health_records.health_record_id) as total_sakit');
+    $this->db->join('student', 'health_records.student_id = student.student_id');
+    $this->db->join('class', 'student.class_class_id = class.class_id');
+    $this->db->where('health_records.period_id', $active_period['period_id']);
+    $this->db->group_by('student.student_id');
+    $this->db->order_by('total_sakit', 'DESC');
+    $this->db->limit(10);
+    return $this->db->get('health_records')->result_array();
+}
+
+public function get_last_sickness($student_id)
+{
+    $this->db->select('kondisi_kesehatan');
+    $this->db->where('student_id', $student_id);
+    $this->db->order_by('tanggal', 'DESC');
+    $this->db->limit(1);
+    $result = $this->db->get('health_records')->row_array();
+    return $result ? $result['kondisi_kesehatan'] : '-';
+}
+
 
     /**
      * Delete health record

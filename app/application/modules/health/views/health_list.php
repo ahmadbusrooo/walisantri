@@ -1,3 +1,24 @@
+<style>
+    .status-select {
+        padding: 3px 8px;
+        border-radius: 15px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .status-select:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    }
+
+    .status-container {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+</style>
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -61,6 +82,108 @@
                     </div>
                 </div>
             </div>
+            <!-- Santri yang Sedang Sakit Hari Ini -->
+            <?php if (!isset($f['n'])): ?>
+                <div class="col-md-12">
+                    <div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                Santri Sedang Sakit - <?php echo date('d F Y') ?>
+                            </h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr class="danger">
+                                            <th>No</th>
+                                            <th>Nama Santri</th>
+                                            <th>Kamar</th>
+                                            <th>Kelas</th>
+                                            <th>Tanggal Mulai</th>
+                                            <th>Kondisi Kesehatan</th>
+                                            <th>Lama Sakit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($current_sick)): ?>
+                                            <?php $no = 1;
+                                            foreach ($current_sick as $row): ?>
+                                                <?php
+                                                $start = new DateTime($row['tanggal']);
+                                                $now = new DateTime();
+                                                $interval = $start->diff($now);
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $no++; ?></td>
+                                                    <td><?php echo $row['student_full_name'] ?></td>
+                                                    <td><?php echo $row['majors_name'] ?></td>
+                                                    <td><?php echo $row['class_name'] ?></td>
+                                                    <td><?php echo date('d/m/Y', strtotime($row['tanggal'])) ?></td>
+                                                    <td><?php echo $row['kondisi_kesehatan'] ?></td>
+                                                    <td>
+                                                        <span class="badge bg-red"><?php echo $interval->days ?> Hari</span>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="6" class="text-center text-muted">Tidak ada data santri sakit saat ini.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+
+            <!-- Top Santri Sering Sakit -->
+            <?php if (!isset($f['n'])): ?>
+<div class="col-md-12">
+    <div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                Top 10 Santri Sering Sakit - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="warning">
+                            <th width="30">Rank</th>
+                            <th>Nama Santri</th>
+                            <th>Kelas</th>
+                            <th>Total Sakit</th>
+                            <th>Penyakit Terakhir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($top_sick)): ?>
+                            <?php $no = 1; foreach ($top_sick as $row): ?>
+                                <tr>
+                                    <td><?php echo $no++; ?></td>
+                                    <td><?php echo $row['student_full_name'] ?></td>
+                                    <td><?php echo $row['class_name'] ?></td>
+                                    <td><span class="badge bg-red"><?php echo $row['total_sakit'] ?>x</span></td>
+                                    <td><?php echo $this->Health_model->get_last_sickness($row['student_id']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Tidak ada data santri yang sering sakit dalam periode ini.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
             <!-- Informasi Santri -->
             <?php if ($f) { ?>
@@ -134,7 +257,8 @@
                                             <th>Tanggal</th>
                                             <th>Kondisi Kesehatan</th>
                                             <th>Tindakan</th>
-                                            <th>Catatan</th>
+                                            <th>Status</th>
+                                            <th>Tanggal Sembuh</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -147,7 +271,17 @@
                                                     <td><?php echo $row['tanggal']; ?></td>
                                                     <td><?php echo $row['kondisi_kesehatan']; ?></td>
                                                     <td><?php echo $row['tindakan']; ?></td>
-                                                    <td><?php echo $row['catatan']; ?></td>
+                                                    <td>
+                                                        <select class="status-select"
+                                                            data-health-id="<?= $row['health_record_id'] ?>"
+                                                            style="<?= $row['status'] == 'Sudah Sembuh' ?
+                                                                        'background-color: #d4edda;' :
+                                                                        'background-color: #f8d7da;' ?>">
+                                                            <option value="Masih Sakit" <?= $row['status'] == 'Masih Sakit' ? 'selected' : '' ?>>Masih Sakit</option>
+                                                            <option value="Sudah Sembuh" <?= $row['status'] == 'Sudah Sembuh' ? 'selected' : '' ?>>Sudah Sembuh</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="tanggal-sembuh"><?= $row['tanggal_sembuh'] ?: '-' ?></td>
                                                     <td>
                                                         <a href="<?php echo site_url('health/delete/' . $row['health_record_id']); ?>"
                                                             class="btn btn-danger btn-xs"
@@ -200,10 +334,8 @@
                                 <label>Tindakan</label>
                                 <input type="text" name="tindakan" class="form-control" required>
                             </div>
-                            <div class="form-group">
-                                <label>Catatan</label>
-                                <textarea name="catatan" class="form-control"></textarea>
-                            </div>
+                            <input type="hidden" name="status" value="Masih Sakit">
+
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Simpan</button>
@@ -220,6 +352,33 @@
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    $(document).on('change', '.status-select', function() {
+        const select = $(this);
+        const healthId = select.data('health-id');
+        const newStatus = select.val();
+        const row = select.closest('tr');
+
+        $.ajax({
+            url: '<?= site_url('health/update_status') ?>',
+            method: 'POST',
+            data: {
+                health_id: healthId,
+                status: newStatus
+            },
+            success: function(response) {
+                // Update warna dropdown
+                if (newStatus === 'Sudah Sembuh') {
+                    select.css('background-color', '#d4edda');
+                    row.find('.tanggal-sembuh').text(response.tanggal_sembuh);
+                } else {
+                    select.css('background-color', '#f8d7da');
+                    row.find('.tanggal-sembuh').text('-');
+                }
+            }
+        });
+    });
+</script>
 <script>
     $(document).ready(function() {
         $('#nisDropdown').select2({

@@ -24,7 +24,7 @@ class Izin_pulang_model extends CI_Model
 
     public function get_currently_on_leave()
 {
-    $this->db->select('ip.*, s.student_full_name, s.student_nis, c.class_name');
+    $this->db->select('ip.*, s.student_full_name, s.student_nis, s.student_address, c.class_name');
     $this->db->from('izin_pulang ip');
     $this->db->join('student s', 's.student_id = ip.student_id');
     $this->db->join('class c', 'c.class_id = s.class_class_id');

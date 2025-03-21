@@ -28,7 +28,7 @@ $bulan = array(
 
     <section class="content">
         <div class="row">
-        <div class="col-md-12">
+            <div class="col-md-12">
                 <div class="box box-info" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
                     <div class="box-header with-border">
                         <h3 class="box-title">Filter Data Tidak Jama'ah Santri</h3>
@@ -73,46 +73,48 @@ $bulan = array(
                     </div>
                 </div>
             </div>
-            <?php if (empty($f['n'])): // Tampilkan hanya jika belum ada filter ?>
-<div class="col-md-12">
-    <div class="box box-danger" style="border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
-        <div class="box-header with-border">
-            <h3 class="box-title"> Top 10 Pelanggaran Absen Jamaah Periode <?php echo $active_period['period_start'] ?>-<?php echo $active_period['period_end'] ?></h3>
-        </div>
-        <div class="box-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr class="danger">
-                        <th width="30">Rank</th>
-                        <th>Nama Santri</th>
-                        <th>Kelas</th>
-                        <th>Total Tidak Berjama'ah</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($top_absent)): ?>
-                        <?php $rank = 1; foreach ($top_absent as $row): ?>
-                        <tr>
-                            <td><?php echo $rank++; ?></td>
-                            <td><?php echo $row['student_full_name'] ?></td>
-                            <td><?php echo $row['class_name'] ?></td>
-                            <td><span class="badge bg-red"><?php echo $row['total'] ?></span></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="4" class="text-center">Tidak ada data absen</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-            <p class="text-muted text-sm">* Data peringkat berdasarkan total ketidakhadiran jamaah pada periode aktif</p>
-        </div>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
+            <?php if (empty($f['n'])): // Tampilkan hanya jika belum ada filter 
+            ?>
+                <div class="col-md-12">
+                    <div class="box box-danger" style="border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"> Top 10 Pelanggaran Absen Jamaah Periode <?php echo $active_period['period_start'] ?>-<?php echo $active_period['period_end'] ?></h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr class="danger">
+                                            <th width="30">Rank</th>
+                                            <th>Nama Santri</th>
+                                            <th>Kelas</th>
+                                            <th>Total Tidak Berjama'ah</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($top_absent)): ?>
+                                            <?php $rank = 1;
+                                            foreach ($top_absent as $row): ?>
+                                                <tr>
+                                                    <td><?php echo $rank++; ?></td>
+                                                    <td><?php echo $row['student_full_name'] ?></td>
+                                                    <td><?php echo $row['class_name'] ?></td>
+                                                    <td><span class="badge bg-red"><?php echo $row['total'] ?></span></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center">Tidak ada data absen</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                                <p class="text-muted text-sm">* Data peringkat berdasarkan total ketidakhadiran jamaah pada periode aktif</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
             <?php if (!empty($f['n']) && !empty($f['r'])): ?>
                 <div class="col-md-12">
                     <div class="box box-success" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
@@ -187,57 +189,58 @@ $bulan = array(
                         <div class="box-header with-border">
                             <h3 class="box-title">Riwayat Absen Jama'ah</h3>
                             <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addModal">
-                                <i class="fa fa-plus"></i> Tambah 
+                                <i class="fa fa-plus"></i> Tambah
                             </button>
                         </div>
                         <div class="box-body">
-                        <table class="table table-bordered">
-    <thead>
-        <tr class="info">
-            <th>No</th>
-            <th>Tanggal Mulai</th>
-            <th>Tanggal Selesai</th>
-            <th>Jumlah Tidak Jama'ah</th>
-            <th>Keterangan</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if (!empty($absen)): ?>
-        <?php $no = 1; foreach ($absen as $row): ?>
-        <tr>
-            <td><?php echo $no++; ?></td>
-            <td>
-    <?php 
-    $timestamp = strtotime($row['tanggal_mulai']);
-    echo $hari[date('w', $timestamp)].', '.date('j', $timestamp).' '.$bulan[date('n', $timestamp)].' '.date('Y', $timestamp);
-    ?>
-</td>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="info">
+                                        <th>No</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Selesai</th>
+                                        <th>Jumlah Tidak Jama'ah</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($absen)): ?>
+                                        <?php $no = 1;
+                                        foreach ($absen as $row): ?>
+                                            <tr>
+                                                <td><?php echo $no++; ?></td>
+                                                <td>
+                                                    <?php
+                                                    $timestamp = strtotime($row['tanggal_mulai']);
+                                                    echo $hari[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $bulan[date('n', $timestamp)] . ' ' . date('Y', $timestamp);
+                                                    ?>
+                                                </td>
 
-<td>
-    <?php 
-    $timestamp = strtotime($row['tanggal_selesai']);
-    echo $hari[date('w', $timestamp)].', '.date('j', $timestamp).' '.$bulan[date('n', $timestamp)].' '.date('Y', $timestamp);
-    ?>
-</td>
-            <td><?php echo $row['jumlah_tidak_jamaah']; ?> Kali</td>
-            <td><?php echo $row['keterangan']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    $timestamp = strtotime($row['tanggal_selesai']);
+                                                    echo $hari[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $bulan[date('n', $timestamp)] . ' ' . date('Y', $timestamp);
+                                                    ?>
+                                                </td>
+                                                <td><?php echo $row['jumlah_tidak_jamaah']; ?> Kali</td>
+                                                <td><?php echo $row['keterangan']; ?></td>
                                                 <!-- Di dalam tabel -->
                                                 <td>
-    <button class="btn btn-success btn-xs btn-send-wa"
-        data-pesan="<?php echo "Periode: {$row['tanggal_mulai']} - {$row['tanggal_selesai']}\nJumlah Tidak Jama'ah: {$row['jumlah_tidak_jamaah']}\nKeterangan: {$row['keterangan']}"; ?>"
-        data-url="<?php echo site_url('manage/absen_jamaah/send_whatsapp/' . $row['jamaah_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
-        data-wali="<?php echo isset($santri_selected['student_name_of_father']) ? $santri_selected['student_name_of_father'] : '-'; ?>"
-        data-telepon="<?php echo isset($santri_selected['student_parent_phone']) ? $santri_selected['student_parent_phone'] : '-'; ?>">
-        <i class="fab fa-whatsapp"></i> WA
-    </button>
+                                                    <button class="btn btn-success btn-xs btn-send-wa"
+                                                        data-pesan="<?php echo "Periode: {$row['tanggal_mulai']} - {$row['tanggal_selesai']}\nJumlah Tidak Jama'ah: {$row['jumlah_tidak_jamaah']}\nKeterangan: {$row['keterangan']}"; ?>"
+                                                        data-url="<?php echo site_url('manage/absen_jamaah/send_whatsapp/' . $row['jamaah_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
+                                                        data-wali="<?php echo isset($santri_selected['student_name_of_father']) ? $santri_selected['student_name_of_father'] : '-'; ?>"
+                                                        data-telepon="<?php echo isset($santri_selected['student_parent_phone']) ? $santri_selected['student_parent_phone'] : '-'; ?>">
+                                                        <i class="fab fa-whatsapp"></i> WA
+                                                    </button>
 
-    <a href="<?php echo site_url('manage/absen_jamaah/delete/' . $row['jamaah_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
-        class="btn btn-danger btn-xs"
-        onclick="return confirm('Hapus data ini?')">
-        <i class="fa fa-trash"></i>
-    </a>
-</td>
+                                                    <a href="<?php echo site_url('manage/absen_jamaah/delete/' . $row['jamaah_id'] . '?n=' . $f['n'] . '&r=' . $f['r']); ?>"
+                                                        class="btn btn-danger btn-xs"
+                                                        onclick="return confirm('Hapus data ini?')">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>
@@ -260,40 +263,40 @@ $bulan = array(
     <div class="modal-dialog">
         <div class="modal-content">
             <?php echo form_open('manage/absen_jamaah/add'); ?>
-                <div class="modal-header">
-                    <h4 class="modal-title">Tambah Laporan Tidak Jama'ah</h4>
+            <div class="modal-header">
+                <h4 class="modal-title">Tambah Laporan Tidak Jama'ah</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="student_id" value="<?php echo isset($santri_selected['student_id']) ? $santri_selected['student_id'] : ''; ?>">
+                <input type="hidden" name="student_nis" value="<?php echo isset($santri_selected['student_nis']) ? $santri_selected['student_nis'] : ''; ?>">
+                <input type="hidden" name="period_id" value="<?php echo isset($f['n']) ? $f['n'] : ''; ?>">
+
+                <div class="form-group">
+                    <label>Tanggal Mulai</label>
+                    <input type="date" name="tanggal_mulai" class="form-control" required>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" name="student_id" value="<?php echo isset($santri_selected['student_id']) ? $santri_selected['student_id'] : ''; ?>">
-                    <input type="hidden" name="student_nis" value="<?php echo isset($santri_selected['student_nis']) ? $santri_selected['student_nis'] : ''; ?>">
-                    <input type="hidden" name="period_id" value="<?php echo isset($f['n']) ? $f['n'] : ''; ?>">
-                    
-                    <div class="form-group">
-                        <label>Tanggal Mulai</label>
-                        <input type="date" name="tanggal_mulai" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Tanggal Selesai</label>
-                        <input type="date" name="tanggal_selesai" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Jumlah Tidak Jama'ah</label>
-                        <input type="number" name="jumlah_tidak_jamaah" class="form-control" 
-                               min="1" required 
-                               placeholder="Masukkan jumlah Absen">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Keterangan</label>
-                        <textarea name="keterangan" class="form-control"></textarea>
-                    </div>
+
+                <div class="form-group">
+                    <label>Tanggal Selesai</label>
+                    <input type="date" name="tanggal_selesai" class="form-control" required>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+
+                <div class="form-group">
+                    <label>Jumlah Tidak Jama'ah</label>
+                    <input type="number" name="jumlah_tidak_jamaah" class="form-control"
+                        min="1" required
+                        placeholder="Masukkan jumlah Absen">
                 </div>
+
+                <div class="form-group">
+                    <label>Keterangan</label>
+                    <textarea name="keterangan" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+            </div>
             <?php echo form_close(); ?>
         </div>
     </div>
@@ -376,22 +379,22 @@ $bulan = array(
     });
 </script>
 <script>
-// Hitung otomatis jumlah hari
-document.addEventListener('DOMContentLoaded', function() {
-    var tglMulai = document.getElementById('tglMulai');
-    var tglSelesai = document.getElementById('tglSelesai');
-    var jumlahHari = document.getElementById('jumlahHari');
+    // Hitung otomatis jumlah hari
+    document.addEventListener('DOMContentLoaded', function() {
+        var tglMulai = document.getElementById('tglMulai');
+        var tglSelesai = document.getElementById('tglSelesai');
+        var jumlahHari = document.getElementById('jumlahHari');
 
-    function hitungHari() {
-        if(tglMulai.value && tglSelesai.value) {
-            var start = new Date(tglMulai.value);
-            var end = new Date(tglSelesai.value);
-            var diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-            jumlahHari.value = diff + ' Hari';
+        function hitungHari() {
+            if (tglMulai.value && tglSelesai.value) {
+                var start = new Date(tglMulai.value);
+                var end = new Date(tglSelesai.value);
+                var diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                jumlahHari.value = diff + ' Hari';
+            }
         }
-    }
 
-    tglMulai.addEventListener('change', hitungHari);
-    tglSelesai.addEventListener('change', hitungHari);
-});
+        tglMulai.addEventListener('change', hitungHari);
+        tglSelesai.addEventListener('change', hitungHari);
+    });
 </script>

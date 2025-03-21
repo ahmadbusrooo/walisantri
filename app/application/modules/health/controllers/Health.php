@@ -19,7 +19,11 @@ class Health extends CI_Controller
         $data['f'] = $filter;
         $data['period'] = $this->Period_model->get(); // Ambil semua periode
         $data['santri'] = $this->Student_model->get(); // Ambil semua data siswa
-    
+        if(!isset($f['n'])) {
+            $data['current_sick'] = $this->Health_model->get_current_sick();
+            $data['top_sick'] = $this->Health_model->get_top_sick();
+            $data['active_period'] = $this->Period_model->get_active_period();
+        }
         if (isset($filter['n']) && isset($filter['r']) && !empty($filter['n']) && !empty($filter['r'])) {
             $data['santri_selected'] = $this->Student_model->get_by_nis($filter['r']);
             if ($data['santri_selected']) {
@@ -54,7 +58,7 @@ class Health extends CI_Controller
                 'tanggal' => $this->input->post('tanggal', TRUE),
                 'kondisi_kesehatan' => $this->input->post('kondisi_kesehatan', TRUE),
                 'tindakan' => $this->input->post('tindakan', TRUE),
-                'catatan' => $this->input->post('catatan', TRUE),
+                'status' => $this->input->post('status', TRUE) // Tambahkan status
             ];
     
             $this->Health_model->add($data);
@@ -62,7 +66,22 @@ class Health extends CI_Controller
             redirect('health?n=' . $data['period_id'] . '&r=' . $this->input->post('nis', TRUE));
         }
     }
+// Health.php
+public function update_status() {
+    $health_id = $this->input->post('health_id');
+    $status = $this->input->post('status');
+
+    $data = [
+        'status' => $status,
+        'tanggal_sembuh' => ($status == 'Sudah Sembuh') ? date('Y-m-d') : null
+    ];
+
+    $this->Health_model->update($data, $health_id);
     
+    echo json_encode([
+        'tanggal_sembuh' => $data['tanggal_sembuh'] ? date('d/m/Y', strtotime($data['tanggal_sembuh'])) : '-'
+    ]);
+} 
     public function search_santri()
     {
         $keyword = $this->input->get('keyword');

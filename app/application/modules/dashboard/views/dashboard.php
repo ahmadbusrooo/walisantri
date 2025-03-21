@@ -691,9 +691,6 @@
         }
       });
     }
-
-    // Auto refresh setiap 1 menit
-    setInterval(refreshViolations, 60000);
   </script>
 </div>
     <!-- Santri Sering Melanggar dan Grafik Pelanggaran -->

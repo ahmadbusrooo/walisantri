@@ -135,7 +135,6 @@ $(document).ready(function() {
         $(".checkbox").prop('checked', $(this).prop("checked"));
     });
 
-    // Tombol Kirim WA
     $("#sendWaButton").click(function() {
         var selectedUstadz = [];
         $(".checkbox:checked").each(function() {
@@ -152,6 +151,11 @@ $(document).ready(function() {
             alert("Pesan WA tidak boleh kosong.");
             return;
         }
+
+        // Simpan teks tombol asli dan ubah ke loading state
+        var originalText = $("#sendWaButton").html();
+        $("#sendWaButton").html('<i class="fa fa-spinner fa-spin"></i> Mengirim...');
+        $("#sendWaButton").prop("disabled", true); // Nonaktifkan tombol sementara
 
         $.ajax({
             url: "<?php echo site_url('ustadz/send_multiple_wa'); ?>",
@@ -172,9 +176,13 @@ $(document).ready(function() {
             error: function(xhr, status, error) {
                 console.error(xhr.responseText);
                 alert("Terjadi kesalahan. Coba lagi.");
+            },
+            complete: function() {
+                // Kembalikan tombol ke keadaan semula setelah proses selesai
+                $("#sendWaButton").html(originalText);
+                $("#sendWaButton").prop("disabled", false);
             }
         });
     });
-
 });
 </script>

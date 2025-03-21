@@ -68,15 +68,19 @@ class Ustadz extends MX_Controller {
             return;
         }
     
-        // API Wablas
-        $token = "C5ZefdADVrejALPpeCn1rYPZ3OQaKuEszSQgXrpbQXPoKjt2sFzfXWT0jiSbs2Pg"; // Ganti dengan API Key Wablas Anda
-        $secret_key = "tgw6gVhz"; // Ganti dengan Secret Key Wablas Anda
-        $url = "https://tegal.wablas.com/api/v2/send-message";
+        // Ambil data WhatsApp Gateway dari database
+        $this->load->model('Setting_model');
+        $api_url = $this->Setting_model->get_value(['id' => 8]); // setting_wa_gateway_url
+        $api_token = $this->Setting_model->get_value(['id' => 9]); // setting_wa_api_key
     
-        // Format data sesuai dokumentasi terbaru Wablas
-        $payload = [
-            "data" => []
-        ];
+        if (empty($api_url) || empty($api_token)) {
+            log_message('error', "WhatsApp API Gateway URL atau API Key tidak ditemukan di database.");
+            echo json_encode(["status" => "error", "message" => "Konfigurasi WhatsApp Gateway tidak ditemukan."]);
+            return;
+        }
+    
+        // Format data sesuai dokumentasi terbaru WhatsApp API Gateway
+        $payload = ["data" => []];
     
         foreach ($recipients as $phone) {
             $payload["data"][] = [
@@ -85,24 +89,49 @@ class Ustadz extends MX_Controller {
             ];
         }
     
-        // Kirim request ke API Wablas
+        $jsonData = json_encode($payload);
+    
+        // Kirim request ke API WhatsApp Gateway
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            "Authorization: $token.$secret_key",
-            "Content-Type: application/json"
-        ));
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($curl, CURLOPT_URL, $api_url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonData);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "Authorization: $api_token",
+            "Content-Type: application/json"
+        ]);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
     
         $result = curl_exec($curl);
+        $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $response = json_decode($result, true);
+    
+        if (curl_errno($curl)) {
+            log_message('error', "Curl error: " . curl_error($curl));
+        }
+    
         curl_close($curl);
     
-        echo json_encode(["status" => "success", "message" => "Pesan berhasil dikirim!", "response" => json_decode($result)]);
+        // Jika HTTP Response tidak 200 atau respons API tidak sesuai
+        if ($http_code != 200 || empty($response) || !isset($response['status'])) {
+            log_message('error', "WhatsApp gagal dikirim. HTTP Code: $http_code, Response: " . json_encode($response));
+            echo json_encode(["status" => "error", "message" => "Gagal mengirim pesan WhatsApp."]);
+            return;
+        }
+    
+        // Pastikan status dari API adalah `true`
+        if ($response['status'] !== true) {
+            log_message('error', "WhatsApp API response error: " . json_encode($response));
+            echo json_encode(["status" => "error", "message" => "Gagal mengirim pesan WhatsApp."]);
+            return;
+        }
+    
+        // Jika berhasil, kembalikan pesan sukses
+        echo json_encode(["status" => "success", "message" => "Pesan berhasil dikirim!"]);
     }
+    
     
     // Form tambah/edit ustadz
     public function form($id = null) {

@@ -28,15 +28,17 @@ class Pelanggaran_model extends CI_Model
     }
 
     // Untuk mendapatkan pelanggaran hari ini
-    public function get_today_violations()
-    {
-        $this->db->select('p.*, s.student_full_name');
+    public function get_today_violations() {
+        $this->db->select('p.*, s.student_full_name, c.class_name, r.majors_name, 
+            COUNT(p.pelanggaran_id) as total_period, p.tindakan');
         $this->db->from('pelanggaran p');
         $this->db->join('student s', 'p.student_id = s.student_id');
-        $this->db->where('p.tanggal', date('Y-m-d')); // Filter tanggal hari ini
-        $this->db->order_by('p.tanggal', 'DESC');
-        $query = $this->db->get();
-        return $query->result_array();
+        $this->db->join('class c', 's.class_class_id = c.class_id'); // Sesuaikan dengan nama kolom
+        $this->db->join('majors r', 's.majors_majors_id = r.majors_id'); // Sesuaikan dengan nama kolom
+        $this->db->where('p.tanggal', date('Y-m-d'));
+        $this->db->group_by('s.student_id'); // Group by student
+        $this->db->order_by('total_period', 'DESC');
+        return $this->db->get()->result_array();
     }
 
     public function get_top_violators($month, $year, $limit = 5)

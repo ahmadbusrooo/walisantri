@@ -142,48 +142,49 @@
 
             <!-- Top Santri Sering Sakit -->
             <?php if (!isset($f['n'])): ?>
-<div class="col-md-12">
-    <div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
-        <div class="box-header with-border">
-            <h3 class="box-title">
-                Top 10 Santri Sering Sakit - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
-            </h3>
-        </div>
-        <div class="box-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="warning">
-                            <th width="30">Rank</th>
-                            <th>Nama Santri</th>
-                            <th>Kelas</th>
-                            <th>Total Sakit</th>
-                            <th>Penyakit Terakhir</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($top_sick)): ?>
-                            <?php $no = 1; foreach ($top_sick as $row): ?>
-                                <tr>
-                                    <td><?php echo $no++; ?></td>
-                                    <td><?php echo $row['student_full_name'] ?></td>
-                                    <td><?php echo $row['class_name'] ?></td>
-                                    <td><span class="badge bg-red"><?php echo $row['total_sakit'] ?>x</span></td>
-                                    <td><?php echo $this->Health_model->get_last_sickness($row['student_id']) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="5" class="text-center text-muted">Tidak ada data santri yang sering sakit dalam periode ini.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
+                <div class="col-md-12">
+                    <div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                Top 10 Santri Sering Sakit - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
+                            </h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr class="warning">
+                                            <th width="30">Rank</th>
+                                            <th>Nama Santri</th>
+                                            <th>Kelas</th>
+                                            <th>Total Sakit</th>
+                                            <th>Penyakit Terakhir</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($top_sick)): ?>
+                                            <?php $no = 1;
+                                            foreach ($top_sick as $row): ?>
+                                                <tr>
+                                                    <td><?php echo $no++; ?></td>
+                                                    <td><?php echo $row['student_full_name'] ?></td>
+                                                    <td><?php echo $row['class_name'] ?></td>
+                                                    <td><span class="badge bg-red"><?php echo $row['total_sakit'] ?>x</span></td>
+                                                    <td><?php echo $this->Health_model->get_last_sickness($row['student_id']) ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">Tidak ada data santri yang sering sakit dalam periode ini.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <!-- Informasi Santri -->
             <?php if ($f) { ?>

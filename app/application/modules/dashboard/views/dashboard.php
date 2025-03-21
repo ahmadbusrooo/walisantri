@@ -375,13 +375,224 @@
         </div>
       </div>
     </div>
-<!-- Tambahkan di bagian konten utama setelah row pertama -->
-<div class="row">
+    <div class="row">
+
+      <div class="col-md-6">
+        <div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+          <div class="box-header with-border">
+            <h3 class="box-title">
+              Santri Sedang Sakit - <?php echo date('d F Y') ?>
+            </h3>
+          </div>
+          <div class="box-body">
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr class="danger">
+                    <th>No</th>
+                    <th>Nama Santri</th>
+                    <th>Kamar</th>
+                    <th>Kelas</th>
+                    <th>Tanggal Mulai</th>
+                    <th>Kondisi Kesehatan</th>
+                    <th>Lama Sakit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php if (!empty($current_sick)): ?>
+                    <?php $no = 1;
+                    foreach ($current_sick as $row): ?>
+                      <?php
+                      $start = new DateTime($row['tanggal']);
+                      $now = new DateTime();
+                      $interval = $start->diff($now);
+                      ?>
+                      <tr>
+                        <td><?php echo $no++; ?></td>
+                        <td><?php echo $row['student_full_name'] ?></td>
+                        <td><?php echo $row['majors_name'] ?></td>
+                        <td><?php echo $row['class_name'] ?></td>
+                        <td><?php echo date('d/m/Y', strtotime($row['tanggal'])) ?></td>
+                        <td><?php echo $row['kondisi_kesehatan'] ?></td>
+                        <td>
+                          <span class="badge bg-red"><?php echo $interval->days ?> Hari</span>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                      <td colspan="6" class="text-center text-muted">Tidak ada data santri sakit saat ini.</td>
+                    </tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- Top Santri Sering Sakit -->
+
+      <div class="col-md-6">
+        <div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+          <div class="box-header with-border">
+            <h3 class="box-title">
+              Top 10 Santri Sering Sakit - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
+            </h3>
+          </div>
+          <div class="box-body">
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr class="warning">
+                    <th width="30">Rank</th>
+                    <th>Nama Santri</th>
+                    <th>Kelas</th>
+                    <th>Total Sakit</th>
+                    <th>Penyakit Terakhir</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php if (!empty($top_sick)): ?>
+                    <?php $no = 1;
+                    foreach ($top_sick as $row): ?>
+                      <tr>
+                        <td><?php echo $no++; ?></td>
+                        <td><?php echo $row['student_full_name'] ?></td>
+                        <td><?php echo $row['class_name'] ?></td>
+                        <td><span class="badge bg-red"><?php echo $row['total_sakit'] ?>x</span></td>
+                        <td><?php echo $this->Health_model->get_last_sickness($row['student_id']) ?></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                      <td colspan="5" class="text-center text-muted">Tidak ada data santri yang sering sakit dalam periode ini.</td>
+                    </tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+          <div class="box box-warning" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+                Santri Sedang Pulang - <?php echo date('d F Y') ?>
+              </h3>
+            </div>
+            <div class="box-body">
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr class="warning">
+                      <th>Nama Santri</th>
+                      <th>Kelas</th>
+                      <th>Alamat</th>
+                      <th>Tanggal Pulang</th>
+                      <th>Tanggal Kembali</th>
+                      <th>Sisa Hari</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php if (!empty($current_leaves)): ?>
+                      <?php foreach ($current_leaves as $row):
+                        $end_date = new DateTime($row['tanggal_akhir']);
+                        $today = new DateTime();
+                        $remaining_days = $today->diff($end_date)->days + 1;
+                      ?>
+                        <tr>
+                          <td><?php echo $row['student_full_name'] ?></td>
+                          <td><?php echo $row['class_name'] ?></td>
+                          <td><?php echo $row['student_address'] ?></td>
+                          <td><?php echo date('d/m/Y', strtotime($row['tanggal'])) ?></td>
+                          <td><?php echo date('d/m/Y', strtotime($row['tanggal_akhir'])) ?></td>
+                          <td>
+                            <span class="badge bg-orange remaining-days"
+                              data-end-date="<?php echo $row['tanggal_akhir'] ?>">
+                              <?php echo $remaining_days ?> Hari
+                            </span>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                    <?php else: ?>
+                      <tr>
+                        <td colspan="6" class="text-center text-muted">Tidak ada santri yang sedang pulang hari ini.</td>
+                      </tr>
+                    <?php endif; ?>
+                  </tbody>
+                </table>
+                <p class="text-muted text-sm">
+                  * Menampilkan santri yang sedang dalam masa izin pulang hari ini
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- Top Santri dengan Izin Pulang Terbanyak -->
+        <div class="col-md-6">
+          <div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+                Top 10 Santri dengan Izin Pulang Terbanyak - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
+              </h3>
+            </div>
+            <div class="box-body">
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr class="danger">
+                      <th width="30">Rank</th>
+                      <th>Nama Santri</th>
+                      <th>Alamat</th>
+                      <th>Kelas</th>
+                      <th>Total Izin</th>
+                      <th>Total Hari</th>
+                      <th>Keterlambatan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php if (!empty($top_izin)): ?>
+                      <?php $no = 1;
+                      foreach ($top_izin as $row): ?>
+                        <tr>
+                          <td><?php echo $no++; ?></td>
+                          <td><?php echo $row['student_full_name'] ?></td>
+                          <td><?php echo $row['student_address'] ?></td>
+                          <td><?php echo $row['class_name'] ?></td>
+                          <td><span class="badge bg-blue"><?php echo $row['total_izin'] ?>x</span></td>
+                          <td><span class="badge bg-purple"><?php echo $row['total_hari'] ?> Hari</span></td>
+                          <td><span class="badge bg-red"><?php echo $row['total_telat'] ?>x</span></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    <?php else: ?>
+                      <tr>
+                        <td colspan="7" class="text-center text-muted">Tidak ada data izin pulang pada periode aktif.</td>
+                      </tr>
+                    <?php endif; ?>
+                  </tbody>
+                </table>
+                <p class="text-muted text-sm">
+                  * Data dihitung berdasarkan total hari izin pulang dan status keterlambatan
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- Santri Melanggar Hari Ini -->
+    <div class="row">
   <div class="col-md-12">
     <div class="box box-danger">
       <div class="box-header with-border">
         <h3 class="box-title">
-          <i class="fa fa-exclamation-triangle"></i> Pelanggaran Hari Ini 
+          Pelanggaran Hari Ini
           <small class="text-white">(<?= date('d F Y') ?>)</small>
         </h3>
         <div class="box-tools pull-right">
@@ -393,29 +604,28 @@
       <div class="box-body">
         <div class="table-responsive">
           <table class="table table-bordered table-hover table-striped">
-            <thead class="bg-red">
-              <tr>
-                <th class="text-center">Waktu</th>
+            <thead>
+              <tr class="danger">
+                <th class="text-center">No</th>
                 <th>Nama Santri</th>
-                <th>Jenis Pelanggaran</th>
-                <th class="text-center">Poin</th>
+                <th>Kelas</th>
+                <th>Kamar</th>
+                <th>Pelanggaran</th>
                 <th>Tindakan</th>
               </tr>
             </thead>
             <tbody>
               <?php if (!empty($today_violations)) : ?>
+                <?php $no = 1; ?>
                 <?php foreach ($today_violations as $violation) : ?>
                   <tr>
-                    <td class="text-center">
-                      <span class="badge bg-red">
-                      <?= $violation['pelanggaran_created_at'] ?>
-                      </span>
-                    </td>
+                    <td class="text-center"><?= $no++ ?></td>
                     <td><?= $violation['student_full_name'] ?></td>
-                    <td><?= $violation['pelanggaran'] ?></td>
-                    <td class="text-center">
-                      <span class="badge bg-orange">
-                        <?= $violation['poin'] ?>
+                    <td><?= $violation['class_name'] ?></td>
+                    <td><?= $violation['majors_name']?></td>
+                    <td >
+                      <span class="badge bg-red">
+                        <?= $violation['pelanggaran'] ?>
                       </span>
                     </td>
                     <td><?= $violation['tindakan'] ?></td>
@@ -423,7 +633,7 @@
                 <?php endforeach; ?>
               <?php else : ?>
                 <tr>
-                  <td colspan="5" class="text-center text-muted">
+                  <td colspan="6" class="text-center text-muted">
                     <i class="fa fa-check-circle"></i> Tidak ada pelanggaran hari ini
                   </td>
                 </tr>
@@ -437,105 +647,55 @@
       </div>
     </div>
   </div>
-</div>
 
-<script>
-function refreshViolations() {
-  $('#loading-overlay').show();
-  $.ajax({
-    url: '<?= site_url('manage/dashboard_set/get_today_violations_api') ?>',
-    type: 'GET',
-    success: function(response) {
-      let data = JSON.parse(response);
-      let html = '';
-      
-      if(data.length > 0) {
-        data.forEach(function(violation) {
-          html += `
-            <tr>
-              <td class="text-center">
-                <span class="badge bg-red">
-                  ${new Date(violation.tanggal).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}
-                </span>
+  <script>
+    function refreshViolations() {
+      $('#loading-overlay').show();
+      $.ajax({
+        url: '<?= site_url('manage/dashboard_set/get_today_violations_api') ?>',
+        type: 'GET',
+        success: function(response) {
+          let data = JSON.parse(response);
+          let html = '';
+          let no = 1;
+
+          if (data.length > 0) {
+            data.forEach(function(violation) {
+              html += `
+                <tr>
+                  <td class="text-center">${no++}</td>
+                  <td>${violation.student_full_name}</td>
+                  <td>${violation.class_name || '-'}</td>
+                  <td>${violation.room_name || '-'}</td>
+                  <td class="text-center">
+                    <span class="badge bg-red">
+                      ${violation.total_period}
+                    </span>
+                  </td>
+                  <td>${violation.keterangan || '-'}</td>
+                </tr>`;
+            });
+          } else {
+            html = `<tr>
+              <td colspan="6" class="text-center text-muted">
+                <i class="fa fa-check-circle"></i> Tidak ada pelanggaran hari ini
               </td>
-              <td>${violation.student_full_name}</td>
-              <td>${violation.jenis_pelanggaran}</td>
-              <td class="text-center">
-                <span class="badge bg-orange">
-                  ${violation.poin}
-                </span>
-              </td>
-              <td>${violation.keterangan || '-'}</td>
-            </tr>
-          `;
-        });
-      } else {
-        html = `
-          <tr>
-            <td colspan="5" class="text-center text-muted">
-              <i class="fa fa-check-circle"></i> Tidak ada pelanggaran hari ini
-            </td>
-          </tr>
-        `;
-      }
-      
-      $('table tbody').html(html);
-      $('.box-footer small').text('Diperbarui: ' + new Date().toLocaleTimeString('id-ID'));
-    },
-    complete: function() {
-      $('#loading-overlay').hide();
+            </tr>`;
+          }
+
+          $('table tbody').html(html);
+          $('.box-footer small').text('Diperbarui: ' + new Date().toLocaleTimeString('id-ID'));
+        },
+        complete: function() {
+          $('#loading-overlay').hide();
+        }
+      });
     }
-  });
-}
 
-// Auto refresh setiap 1 menit
-setInterval(refreshViolations, 60000);
-</script>
-
-<div class="col-md-12">
-                    <div class="box box-danger" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">
-                                Top 10 Santri dengan Izin Pulang Terbanyak - Periode <?php echo $active_period['period_start'] . '/' . $active_period['period_end'] ?>
-                            </h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr class="danger">
-                                            <th width="30">Rank</th>
-                                            <th>Nama Santri</th>
-                                            <th>Alamat</th>
-                                            <th>Kelas</th>
-                                            <th>Total Izin</th>
-                                            <th>Total Hari</th>
-                                            <th>Keterlambatan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $no = 1;
-                                        foreach ($top_izin as $row): ?>
-                                            <tr>
-                                                <td><?php echo $no++; ?></td>
-                                                <td><?php echo $row['student_full_name'] ?></td>
-                                                <td><?php echo $row['student_address'] ?></td>
-                                                <td><?php echo $row['class_name'] ?></td>
-                                                <td><span class="badge bg-blue"><?php echo $row['total_izin'] ?>x</span></td>
-                                                <td><span class="badge bg-purple"><?php echo $row['total_hari'] ?> Hari</span></td>
-                                                <td><span class="badge bg-red"><?php echo $row['total_telat'] ?>x</span></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <p class="text-muted text-sm">
-                                    * Data dihitung berdasarkan total hari izin pulang dan status keterlambatan
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+    // Auto refresh setiap 1 menit
+    setInterval(refreshViolations, 60000);
+  </script>
+</div>
     <!-- Santri Sering Melanggar dan Grafik Pelanggaran -->
     <div class="row">
       <div class="col-md-6">

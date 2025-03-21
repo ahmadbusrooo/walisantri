@@ -26,7 +26,8 @@ class Dashboard_set extends CI_Controller {
             'nadzhaman/Nadzhaman_model',
             'izin_pulang/Izin_pulang_model',
             'pelanggaran/Pelanggaran_model',
-            'period/Period_model'
+            'period/Period_model',
+            'health/Health_model'
 
 
         ));
@@ -151,6 +152,11 @@ $data['santri_masuk_keluar'] = $this->Student_model->get_santri_masuk_keluar($mo
             $data['active_period']['period_id'], 
             10 // Limit 10 santri
         );
+        $data['current_leaves'] = $this->Izin_pulang_model->get_currently_on_leave();
+
+        $data['current_sick'] = $this->Health_model->get_current_sick();
+        $data['top_sick'] = $this->Health_model->get_top_sick();
+
         
         $data['today_violations'] = $this->Pelanggaran_model->get_today_violations();
         $data['setting_logo'] = $this->Setting_model->get(array('id' => 6));

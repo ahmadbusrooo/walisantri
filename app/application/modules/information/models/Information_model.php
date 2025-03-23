@@ -53,7 +53,12 @@ class Information_model extends CI_Model {
 		{
 			$this->db->order_by('information_id', 'desc');
 		}
-
+// Ubah bagian order_by menjadi:
+if(isset($params['order_by'])) {
+    $this->db->order_by($params['order_by'], 'desc'); // Tetap pertahankan DESC
+} else {
+    $this->db->order_by('information_input_date', 'desc');
+}
 		$this->db->select('information_id, information_title, information_desc, information_img, information_publish, information_input_date, information_last_update');
 		$this->db->select('user_user_id, user_full_name');
 
@@ -115,10 +120,24 @@ class Information_model extends CI_Model {
 			$id = $this->db->insert_id();
 		}
 
+
+
 		$status = $this->db->affected_rows();
 		return ($status == 0) ? FALSE : $id;
 	}
 
+	
+	public function count($filters = []) {
+		$this->db->from('information');
+		
+		foreach($filters as $key => $value) {
+			if($key !== 'order_by') { // IGNORE ORDER BY
+				$this->db->where($key, $value);
+			}
+		}
+		
+		return $this->db->count_all_results();
+	}
     // Delete information to database
 	function delete($id) {
 		$this->db->where('information_id', $id);

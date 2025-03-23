@@ -23,7 +23,8 @@ class Flutter_Integration extends CI_Controller
             'bebas/Bebas_model',
             'bebas/Bebas_pay_model',
             'setting/Setting_model',
-            'information/Information_model'
+            'information/Information_model',
+            'ltrx/Log_trx_model'
         ]);
         $this->load->model('KitabDikelas_model');
 
@@ -38,7 +39,7 @@ class Flutter_Integration extends CI_Controller
         $headers = apache_request_headers();
         $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : (isset($headers['authorization']) ? $headers['authorization'] : null);
         $token = $authHeader ? str_replace('Bearer ', '', $authHeader) : null;
-    
+
         if (!$token) {
             echo json_encode([
                 "status" => false,
@@ -46,12 +47,12 @@ class Flutter_Integration extends CI_Controller
             ]);
             exit;
         }
-    
+
         // Validasi token di tabel `student_tokens`
         $this->db->where('token', $token);
         $query = $this->db->get('student_tokens');
         $token_data = $query->row_array();
-    
+
         if (empty($token_data)) {
             echo json_encode([
                 "status" => false,
@@ -59,11 +60,11 @@ class Flutter_Integration extends CI_Controller
             ]);
             exit;
         }
-    
+
         // Ambil data siswa terkait token
         $this->db->where('student_id', $token_data['student_id']);
         $student = $this->db->get('student')->row_array();
-    
+
         if (empty($student)) {
             echo json_encode([
                 "status" => false,
@@ -71,10 +72,10 @@ class Flutter_Integration extends CI_Controller
             ]);
             exit;
         }
-    
+
         return $student;
     }
-    
+
 
     // API for profile details
     public function get_profile()
@@ -188,26 +189,26 @@ class Flutter_Integration extends CI_Controller
     {
         header('Content-Type: application/json');
         $response = ['status' => false, 'message' => ''];
-    
+
         // Validasi input
         $this->form_validation->set_rules('nis', 'NIS', 'trim|required');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
         $this->form_validation->set_rules('fcm_token', 'FCM Token', 'trim'); // Token FCM dari Flutter
-    
+
         if ($this->form_validation->run() == FALSE) {
             $response['message'] = validation_errors();
             echo json_encode($response);
             return;
         }
-    
+
         // Ambil data dari POST
         $nis = $this->input->post('nis', TRUE);
         $password = $this->input->post('password', TRUE);
         $fcm_token = $this->input->post('fcm_token', TRUE); // Ambil token FCM
-    
+
         // Cek data siswa
         $student = $this->Student_model->get(['nis' => $nis, 'password' => sha1($password)]);
-    
+
         if (!empty($student)) {
             // Login berhasil
             $this->session->set_userdata('logged_student', TRUE);
@@ -215,19 +216,19 @@ class Flutter_Integration extends CI_Controller
             $this->session->set_userdata('unis_student', $student[0]['student_nis']);
             $this->session->set_userdata('ufullname_student', $student[0]['student_full_name']);
             $this->session->set_userdata('student_img', $student[0]['student_img']);
-    
+
             // Informasi perangkat opsional
             $device_info = $this->input->post('device_info', TRUE) ?: 'Unknown Device';
-    
+
             // Periksa apakah token sudah ada untuk perangkat ini
             $this->db->where('student_id', $student[0]['student_id']);
             $this->db->where('device_info', $device_info);
             $existing_token = $this->db->get('student_tokens')->row_array();
-    
+
             if ($existing_token) {
                 // Jika token sudah ada, gunakan token yang sama
                 $token = $existing_token['token'];
-    
+
                 // Perbarui token FCM jika berubah
                 if (!empty($fcm_token) && $existing_token['fcm_token'] !== $fcm_token) {
                     $this->db->where('student_id', $student[0]['student_id']);
@@ -244,7 +245,7 @@ class Flutter_Integration extends CI_Controller
                     'fcm_token' => $fcm_token // Simpan FCM Token
                 ]);
             }
-    
+
             $response['status'] = true;
             $response['message'] = 'Login successful';
             $response['data'] = [
@@ -258,10 +259,10 @@ class Flutter_Integration extends CI_Controller
             // Login gagal
             $response['message'] = 'NIS atau Password tidak cocok.';
         }
-    
+
         echo json_encode($response);
     }
-    
+
 
     // Tambahkan fungsi lainnya tanpa perubahan logika
 
@@ -287,65 +288,66 @@ class Flutter_Integration extends CI_Controller
         }
     }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         header('Content-Type: application/json');
         $student = $this->validate_token();
-    
+
         // Mengambil data kelas siswa
         $student_class = $this->Class_model->get(['student_id' => $student['student_id']]);
         $class_name = isset($student_class['class_name']) ? $student_class['class_name'] : 'Tidak Ada Data';
-    
+
         $student_data = [
             'student_full_name' => $student['student_full_name'],
             'student_nis' => $student['student_nis'],
             'class_name' => $class_name,
             'student_img' => $student['student_img']
         ];
-    
+
         // Mengambil periode aktif menggunakan Period_model
         $active_period = $this->Period_model->get(['status' => 1]); // Mengambil data dengan period_status = 1
-    
+
         // Validasi data periode aktif
         $academic_year = 'Tidak Ada Data'; // Default jika data tidak ditemukan
         $period_id = null;
-    
+
         if (!empty($active_period) && is_array($active_period)) {
             // Jika data periode ditemukan, ambil period_start, period_end, dan period_id
             $academic_year = $active_period[0]['period_start'] . '/' . $active_period[0]['period_end'];
             $period_id = $active_period[0]['period_id'];
         }
-    
+
         // Fallback jika period_id tetap tidak ditemukan
         if (!$period_id) {
             $period_id = 1; // Menggunakan periode default
         }
-    
+
         // Mengambil data tagihan bulanan
         $bulan = $this->Bulan_model->get([
             'status' => 0, // Tagihan yang belum dibayar
             'period_id' => $period_id, // Menggunakan period_id
             'student_id' => $student['student_id']
         ]);
-    
+
         $total_bulan = array_sum(array_column($bulan, 'bulan_bill')); // Total tagihan bulanan
-    
+
         // Mengambil data tagihan bebas
         $bebas = $this->Bebas_model->get([
             'period_id' => $period_id, // Menggunakan period_id
             'student_id' => $student['student_id']
         ]);
-    
+
         $total_bebas = array_sum(array_column($bebas, 'bebas_bill')); // Total tagihan bebas
         $total_bebas_pay = array_sum(array_column($bebas, 'bebas_total_pay')); // Total pembayaran bebas
-    
+
         // Menghitung total tagihan dengan memperhitungkan pembayaran
         $total_tagihan = ($total_bulan + $total_bebas) - $total_bebas_pay;
-    
+
         // Mengambil data informasi yang dipublikasikan
         $information = $this->Information_model->get([
             'information_publish' => 1 // Hanya informasi yang dipublikasikan
         ]);
-    
+
         // Menyiapkan respons JSON
         echo json_encode([
             'status' => true,
@@ -361,11 +363,68 @@ class Flutter_Integration extends CI_Controller
             ]
         ]);
     }
-    
+
+
+
+    public function information()
+    {
+        header('Content-Type: application/json');
+
+        try {
+            $student = $this->validate_token();
+
+            $page = $this->input->get('page') ?: 1;
+            $limit = $this->input->get('limit') ?: 10;
+            $offset = ($page - 1) * $limit;
+
+            // Perbaiki parameter yang dikirim ke model
+            $params = [
+                'information_publish' => 1,
+                'order_by' => 'information_input_date', // HAPUS DESC DISINI
+                'limit' => $limit,
+                'offset' => $offset
+            ];
+
+            $total_records = $this->Information_model->count(['information_publish' => 1]);
+            $informations = $this->Information_model->get($params);
+
+            // Tambahkan pengecekan empty image
+            foreach ($informations as &$info) {
+                $info['formatted_date'] = date('d F Y', strtotime($info['information_input_date']));
+                $info['information_desc'] = preg_replace('/\sxss=removed/', '', $info['information_desc']);
+
+                if (!empty($info['information_img'])) {
+                    $info['image_url'] = base_url("uploads/information/{$info['information_img']}");
+                } else {
+                    $info['image_url'] = null;
+                }
+            }
+
+            $response = [
+                'status' => true,
+                'message' => 'Data informasi berhasil diambil',
+                'data' => [
+                    'total_records' => (int)$total_records,
+                    'total_pages' => ceil($total_records / $limit),
+                    'current_page' => (int)$page,
+                    'informations' => $informations ?: []
+                ]
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'status' => false,
+                'message' => 'Gagal mengambil data: ' . $e->getMessage(),
+                'data' => null
+            ];
+        }
+
+        echo json_encode($response);
+        exit; // Tambahkan exit untuk menghindari header error
+    }
     public function get_payment_history()
     {
         header('Content-Type: application/json');
-        
+
         // Validasi token dan dapatkan data santri
         $student = $this->validate_token();
         if (!$student) {
@@ -375,7 +434,7 @@ class Flutter_Integration extends CI_Controller
             ]);
             return;
         }
-    
+
         // Ambil semua periode
         $periods = $this->Period_model->get();
         if (empty($periods)) {
@@ -385,36 +444,36 @@ class Flutter_Integration extends CI_Controller
             ]);
             return;
         }
-    
+
         $response_data = [];
-    
+
         foreach ($periods as $period) {
             $period_id = $period['period_id'];
-    
+
             // Ambil data pembayaran bulanan
             $bulan_payments = $this->Bulan_model->get([
                 'student_id' => $student['student_id'],
                 'period_id' => $period_id
             ]) ?: [];
-    
+
             // Ambil data pembayaran bebas
             $bebas_payments = $this->Bebas_model->get([
                 'student_id' => $student['student_id'],
                 'period_id' => $period_id
             ]) ?: [];
-    
+
             // Total tagihan dan pembayaran
             $total_bulan = array_sum(array_column($bulan_payments, 'bulan_bill'));
             $total_paid_bulan = array_reduce($bulan_payments, function ($carry, $item) {
                 return $carry + ($item['bulan_status'] == 1 ? $item['bulan_bill'] : 0);
             }, 0);
-    
+
             $total_bebas = array_sum(array_column($bebas_payments, 'bebas_bill'));
             $total_paid_bebas = array_sum(array_column($bebas_payments, 'bebas_total_pay'));
-    
+
             $total_tagihan_periode = $total_bulan + $total_bebas;
             $total_paid_periode = $total_paid_bulan + $total_paid_bebas;
-    
+
             // Detail pembayaran bulanan
             $bulan_grouped = [];
             foreach ($bulan_payments as $payment) {
@@ -428,7 +487,7 @@ class Flutter_Integration extends CI_Controller
                     'pos_name' => $payment['pos_name']
                 ];
             }
-    
+
             // Detail pembayaran bebas
             $bebas_grouped = [];
             foreach ($bebas_payments as $payment) {
@@ -440,7 +499,7 @@ class Flutter_Integration extends CI_Controller
                     'pos_name' => $payment['pos_name']
                 ];
             }
-    
+
             // Tambahkan data periode ke respons
             $response_data[] = [
                 'period' => [
@@ -468,7 +527,7 @@ class Flutter_Integration extends CI_Controller
                 ]
             ];
         }
-    
+
         // Kirim data sebagai JSON
         echo json_encode([
             'status' => true,
@@ -476,7 +535,7 @@ class Flutter_Integration extends CI_Controller
             'data' => $response_data
         ]);
     }
-    
+
 
 
 
@@ -487,7 +546,7 @@ class Flutter_Integration extends CI_Controller
         $headers = apache_request_headers();
         $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : null;
         $token = $authHeader ? str_replace('Bearer ', '', $authHeader) : null;
-    
+
         if ($token) {
             $this->db->where('token', $token);
             $this->db->delete('student_tokens');
@@ -496,37 +555,37 @@ class Flutter_Integration extends CI_Controller
             echo json_encode(['status' => false, 'message' => 'Token not found.']);
         }
     }
-    
-    
+
+
     public function logout_all()
     {
         header('Content-Type: application/json');
         $student = $this->validate_token();
-    
+
         $this->db->where('student_id', $student['student_id']);
         $this->db->delete('student_tokens');
-    
+
         echo json_encode(['status' => true, 'message' => 'Logged out from all devices.']);
     }
-    
+
     // Fungsi lainnya seperti get_pelanggaran, get_health_data, get_nadzhaman_data, dan get_payout_data tetap sama
 
 
     public function get_pelanggaran()
     {
         header('Content-Type: application/json');
-    
+
         try {
             // Validasi token
             $student = $this->validate_token();
             if (!$student) {
                 throw new Exception('Token tidak valid atau siswa tidak ditemukan.');
             }
-    
+
             // Ambil informasi kelas siswa
             $student_class = $this->Class_model->get(['student_id' => $student['student_id']]);
             $class_name = isset($student_class['class_name']) ? $student_class['class_name'] : 'Tidak Ada Data';
-    
+
             // Ambil semua periode
             $periods = $this->Period_model->get();
             if (empty($periods)) {
@@ -536,18 +595,18 @@ class Flutter_Integration extends CI_Controller
                 ]);
                 return;
             }
-    
+
             $response_data = [];
-    
+
             foreach ($periods as $period) {
                 $period_id = $period['period_id'];
-    
+
                 // Ambil data pelanggaran berdasarkan periode
                 $pelanggaran = $this->Pelanggaran_model->get_by_student_period($student['student_id'], $period_id);
-                
+
                 // Hitung total pelanggaran (jumlah poin) per periode
                 $total_pelanggaran = $this->Pelanggaran_model->get_yearly_violations($student['student_id'], $period_id);
-    
+
                 // Format data pelanggaran
                 $pelanggaran_grouped = [];
                 foreach ($pelanggaran as $item) {
@@ -559,7 +618,7 @@ class Flutter_Integration extends CI_Controller
                         "points" => $item['poin']
                     ];
                 }
-    
+
                 // Tambahkan data periode ke response
                 $response_data[] = [
                     'period' => [
@@ -577,18 +636,17 @@ class Flutter_Integration extends CI_Controller
                     'pelanggaran' => $pelanggaran_grouped
                 ];
             }
-    
+
             // Kembalikan data dalam format JSON
             echo json_encode([
                 'status' => true,
                 'message' => 'Data pelanggaran berhasil diambil.',
                 'data' => $response_data
             ]);
-    
         } catch (Exception $e) {
             // Tangkap error dan log
             file_put_contents('debug_log.txt', "Error: " . $e->getMessage() . "\n", FILE_APPEND);
-    
+
             // Kembalikan error ke client
             echo json_encode([
                 "status" => false,
@@ -597,8 +655,8 @@ class Flutter_Integration extends CI_Controller
             http_response_code(500);
         }
     }
-    
-    
+
+
 
     public function get_health_data()
     {
@@ -617,57 +675,57 @@ class Flutter_Integration extends CI_Controller
     public function get_nadzhaman_data()
     {
         header('Content-Type: application/json');
-    
+
         // Validasi token dan dapatkan data siswa
         $student = $this->validate_token();
-    
+
         if (!$student) {
             echo json_encode(["status" => false, "message" => "Invalid token."]);
             return;
         }
-    
+
         // Ambil data kelas siswa
         $student_class = $this->Class_model->get(['student_id' => $student['student_id']]);
         $class_name = isset($student_class['class_name']) ? $student_class['class_name'] : 'Tidak Ada Data';
-    
+
         // Ambil semua periode
         $periods = $this->Period_model->get();
-    
+
         if (empty($periods)) {
             echo json_encode(["status" => false, "message" => "No periods found."]);
             return;
         }
-    
+
         $response_data = [];
-    
+
         foreach ($periods as $period) {
             $period_id = $period['period_id'];
-    
+
             // Ambil data nadzhaman siswa berdasarkan periode
             $nadzhaman = $this->Nadzhaman_model->get([
                 'student_id' => $student['student_id'],
                 'period_id' => $period_id
             ]);
-    
+
             // Ambil daftar kitab yang diajarkan di kelas siswa pada periode ini
             $class_kitabs = $this->KitabDikelas_model->get_by_class($student_class['class_id'], $period_id);
-    
+
             $kitab_list = [];
-    
+
             foreach ($class_kitabs as $kitab) {
                 // Ambil detail kitab
                 $kitab_detail = $this->Kitab_model->get(['kitab_id' => $kitab['kitab_id']]);
-    
+
                 $kitab_list[] = [
                     'kitab_id' => $kitab['kitab_id'],
                     'nama_kitab' => isset($kitab_detail['nama_kitab']) ? $kitab_detail['nama_kitab'] : 'Tidak Diketahui',
                     'target_hafalan' => isset($kitab_detail['target']) ? $kitab_detail['target'] : 0
                 ];
             }
-    
+
             // Rekap jumlah hafalan per bulan
             $monthly_hafalan = $this->Nadzhaman_model->get_monthly_hafalan($student['student_id'], $period_id);
-    
+
             $response_data[] = [
                 'period' => [
                     'period_id' => $period_id,
@@ -685,25 +743,25 @@ class Flutter_Integration extends CI_Controller
                 'monthly_hafalan' => $monthly_hafalan
             ];
         }
-    
+
         // Susun respons JSON
         $response = [
             'status' => true,
             'message' => 'All Nadzhaman data retrieved successfully.',
             'data' => $response_data
         ];
-    
+
         echo json_encode($response);
     }
-    
-    
+
+
     public function get_payout_data()
     {
         header('Content-Type: application/json');
-        
+
         // Validasi token
         $student = $this->validate_token();
-    
+
         // Ambil semua periode
         $periods = $this->Period_model->get(); // Ambil semua periode yang ada
         if (empty($periods)) {
@@ -713,35 +771,35 @@ class Flutter_Integration extends CI_Controller
             ]);
             return;
         }
-    
+
         $response_data = [];
         foreach ($periods as $period) {
             $period_id = $period['period_id'];
-    
+
             // Ambil data pembayaran bulanan untuk periode ini
             $bulan_payments = $this->Bulan_model->get([
                 'student_id' => $student['student_id'],
                 'period_id' => $period_id
             ]) ?: [];
-    
+
             // Ambil data pembayaran bebas untuk periode ini
             $bebas_payments = $this->Bebas_model->get([
                 'student_id' => $student['student_id'],
                 'period_id' => $period_id
             ]) ?: [];
-    
+
             // Total tagihan dan pembayaran untuk periode ini
             $total_bulan = array_sum(array_column($bulan_payments, 'bulan_bill'));
             $total_paid_bulan = array_reduce($bulan_payments, function ($carry, $item) {
                 return $carry + ($item['bulan_status'] == 1 ? $item['bulan_bill'] : 0);
             }, 0);
-    
+
             $total_bebas = array_sum(array_column($bebas_payments, 'bebas_bill'));
             $total_paid_bebas = array_sum(array_column($bebas_payments, 'bebas_total_pay'));
-    
+
             $total_tagihan_periode = $total_bulan + $total_bebas;
             $total_paid_periode = $total_paid_bulan + $total_paid_bebas;
-    
+
             // Data pembayaran bulanan
             $bulan_grouped = [];
             foreach ($bulan_payments as $payment) {
@@ -755,7 +813,7 @@ class Flutter_Integration extends CI_Controller
                     'pos_name' => $payment['pos_name']
                 ];
             }
-    
+
             // Data pembayaran bebas
             $bebas_grouped = [];
             foreach ($bebas_payments as $payment) {
@@ -767,7 +825,7 @@ class Flutter_Integration extends CI_Controller
                     'pos_name' => $payment['pos_name']
                 ];
             }
-    
+
             // Tambahkan data periode ke respons
             $response_data[] = [
                 'period' => [
@@ -795,7 +853,7 @@ class Flutter_Integration extends CI_Controller
                 ]
             ];
         }
-    
+
         // Respons JSON
         echo json_encode([
             'status' => true,
@@ -803,7 +861,144 @@ class Flutter_Integration extends CI_Controller
             'data' => $response_data
         ]);
     }
-    
+
+    public function get_recent_transactions()
+    {
+        header('Content-Type: application/json');
+        $student = $this->validate_token();
+
+        try {
+            // Ambil parameter dari request
+            $limit = $this->input->get('limit') ? (int)$this->input->get('limit') : 10;
+            $page = $this->input->get('page') ? (int)$this->input->get('page') : 1;
+            $offset = ($page - 1) * $limit;
+
+            // Parameter untuk model
+            $params = [
+                'student_id' => $student['student_id'],
+                'order_by' => 'log_trx_input_date',
+                'limit' => $limit,
+                'offset' => $offset
+            ];
+
+            // Ambil data dari model
+            $transactions = $this->Log_trx_model->get($params);
+            $total_transactions = $this->Log_trx_model->count($params);
+
+            // Format data response
+            $formatted_transactions = [];
+            $total_paid = 0;
+            $total_bill = 0;
+            
+            foreach ($transactions as $transaction) {
+                $is_monthly = !is_null($transaction['bulan_bulan_id']);
+                $payment_type = $is_monthly ? 'BULANAN' : 'BEBAS';
+            
+                // Status transaksi
+                $status = 'PENDING';
+                $amount = 0;
+                $receipt_number = 'N/A';
+            
+                if ($is_monthly) {
+                    // Transaksi bulanan
+                    $status = isset($transaction['bulan_status']) && $transaction['bulan_status'] ? 'DIBAYAR' : 'PENDING';
+                    $amount = isset($transaction['bulan_bill']) ? (int)$transaction['bulan_bill'] : 0;
+                    $receipt_number = isset($transaction['bulan_number_pay']) ? $transaction['bulan_number_pay'] : 'N/A';
+                } else {
+                    // Transaksi bebas
+                    $total_tagihan_bebas = isset($transaction['bebas_bill']) ? (int)$transaction['bebas_bill'] : 0;
+                    $total_terbayar = isset($transaction['bebas_pay_bill']) ? (int)$transaction['bebas_pay_bill'] : 0;
+            
+                    if ($total_terbayar >= $total_tagihan_bebas) {
+                        $status = 'DIBAYAR';
+                    } elseif ($total_terbayar > 0) {
+                        $status = 'DIBAYAR';
+                    } else {
+                        $status = 'PENDING';
+                    }
+            
+                    $amount = $total_tagihan_bebas;
+                    $receipt_number = isset($transaction['bebas_pay_number']) ? $transaction['bebas_pay_number'] : 'N/A';
+                }
+            
+                // Hitung total_bill
+                if ($is_monthly) {
+                    $total_bill += $amount;
+                } else {
+                    $total_bill += $amount;
+                }
+            
+                // Hitung total_paid dengan logika yang benar
+                if ($is_monthly) {
+                    if ($status === 'DIBAYAR') {
+                        $total_paid += $amount;
+                    }
+                } else {
+                    $total_paid += $total_terbayar; // Ambil total yang sudah dibayar, bukan total tagihan
+                }
+            
+                // Format transaksi
+                $formatted = [
+                    'transaction_id' => $transaction['log_trx_id'],
+                    'payment_type' => $payment_type,
+                    'payment_name' => $is_monthly
+                        ? (isset($transaction['posmonth_name']) ? $transaction['posmonth_name'] : 'Pembayaran Bulanan')
+                        : (isset($transaction['posbebas_name']) ? $transaction['posbebas_name'] : 'Pembayaran Bebas'),
+                    'period' => $is_monthly
+                        ? (isset($transaction['period_start_month']) ? $transaction['period_start_month'] : '-') . '/' . (isset($transaction['period_end_month']) ? $transaction['period_end_month'] : '-')
+                        : (isset($transaction['period_start_bebas']) ? $transaction['period_start_bebas'] : '-') . '/' . (isset($transaction['period_end_bebas']) ? $transaction['period_end_bebas'] : '-'),
+                    'amount' => $amount,
+                    'transaction_date' => date('Y-m-d H:i:s', strtotime($transaction['log_trx_input_date'])),
+                    'status' => $status,
+                    'details' => [
+                        'month' => $is_monthly ? (isset($transaction['month_name']) ? $transaction['month_name'] : null) : null,
+                        'receipt_number' => $receipt_number,
+                        'description' => $is_monthly
+                            ? 'Pembayaran Bulanan'
+                            : sprintf('Pembayaran Bebas (%s/%s)',
+                                number_format($total_terbayar, 0, ',', '.'),
+                                number_format($total_tagihan_bebas, 0, ',', '.')
+                            )
+                    ]
+                ];
+            
+                $formatted_transactions[] = $formatted;
+            }
+
+
+            // Response structure
+            $response = [
+                'status' => true,
+                'message' => 'Riwayat transaksi berhasil diambil',
+                'data' => [
+                    'meta' => [
+                        'current_page' => $page,
+                        'total_pages' => ceil($total_transactions / $limit),
+                        'items_per_page' => $limit,
+                        'total_items' => $total_transactions
+                    ],
+                    'summary' => [
+                        'total_paid' => $total_paid,
+                        'total_bill' => $total_bill,
+                       'outstanding_balance' => max(0, $total_bill - $total_paid)
+
+
+                    ],
+                    'transactions' => $formatted_transactions
+                ]
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'status' => false,
+                'message' => 'Gagal mengambil riwayat transaksi: ' . $e->getMessage(),
+                'data' => null
+            ];
+        }
+
+        echo json_encode($response);
+        exit;
+    }
+
     public function create_transaction()
     {
         header('Content-Type: application/json');
@@ -841,9 +1036,4 @@ class Flutter_Integration extends CI_Controller
             echo json_encode(['status' => false, 'message' => $e->getMessage()]);
         }
     }
-
-    
-    
-    
-
 }

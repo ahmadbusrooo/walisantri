@@ -55,11 +55,47 @@ class Log_trx_model extends CI_Model {
         } else {
             $this->db->order_by('log_trx_id', 'desc');
         }
-        $this->db->select('log_trx.log_trx_id, log_trx_input_date, log_trx_last_update');
-        $this->db->select('bulan_bulan_id, log_trx.student_student_id, student_nis, bulan_bill, month_name, bebas_pay_bill');
 
-        $this->db->select('posMonth.pos_name AS posmonth_name, posBebas.pos_name AS posbebas_name, periodMonth.period_start AS period_start_month, periodMonth.period_end AS period_end_month');
-        $this->db->select('periodBebas.period_start AS period_start_bebas, periodBebas.period_end AS period_end_bebas');
+        if (isset($params['period'])) {
+            $period = explode('/', $params['period']);
+            if (count($period) == 2) {
+                $start_year = $period[0];
+                $end_year = $period[1];
+                
+                $this->db->group_start()
+                    ->group_start()
+                        ->where('periodMonth.period_start', $start_year)
+                        ->where('periodMonth.period_end', $end_year)
+                    ->group_end()
+                    ->or_group_start()
+                        ->where('periodBebas.period_start', $start_year)
+                        ->where('periodBebas.period_end', $end_year)
+                    ->group_end()
+                ->group_end();
+            }
+        }
+        // Di dalam method get()
+$this->db->select('
+log_trx.log_trx_id, 
+log_trx_input_date, 
+log_trx_last_update,
+bulan_bulan_id, 
+log_trx.student_student_id, 
+student_nis, 
+bulan_bill, 
+bulan.bulan_status,          
+bulan.bulan_number_pay,       
+month_name, 
+bebas_pay_bill,
+bebas_pay.bebas_pay_number,   
+bebas.bebas_bill,          
+posMonth.pos_name AS posmonth_name, 
+posBebas.pos_name AS posbebas_name, 
+periodMonth.period_start AS period_start_month, 
+periodMonth.period_end AS period_end_month,
+periodBebas.period_start AS period_start_bebas, 
+periodBebas.period_end AS period_end_bebas'
+);
 
         $this->db->join('bulan', 'bulan.bulan_id = log_trx.bulan_bulan_id', 'left');
         $this->db->join('month', 'month.month_id = bulan.month_month_id', 'left');
@@ -123,7 +159,40 @@ class Log_trx_model extends CI_Model {
         $status = $this->db->affected_rows();
         return ($status == 0) ? FALSE : $id;
     }
-
+// Di Log_trx_model
+function count($params = array()) {
+    $this->db->from('log_trx');
+    
+    // Existing conditions
+    if (isset($params['student_id'])) {
+        $this->db->where('log_trx.student_student_id', $params['student_id']);
+    }
+    
+    // Tambahkan filter periode yang sama
+    if (isset($params['period'])) {
+        $period = explode('/', $params['period']);
+        if (count($period) == 2) {
+            $start_year = $period[0];
+            $end_year = $period[1];
+            
+            $this->db->join('period AS periodMonth', 'periodMonth.period_id = payMonth.period_period_id', 'left');
+            $this->db->join('period AS periodBebas', 'periodBebas.period_id = payBebas.period_period_id', 'left');
+            
+            $this->db->group_start()
+                ->group_start()
+                    ->where('periodMonth.period_start', $start_year)
+                    ->where('periodMonth.period_end', $end_year)
+                ->group_end()
+                ->or_group_start()
+                    ->where('periodBebas.period_start', $start_year)
+                    ->where('periodBebas.period_end', $end_year)
+                ->group_end()
+            ->group_end();
+        }
+    }
+    
+    return $this->db->count_all_results();
+}
       // Delete log_trx to database
     function delete($id) {
         $this->db->where('log_trx_id', $id);

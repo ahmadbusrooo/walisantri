@@ -136,6 +136,8 @@ $route['api/nadzhaman'] = 'flutter_integration/get_nadzhaman_data'; // Get nadzh
 $route['api/payout'] = 'flutter_integration/get_payout_data'; // Get payout data
 $route['api/create_transaction'] = 'flutter_integration/create_transaction'; 
 $route['api/payment_history'] = 'flutter_integration/get_payment_history'; // API untuk mendapatkan riwayat pembayaran santri
+$route['api/information'] = 'flutter_integration/information'; 
+$route['api/transaction'] = 'flutter_integration/get_recent_transactions'; // API untuk mendapatkan riwayat transaksi santri
 
 
 

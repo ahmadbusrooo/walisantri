@@ -106,6 +106,9 @@ if ($this->session->userdata('uroleid') != SUPERUSER && $this->session->userdata
             <li class="<?= ($this->uri->segment(2) == 'maintenance') ? 'active' : '' ?>">
               <a href="<?= site_url('manage/maintenance') ?>"><i class="fas fa-database"></i> Backup Data</a>
             </li>
+            <li class="<?= ($this->uri->segment(2) == 'amalan') ? 'active' : '' ?>">
+              <a href="<?= site_url('amalan') ?>"><i class="fas fa-book"></i> Kitab-Kitab</a>
+            </li>
             <li class="<?= ($this->uri->segment(3) == 'report') ? 'active' : '' ?>">
               <a href="<?= site_url('manage/student/report') ?>"><i class="fas fa-file-pdf"></i> Laporan Santri</a>
             </li>

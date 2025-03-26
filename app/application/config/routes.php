@@ -132,13 +132,16 @@ $route['api/profile/change-password'] = 'flutter_integration/change_password'; /
 $route['api/dashboard'] = 'flutter_integration/dashboard'; // Get dashboard data
 $route['api/pelanggaran'] = 'flutter_integration/get_pelanggaran'; // Get pelanggaran data
 $route['api/health'] = 'flutter_integration/get_health_data'; // Get health data
+$route['api/izin'] = 'flutter_integration/get_izin_data'; // Get health data
 $route['api/nadzhaman'] = 'flutter_integration/get_nadzhaman_data'; // Get nadzhaman data
 $route['api/payout'] = 'flutter_integration/get_payout_data'; // Get payout data
 $route['api/create_transaction'] = 'flutter_integration/create_transaction'; 
 $route['api/payment_history'] = 'flutter_integration/get_payment_history'; // API untuk mendapatkan riwayat pembayaran santri
 $route['api/information'] = 'flutter_integration/information'; 
 $route['api/transaction'] = 'flutter_integration/get_recent_transactions'; // API untuk mendapatkan riwayat transaksi santri
-
+$route['api/amalan'] = 'flutter_integration/get_amalan';         // Untuk get semua amalan
+$route['api/bab'] = 'flutter_integration/get_bab';               // Untuk get bab by amalan_id
+$route['api/isi'] = 'flutter_integration/get_isi';               // Untuk get isi bab by bab_id
 
 
 $route['manage/payment/delete_payment_bulan/(:num)/(:num)'] = 'payment_set/delete_payment_bulan/$1/$2';

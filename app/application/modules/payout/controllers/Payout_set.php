@@ -817,30 +817,63 @@ public function send_reminder()
                 }
                 $body .= "\nSegera lakukan pembayaran. Terima kasih 🙏";
 
-                $batch_size = 500;
-                $token_chunks = array_chunk($fcm_tokens, $batch_size);
-
-                foreach ($token_chunks as $tokens) {
-                    $fcm_url = "https://notifikasi.ppalmaruf.com/send_fcm.php";
-                    $fcm_data = json_encode([
-                        "fcm_tokens" => $tokens,
-                        "title" => $title,
-                        "body" => $body
-                    ]);
-
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $fcm_url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $fcm_data);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                        "Content-Type: application/json"
-                    ]);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-                    $result = curl_exec($ch);
-                    curl_close($ch);
-
+                if (!empty($reminder_groups) && $student_id) {
+                  $student = $this->Student_model->get(['id' => $student_id]);
+                  
+                  // Bangun struktur extra_data
+                  $extraData = [
+                      "title" => $title,
+                      "body" => $body,
+                      "date" => date('Y-m-d H:i:s'),
+                      "student_name" => $student['student_full_name'],
+                      "payments" => []
+                  ];
+              
+                  // Format data tagihan
+                  foreach ($reminder_groups as $payment_name => $months) {
+                      $paymentGroup = [
+                          "payment_name" => $payment_name,
+                          "months" => []
+                      ];
+                      
+                      foreach ($months as $month) {
+                          $paymentGroup['months'][] = [
+                              "month_name" => $month['month_name'],
+                              "amount" => $month['amount'],
+                              "amount_formatted" => "Rp " . number_format($month['amount'], 0, ',', '.')
+                          ];
+                      }
+                      
+                      $extraData['payments'][] = $paymentGroup;
+                  }
+              
+                  // Kirim notifikasi FCM dengan extra data
+                  $batch_size = 500;
+                  $token_chunks = array_chunk($fcm_tokens, $batch_size);
+              
+                  foreach ($token_chunks as $tokens) {
+                      $fcm_url = "https://notifikasi.ppalmaruf.com/send_fcm.php";
+                      $fcm_data = json_encode([
+                          "fcm_tokens" => $tokens,
+                          "title" => $title,
+                          "body" => $body,
+                          "route" => "/notification_detail", // Route khusus untuk tagihan tertunggak
+                          "extra_data" => $extraData
+                      ]);
+              
+                      $ch = curl_init();
+                      curl_setopt($ch, CURLOPT_URL, $fcm_url);
+                      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                      curl_setopt($ch, CURLOPT_POST, 1);
+                      curl_setopt($ch, CURLOPT_POSTFIELDS, $fcm_data);
+                      curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                          "Content-Type: application/json"
+                      ]);
+                      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                      $result = curl_exec($ch);
+                      curl_close($ch);
+                    }
                     log_message('info', "Notifikasi FCM dikirim ke " . count($tokens) . " token: " . $result);
                 }
             } else {

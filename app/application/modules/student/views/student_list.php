@@ -615,18 +615,18 @@ $("#sendWaButton").click(function() {
                     </div>
                     <div class="result-list">`;
 
-                response.success.forEach(student => {
-                    html += `<div class="result-list-item">
-                        <div class="result-list-content">
-                            <div class="result-name">${student.name}</div>
-                            <div class="result-phone">${student.phone}</div>
-                        </div>
-                        <div class="result-icon success">
-                            <i class="fa fa-check"></i>
-                        </div>
-                    </div>`;
-                });
-
+                    response.success.forEach(student => {
+    html += `<div class="result-list-item">
+        <div class="result-list-content">
+            <div class="result-name">${student.name}</div>
+            <div class="result-phone">${student.phone}</div>
+            <div class="text-muted small mt-1">
+                Nama Ayah: ${student.father_name || '-'}
+            </div>
+        </div>
+        <!-- ... -->
+    </div>`;
+});
                 html += `</div></div>`;
             }
 

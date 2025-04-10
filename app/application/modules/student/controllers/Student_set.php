@@ -872,8 +872,9 @@ class Student_set extends CI_Controller
       $failedNumbers = [];
       
       foreach ($allStudents as $student) {
-          $phone = $student['student_parent_phone'];
-          $rawPhone = $phone;
+        $phone = $student['student_parent_phone'];
+        $rawPhone = $phone;
+        $fatherName = $student['student_name_of_father'];
           
           // Normalisasi nomor
           $phone = preg_replace('/[^0-9]/', '', $phone);
@@ -883,18 +884,28 @@ class Student_set extends CI_Controller
               $phone = '62' . substr($phone, 1);
           }
           
+
+          $personalizedMessage = str_replace(
+            '{nama_ayah}', 
+            !empty($fatherName) ? $fatherName : 'Bapak', // Default jika kosong
+            $message
+        );
+
           // Validasi akhir
           if (preg_match('/^628\d{8,15}$/', $phone)) {
-              $validNumbers[] = [
-                  'student_id' => $student['student_id'],
-                  'name' => $student['student_full_name'],
-                  'phone' => $phone
-              ];
+            $validNumbers[] = [
+                'student_id' => $student['student_id'],
+                'name' => $student['student_full_name'],
+                'phone' => $phone,
+                'father_name' => $fatherName, // Simpan nama ayah untuk keperluan tracking
+                'message' => $personalizedMessage // Pesan yang sudah dipersonalisasi
+            ];
           } else {
               $failedNumbers[] = [
                   'student_id' => $student['student_id'],
                   'name' => $student['student_full_name'],
                   'phone' => $rawPhone,
+                  'father_name' => $fatherName,
                   'reason' => $this->get_failure_reason($originalPhone)
               ];
           }
@@ -909,6 +920,8 @@ class Student_set extends CI_Controller
           ]);
           return;
       }
+
+
   
       // 3. Dapatkan konfigurasi API
       $api_url = $this->Setting_model->get_value(['id' => 8]);
@@ -926,13 +939,13 @@ class Student_set extends CI_Controller
   
       // 4. Format payload
       $payload = [
-          "data" => array_map(function($item) use ($message) {
-              return [
-                  'phone' => $item['phone'],
-                  'message' => $message
-              ];
-          }, $validNumbers)
-      ];
+        "data" => array_map(function($item) {
+            return [
+                'phone' => $item['phone'],
+                'message' => $item['message'] // Gunakan pesan yang sudah dipersonalisasi
+            ];
+        }, $validNumbers)
+    ];
   
       // 5. Eksekusi API
       $curl = curl_init();
